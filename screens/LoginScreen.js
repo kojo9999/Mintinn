@@ -93,7 +93,7 @@ export default class LoginSCreen extends React.Component {
               },
             ]}
           >
-            <ActivityIndicator size="large" color={colors.logoColor} />
+            <ActivityIndicator size="large" color={colors.logoColor}/>
           </View>
         ) : null}
         <View>
@@ -111,7 +111,6 @@ export default class LoginSCreen extends React.Component {
             secureTextEntry
             onChangeText={(password) => this.setState({ password })}
           />
-          <Button style={{}} onPress={this.onSignIn} title="Login" />
           <Button style={{}} onPress={this.onSignUp} title="Signup" />
         </View>
       </View>
