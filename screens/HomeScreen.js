@@ -17,7 +17,7 @@ class HomeScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <SafeAreaView />
+        <SafeAreaView>
         <View
           style={{
             height: 70,
@@ -43,7 +43,7 @@ class HomeScreen extends Component {
             onPress={() => this.props.navigation.navigate("WelcomeScreen")}
           ></Button>
         </View>
-        <SafeAreaView />
+        </SafeAreaView>
       </View>
     );
   }

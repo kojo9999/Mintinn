@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, Text, View, TextInput, StyleSheet, ActivityIndicator} from "react-native";
+import {
+  Button,
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import colors from "../../assets/colors";
 import firebase from "firebase/app";
@@ -24,7 +31,7 @@ export default class WelcomeScreen extends React.Component {
         if (responce) {
           this.setState({ isLoading: false });
 
-          this.props.navigation.navigate('LoadingScreen')
+          this.props.navigation.navigate("LoadingScreen");
         }
       } catch (error) {
         this.setState({ isLoading: false });
@@ -53,30 +60,40 @@ export default class WelcomeScreen extends React.Component {
           <Ionicons name="ios-bookmarks" size={150} color={colors.logoColor} />
           <Text style={{ fontSize: 50, fontWeight: "100" }}>M'Intinn</Text>
         </View>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}>
-          <ActivityIndicator size="large" color={colors.logoColor} />
-                    <TextInput
-            styles={styles.TextInput}
-            placeholder="abc@gmail.com"
-            placeholderTextColor="black"
-            keyboardType="email-address"
-            onChangeText={(email) => this.setState({ email })}
-          />
-          <TextInput
-            styles={styles.TextInput}
-            placeholder="enter password"
-            placeholderTextColor="black"
-            secureTextEntry
-            onChangeText={(password) => this.setState({ password })}
-          />
-          <Button style={{}} onPress={this.onSignIn} title="Login" />
-          <Button onPress={() => this.props.navigation.navigate('LoginScreen')} title="Sign Up"/>
-        </View>
+        {this.state.isLoading ? (
+          <View
+            styles={[
+              StyleSheet.absoluteFill,
+              {
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1000,
+                elevation: 1000,
+              },
+            ]}
+          >
+            <ActivityIndicator size="large" color={colors.logoColor} />
+          </View>
+        ) : null}
+        <TextInput
+          styles={styles.TextInput}
+          placeholder="abc@gmail.com"
+          placeholderTextColor="black"
+          keyboardType="email-address"
+          onChangeText={(email) => this.setState({ email })}
+        />
+        <TextInput
+          styles={styles.TextInput}
+          placeholder="enter password"
+          placeholderTextColor="black"
+          secureTextEntry
+          onChangeText={(password) => this.setState({ password })}
+        />
+        <Button style={{}} onPress={this.onSignIn} title="Login" />
+        <Button
+          onPress={() => this.props.navigation.navigate("LoginScreen")}
+          title="Sign Up"
+        />
       </View>
     );
   }
