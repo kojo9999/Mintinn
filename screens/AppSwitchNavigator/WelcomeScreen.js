@@ -1,14 +1,14 @@
 import React from "react";
 import {
-  Button,
   Text,
   View,
   TextInput,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import colors from "../../assets/colors";
+import { Ionicons } from "@expo/vector-icons";
 import firebase from "firebase/app";
 import "firebase/auth";
 
@@ -49,7 +49,7 @@ export default class WelcomeScreen extends React.Component {
   };
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.Container }>
         <View
           style={{
             flex: 1,
@@ -57,9 +57,9 @@ export default class WelcomeScreen extends React.Component {
             justifyContent: "center",
           }}
         >
-          <Ionicons name="ios-bookmarks" size={150} color={colors.logoColor} />
-          <Text style={{ fontSize: 50, fontWeight: "100" }}>M'Intinn</Text>
+         
         </View>
+        <Ionicons style={styles.User} name="ios-contact" size={100} md="md-contact"/>
         {this.state.isLoading ? (
           <View
             styles={[
@@ -76,31 +76,76 @@ export default class WelcomeScreen extends React.Component {
           </View>
         ) : null}
         <TextInput
-          styles={styles.TextInput}
-          placeholder="abc@gmail.com"
+          style={styles.TextInputEmail}
+          placeholder="Email"
           placeholderTextColor="black"
           keyboardType="email-address"
           onChangeText={(email) => this.setState({ email })}
         />
         <TextInput
-          styles={styles.TextInput}
-          placeholder="enter password"
+          style={styles.TextInputPassword}
+          placeholder="Password"
           placeholderTextColor="black"
           secureTextEntry
           onChangeText={(password) => this.setState({ password })}
         />
-        <Button style={{}} onPress={this.onSignIn} title="Login" />
-        <Button
+        <TouchableOpacity style={styles.Button} onPress={this.onSignIn}><Text style={styles.SignInBtnText}>Sign In</Text></TouchableOpacity>
+        <Text style={styles.SignUpText}>Don't have an accont? </Text>
+        <Text style={styles.SignUpLink}
           onPress={() => this.props.navigation.navigate("LoginScreen")}
           title="Sign Up"
-        />
+        >Sign Up</Text>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  Container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  User: {
+    marginBottom: 70
+  },
+  TextInputEmail: {
+    height: 40,
+    width: 300,
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  TextInputPassword: {
+    height: 40,
+    width: 300,
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginBottom: 130,
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  Button: {
+    height: 50,
+    width: 200,
+    borderRadius: 30,
+    marginBottom: 50,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center'
+
+  },
+  SignInBtnText: {
+    color: 'white'
+  },
+  SignUpText: {
+    color: 'black'
+  },
+  SignUpLink: {
+    color: 'blue',
+    marginBottom: 50
+  }
+  
 });
