@@ -1,15 +1,23 @@
 import React from "react";
 import {
-  Button,
+  Image,
   Text,
   View,
   TextInput,
   StyleSheet,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import firebase from "firebase/app";
 import "firebase/auth";
 import colors from "../assets/colors";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
+
+const image = { uri: "https://media.istockphoto.com/photos/yellow-defocused-light-background-for-christmas-picture-id621116812?k=6&m=621116812&s=170667a&w=0&h=2ZIiSOS9ctAsXGxwlAM-LPRkIoGBUFqaCnNlaVUfL14=" };
+const googleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2015/09/google-favicon-vector-400x400.png"}
+const facebookLogo = { uri: "https://pngimg.com/uploads/facebook_logos/facebook_logos_PNG19752.png"}
+const appleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2013/07/apple-mac-vector-logo.png"}
 
 export default class LoginSCreen extends React.Component {
   constructor() {
@@ -73,14 +81,11 @@ export default class LoginSCreen extends React.Component {
   };
   render() {
     return (
+      <ImageBackground source={image} style={styles.image}>
       <View
-        style={{
-          flex: 1,
-          borderWidth: 1,
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
+        style={styles.Container}
       >
+        <Ionicons style={styles.User} name="ios-contact" size={100} md="md-contact"/>
         {this.state.isLoading ? (
           <View
             styles={[
@@ -96,30 +101,105 @@ export default class LoginSCreen extends React.Component {
             <ActivityIndicator size="large" color={colors.logoColor}/>
           </View>
         ) : null}
-        <View>
+        
           <TextInput
-            styles={styles.TextInput}
-            placeholder="abc@gmail.com"
+            style={styles.TextInputEmail}
+            placeholder="Email"
             placeholderTextColor="black"
             keyboardType="email-address"
             onChangeText={(email) => this.setState({ email })}
           />
           <TextInput
-            styles={styles.TextInput}
-            placeholder="enter password"
+            style={styles.TextInputPassword}
+            placeholder="Password"
             placeholderTextColor="black"
             secureTextEntry
             onChangeText={(password) => this.setState({ password })}
           />
-          <Button style={{}} onPress={this.onSignUp} title="Signup" />
+          <TouchableOpacity style={styles.Button} onPress={this.onSignUp} title="Signup" ><Text style={styles.SignInBtnText}>Sign Up</Text></TouchableOpacity>
+          <Text style={styles.authIconsText}>Sign up with</Text>
+        <View
+          style={styles.authIcons}
+        >
+         <Image source={googleLogo} style={styles.icons}></Image>
+         <Image source={facebookLogo} style={styles.icons}></Image>
+         <Image source={appleLogo} style={styles.icons}></Image>
         </View>
+        <Text style={styles.SignUpText}>Already have an account? </Text>
+        <Text style={styles.SignUpLink}
+          onPress={() => this.props.navigation.navigate("WelcomeScreen")}
+          title="Sign In"
+        >Sign In</Text>
       </View>
+      </ImageBackground>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  Container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  },
+  User: {
+    marginBottom: 50
+  },
+  TextInputEmail: {
+    height: 40,
+    width: 300,
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  TextInputPassword: {
+    height: 40,
+    width: 300,
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginBottom: 100,
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  Button: {
+    height: 50,
+    width: 200,
+    borderRadius: 30,
+    marginBottom: 5,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center'
+
+  },
+  SignInBtnText: {
+    color: 'white'
+  },
+  SignUpText: {
+    color: 'black'
+  },
+  SignUpLink: {
+    color: 'blue',
+  },
+  authIconsText: {
+    marginBottom: 5
+  },
+  authIcons: {
+    marginBottom: 50,
+    flexDirection: 'row', 
+    justifyContent: 'flex-end'
+  },
+  icons: {
+    height: 25,
+    width: 25,
+    margin: 2
+    
+  }
+  
 });
