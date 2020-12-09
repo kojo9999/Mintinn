@@ -20,7 +20,7 @@ class App extends React.Component{
         this.initializeFirebase();
     }
     initializeFirebase = () => {
-        firebase.initializeApp(firebaseConfig);
+        !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : null  
     };
     render(){
     return <AppContainer/>;
