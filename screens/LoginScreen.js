@@ -81,7 +81,7 @@ export default class LoginSCreen extends React.Component {
   };
   render() {
     return (
-      <ImageBackground source={image} style={styles.image}>
+      <ImageBackground source={require("../images/authBackground.png")} style={styles.image}>
       <View
         style={styles.Container}
       >
@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     resizeMode: "cover",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "#FFBC78"
   },
   User: {
     marginBottom: 50
