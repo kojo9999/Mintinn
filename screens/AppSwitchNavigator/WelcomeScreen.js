@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import firebase from "firebase/app";
 import "firebase/auth";
 
-const image = { uri: "https://media.istockphoto.com/photos/yellow-defocused-light-background-for-christmas-picture-id621116812?k=6&m=621116812&s=170667a&w=0&h=2ZIiSOS9ctAsXGxwlAM-LPRkIoGBUFqaCnNlaVUfL14=" };
+const image = { uri: "https://imgur.com/yUgNMP8" };
 const googleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2015/09/google-favicon-vector-400x400.png"}
 const facebookLogo = { uri: "https://pngimg.com/uploads/facebook_logos/facebook_logos_PNG19752.png"}
 const appleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2013/07/apple-mac-vector-logo.png"}
@@ -56,7 +56,7 @@ export default class WelcomeScreen extends React.Component {
   };
   render() {
     return (
-      <ImageBackground source={image} style={styles.image}>
+      <ImageBackground source={require("../../images/authBackground.png")} style={styles.image}>
       <View style={styles.Container }>
         
         
@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     resizeMode: "cover",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "#FFBC78"
   },
   User: {
     marginBottom: 50
