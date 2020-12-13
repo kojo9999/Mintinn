@@ -2,16 +2,23 @@ import React from "react";
 import {
   Text,
   View,
+  Image,
   TextInput,
   StyleSheet,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from "react-native";
 import colors from "../../assets/colors";
 import { Ionicons } from "@expo/vector-icons";
 import firebase from "firebase/app";
 import "firebase/auth";
 
+const image = { uri: "https://media.istockphoto.com/photos/yellow-defocused-light-background-for-christmas-picture-id621116812?k=6&m=621116812&s=170667a&w=0&h=2ZIiSOS9ctAsXGxwlAM-LPRkIoGBUFqaCnNlaVUfL14=" };
+const googleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2015/09/google-favicon-vector-400x400.png"}
+const facebookLogo = { uri: "https://pngimg.com/uploads/facebook_logos/facebook_logos_PNG19752.png"}
+const appleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2013/07/apple-mac-vector-logo.png"}
+ 
 export default class WelcomeScreen extends React.Component {
   constructor() {
     super();
@@ -49,16 +56,11 @@ export default class WelcomeScreen extends React.Component {
   };
   render() {
     return (
+      <ImageBackground source={image} style={styles.image}>
       <View style={styles.Container }>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-         
-        </View>
+        
+        
+        
         <Ionicons style={styles.User} name="ios-contact" size={100} md="md-contact"/>
         {this.state.isLoading ? (
           <View
@@ -82,6 +84,7 @@ export default class WelcomeScreen extends React.Component {
           keyboardType="email-address"
           onChangeText={(email) => this.setState({ email })}
         />
+
         <TextInput
           style={styles.TextInputPassword}
           placeholder="Password"
@@ -90,12 +93,22 @@ export default class WelcomeScreen extends React.Component {
           onChangeText={(password) => this.setState({ password })}
         />
         <TouchableOpacity style={styles.Button} onPress={this.onSignIn}><Text style={styles.SignInBtnText}>Sign In</Text></TouchableOpacity>
+        <Text style={styles.authIconsText}>Sign in with</Text>
+        <View
+          style={styles.authIcons}
+        >
+         <Image source={googleLogo} style={styles.icons}></Image>
+         <Image source={facebookLogo} style={styles.icons}></Image>
+         <Image source={appleLogo} style={styles.icons}></Image>
+        </View>
         <Text style={styles.SignUpText}>Don't have an accont? </Text>
         <Text style={styles.SignUpLink}
           onPress={() => this.props.navigation.navigate("LoginScreen")}
           title="Sign Up"
         >Sign Up</Text>
+        
       </View>
+      </ImageBackground>
     );
   }
 }
@@ -106,8 +119,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  },
   User: {
-    marginBottom: 70
+    marginBottom: 50
   },
   TextInputEmail: {
     height: 40,
@@ -123,7 +141,7 @@ const styles = StyleSheet.create({
     width: 300,
     borderBottomColor: 'black',
     borderBottomWidth: 1,
-    marginBottom: 130,
+    marginBottom: 100,
     marginLeft: 30,
     marginRight: 30,
   },
@@ -131,7 +149,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 200,
     borderRadius: 30,
-    marginBottom: 50,
+    marginBottom: 5,
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center'
@@ -145,7 +163,20 @@ const styles = StyleSheet.create({
   },
   SignUpLink: {
     color: 'blue',
-    marginBottom: 50
+  },
+  authIconsText: {
+    marginBottom: 5
+  },
+  authIcons: {
+    marginBottom: 50,
+    flexDirection: 'row', 
+    justifyContent: 'flex-end'
+  },
+  icons: {
+    height: 25,
+    width: 25,
+    margin: 2
+    
   }
   
 });
