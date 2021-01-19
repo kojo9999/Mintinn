@@ -7,12 +7,18 @@ import {
   StyleSheet,
   ActivityIndicator,
   ImageBackground,
-} from "react-native";
+  SnapshotViewIOS,
+
+} 
+from "react-native";
 import firebase from "firebase/app";
 import "firebase/auth";
 import colors from "../assets/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import "firebase/firestore";
+import {db} from '../config/config'
+const profileCollection = db().collection('profile');
 
 const image = { uri: "https://media.istockphoto.com/photos/yellow-defocused-light-background-for-christmas-picture-id621116812?k=6&m=621116812&s=170667a&w=0&h=2ZIiSOS9ctAsXGxwlAM-LPRkIoGBUFqaCnNlaVUfL14=" };
 const googleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2015/09/google-favicon-vector-400x400.png"}
@@ -23,11 +29,14 @@ export default class LoginSCreen extends React.Component {
   constructor() {
     super();
     this.state = {
+      username: "",
+      userId: "",
       email: "",
       password: "",
       isLoading: false,
     };
   }
+  
   onSignIn = async () => {
     if (this.state.email && this.state.password) {
       this.setState({ isLoading: true });
@@ -66,8 +75,11 @@ export default class LoginSCreen extends React.Component {
           );
         if (responce) {
           this.setState({ isLoading: false });
-
           this.onSignIn(this.state.email, this.state.password);
+            profileCollection.add({
+            username: this.state.username,
+            userId: this.HandleGetUserId()
+            });
         }
       } catch (error) {
         this.setState({ isLoading: false });
@@ -79,6 +91,12 @@ export default class LoginSCreen extends React.Component {
       alert("please enter an email and password");
     }
   };
+
+  HandleGetUserId=()=>{
+    let userId = firebase.auth().currentUser.uid;
+    return userId;
+    }
+
   render() {
     return (
       <ImageBackground source={require("../images/authBackground.png")} style={styles.image}>
@@ -101,7 +119,13 @@ export default class LoginSCreen extends React.Component {
             <ActivityIndicator size="large" color={colors.logoColor}/>
           </View>
         ) : null}
-        
+            
+          <TextInput
+            style={styles.TextInputUsername}
+            placeholder="Username"
+            placeholderTextColor="black"
+            onChangeText={(username) => this.setState({ username })}
+          />
           <TextInput
             style={styles.TextInputEmail}
             placeholder="Email"
@@ -150,6 +174,15 @@ const styles = StyleSheet.create({
   },
   User: {
     marginBottom: 50
+  },
+  TextInputUsername: {
+    height: 40,
+    width: 300,
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
   },
   TextInputEmail: {
     height: 40,

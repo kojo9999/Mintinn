@@ -17,11 +17,11 @@ import {Ionicons, MaterialCommunityIcons, FontAwesome} from '@expo/vector-icons'
 class App extends React.Component{
     constructor(){
         super();
-        this.initializeFirebase();
-    }
-    initializeFirebase = () => {
-        !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : null  
-    };
+    //     this.initializeFirebase();
+     }
+    // initializeFirebase = () => {
+    //     !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : null  
+    // };
     render(){
     return <AppContainer/>;
 }
