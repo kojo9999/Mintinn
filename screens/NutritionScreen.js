@@ -6,8 +6,7 @@ constructor() {
     super();
     this.state = {
     result: 0,
-    Amounts: ["none","small","medium","large"]
-    
+    Amounts: ["none","small","medium","large"]  
     }
 }
 
