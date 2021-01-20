@@ -107,10 +107,10 @@ export default class LoginSCreen extends React.Component {
     }
   };
 
-  HandleGetUserId=()=>{
+    HandleGetUserId=()=>{
     let userId = firebase.auth().currentUser.uid;
     return userId;
-    }
+    };
 
   render() {
     return (
