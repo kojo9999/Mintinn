@@ -79,10 +79,22 @@ export default class LoginSCreen extends React.Component {
             profileCollection.doc(this.HandleGetUserId()).set({
             username: this.state.username,
             });
-            profileCollection.doc(this.HandleGetUserId()).collection('water').add({});
-            profileCollection.doc(this.HandleGetUserId()).collection('sleep').add({});
-            profileCollection.doc(this.HandleGetUserId()).collection('food').add({});
-            profileCollection.doc(this.HandleGetUserId()).collection('feelings').add({});
+            profileCollection.doc(this.HandleGetUserId()).collection('water').add({
+            createdat: "",
+            waterstatus: ""
+            });
+            profileCollection.doc(this.HandleGetUserId()).collection('sleep').add({
+            createdat: "",
+            sleepstatus: ""
+            });
+            profileCollection.doc(this.HandleGetUserId()).collection('food').add({
+            createdat: "",
+            foodstatus: ""
+            });
+            profileCollection.doc(this.HandleGetUserId()).collection('feelings').add({
+            createdat: "",
+            feelingstatus: ""
+            });
         }
       } catch (error) {
         this.setState({ isLoading: false });
