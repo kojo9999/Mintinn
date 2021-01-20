@@ -7,7 +7,7 @@ import LoginScreen from './screens/LoginScreen'
 import LoadingScreen from './screens/LoadingScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import CalendarScreen from './screens/CalendarScreen'
-import NutritionScreen from './screens/NutritionScreen'
+import WaterScreen from './screens/WaterScreen'
 import SleepScreen from './screens/SleepScreen'
 import firebase from 'firebase/app'
 import {firebaseConfig} from './config/config'
@@ -17,11 +17,11 @@ import {Ionicons, MaterialCommunityIcons, FontAwesome} from '@expo/vector-icons'
 class App extends React.Component{
     constructor(){
         super();
-        this.initializeFirebase();
-    }
-    initializeFirebase = () => {
-        firebase.initializeApp(firebaseConfig);
-    };
+    //     this.initializeFirebase();
+     }
+    // initializeFirebase = () => {
+    //     !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : null  
+    // };
     render(){
     return <AppContainer/>;
 }
@@ -42,10 +42,10 @@ const AppDrawerNavigator = createDrawerNavigator({
             drawerIcon:() => <FontAwesome name="calendar-check-o" size={24} />
         }
     },
-    NutritionScreen:{
-        screen: NutritionScreen,
+    WaterScreen:{
+        screen: WaterScreen,
         navigationOptions: {
-            title:'Nutrition',
+            title:'Water',
             drawerIcon:() => <MaterialCommunityIcons name="food-apple" size={24} />
         }
     },
