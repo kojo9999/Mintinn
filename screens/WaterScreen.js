@@ -17,8 +17,9 @@ constructor() {
     super();
     this.state = {
     Amounts: ["none","Small Amount","Medium Amount","Large Amount"],
+    watertype: "",
     createdat : "",
-    userId: "",
+    userId: ""
     }
 } 
 
@@ -28,11 +29,30 @@ HandleGetUserId=()=>{
   }
 
 addWaterStatus = async (index,number) => {
-waterCollection.doc(this.HandleGetUserId()).collection('water').add({
-  createdat: new Date(),
-  waterstatus: index,
-  wateramount: number
-});
+// waterCollection.doc(this.HandleGetUserId()).collection('water').add({
+//   createdat: new Date(),
+//   waterstatus: index,
+//   watertype: number
+// })
+// .then(function(docRef) {
+//     console.log("Document written with ID: ", docRef.id);
+// })
+// .catch(function(error) {
+//     console.error("Error adding document: ", error);
+// });
+const today = new Date();
+waterCollection.doc(this.HandleGetUserId()).collection('water')
+.where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
+.where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
+.get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
 };
 
 render() {
@@ -40,8 +60,9 @@ render() {
     <View style={styles.container}>
     <Text style={styles.Question}>How much water have you drank today?</Text>
         {this.state.Amounts.map((number,index) => {
-            return(<TouchableOpacity style={styles.button} key={index} onPress={() => this.addWaterStatus(index,number)}><Text style={styles.Text}>{number}</Text></TouchableOpacity>)
+            return(<TouchableOpacity style={styles.button} key={index} onPress={() => this.addWaterStatus()}><Text style={styles.Text}>{number}</Text></TouchableOpacity>)
         })}
+        <Text style={styles.Question}>Amout of water ive drank is : {this.state.watertype} </Text>
     </View>
     );
 }
