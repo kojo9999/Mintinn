@@ -20,13 +20,44 @@ constructor() {
     watertype: "",
     createdat : "",
     userId: ""
+    
     }
 } 
 
   HandleGetUserId=()=>{
-  let userId = firebase.auth().currentUser.uid;
-  return userId;
+    let userId = firebase.auth().currentUser.uid;
+    return userId;
   }
+
+  TimeOfDay=()=>{
+    const today = new Date();
+    let time = "";
+    if(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 5,0,0) >= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11,59,59))
+    {
+      time = "Morning";
+      return time;
+    }
+    else if(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12,0,0) >= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14,29,59))
+    {
+      time = "Noon";
+      return time; 
+    }
+    else if(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14,30,0) >= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 16,59,59))
+    {
+      time = "Afternoon";
+      return time; 
+    }
+    else if(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 17,0,0) <= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 19,59,59))
+    {
+      time = "Evening";
+      return time; 
+    }
+    else
+    {
+      time = "Night";
+      return time; 
+    }
+}
 
   CheckTodaysWater = async (index, number) => {
   const today = new Date();
@@ -86,6 +117,7 @@ constructor() {
 render() {
     return (
     <View style={styles.container}>
+    <Text style={styles.time}>{this.TimeOfDay()}</Text>
     <Text style={styles.Question}>How much water have you drank today?</Text>
         {this.state.Amounts.map((number,index) => {
             return(<TouchableOpacity style={styles.button} key={index} onPress={() => this.CheckTodaysWater(index, number)}><Text style={styles.Text}>{number}</Text></TouchableOpacity>)
@@ -116,5 +148,8 @@ const styles = StyleSheet.create({
   },
   Question:{
     color:'black'
+  },
+  time:{
+    fontSize: 20
   },
 });
