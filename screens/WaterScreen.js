@@ -28,67 +28,67 @@ constructor() {
   return userId;
   }
 
-CheckTodaysWater = async () => {
+  CheckTodaysWater = async (index, number) => {
   const today = new Date();
+  let addwater = (check) => this.addWaterStatus(index, number, check)
   waterCollection.doc(this.HandleGetUserId()).collection('water')
   .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
   .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
   .get().then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-              console.log(doc.id, " => ", doc.data());
-          });
+    console.log(querySnapshot.size)
+          if(querySnapshot.size == 0)
+          {
+            addwater(false);
+          }
+          else
+          {
+            addwater(true);
+          }
       })
-      .catch(function(error) {
-          console.log("Error getting documents: ", error);
-      });
   };
 
-  addWaterStatus = async (index, number) => {
+  addWaterStatus = async (index, number, check) => {
     const newDocumentBody = {
       updatedat: new Date(),
       waterstatus: index,
-      watertype: number
-    }
+      watertype: number,
+    };
     let user = this.HandleGetUserId();
     let batch = firebase.firestore().batch()
     const today = new Date();
+    console.log(check)
+    if(check)
+    {
     waterCollection.doc(user).collection('water')
     .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
     .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
     .get().then(function(querySnapshot) {
       querySnapshot.docs.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
-          const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
-          batch.update(docRef, newDocumentBody)
+        console.log(doc.id, " => ", doc.data());
+        const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
+        batch.update(docRef, newDocumentBody)
       })
-          batch.commit().then(() => {
-          console.log('water')
+        batch.commit().then(() => {
+        console.log('water document was found')
       })
-  })
+    })
+  }
+  else
+  {
+    waterCollection.doc(user).collection('water').add({
+      createdat: new Date(),
+      waterstatus: index,
+      watertype: number,
+    })
+  }
 }
-//   addWaterStatus = async (index,number) => {
-//     const today = new Date();
-//     waterCollection.doc(this.HandleGetUserId()).collection('water')
-//     .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
-//     .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59)).update({
-//       updatedat: new Date(),
-//       waterstatus: index,
-//       watertype: number
-//     })
-//     .then(function(docRef) {
-//         console.log("Document written with ID: ", docRef.id);
-//     })
-//     .catch(function(error) {
-//         console.error("Error adding document: ", error);
-//     });
-// };
 
 render() {
     return (
     <View style={styles.container}>
     <Text style={styles.Question}>How much water have you drank today?</Text>
         {this.state.Amounts.map((number,index) => {
-            return(<TouchableOpacity style={styles.button} key={index} onPress={() => this.addWaterStatus(index, number)}><Text style={styles.Text}>{number}</Text></TouchableOpacity>)
+            return(<TouchableOpacity style={styles.button} key={index} onPress={() => this.CheckTodaysWater(index, number)}><Text style={styles.Text}>{number}</Text></TouchableOpacity>)
         })}
         {/* <Text style={styles.Question}>Amout of water ive drank is : {this.state.watertype} </Text> */}
     </View>
