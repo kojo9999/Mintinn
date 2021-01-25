@@ -30,8 +30,22 @@ constructor() {
 
   TimeOfDay=()=>{
     const today = new Date();
-    let time = "Night";
-    return time;
+    let time = "";
+    if(new Date(today.getFullYear(), today.getMonth(), today.getDate(),today.getHours(), today.getMinutes(), today.getSeconds()) <= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11,59,59))
+    {
+      time = "Morning"
+      return time;
+    }
+    else if (new Date(today.getFullYear(), today.getMonth(), today.getDate(),today.getHours(), today.getMinutes(), today.getSeconds()) <= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18,0,0))
+    {
+      time = "Mid-day"
+      return time;
+    }
+    else
+    {
+      time = "Night"
+      return time;
+    }
 }
 
   CheckTodaysWater = async (index, number) => {
