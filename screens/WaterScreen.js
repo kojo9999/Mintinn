@@ -20,7 +20,6 @@ constructor() {
     watertype: "",
     createdat : "",
     userId: ""
-    
     }
 } 
 
@@ -104,7 +103,7 @@ constructor() {
   }
   else if(check == true && time == "Mid-day")
     {
-      waterCollection.doc(this.HandleGetUserId()).collection('water')
+      waterCollection.doc(user).collection('water')
       .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
       .where("timeofday", "==", "Mid-day")
@@ -140,7 +139,7 @@ constructor() {
   }
   else
     {
-      waterCollection.doc(this.HandleGetUserId()).collection('water')
+      waterCollection.doc(user).collection('water')
       .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
       .where("timeofday", "==", "Night")
