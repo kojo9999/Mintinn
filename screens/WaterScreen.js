@@ -31,32 +31,8 @@ constructor() {
 
   TimeOfDay=()=>{
     const today = new Date();
-    let time = "";
-    if(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 5,0,0) >= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11,59,59))
-    {
-      time = "Morning";
-      return time;
-    }
-    else if(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12,0,0) >= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14,29,59))
-    {
-      time = "Noon";
-      return time; 
-    }
-    else if(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14,30,0) >= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 16,59,59))
-    {
-      time = "Afternoon";
-      return time; 
-    }
-    else if(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 17,0,0) <= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 19,59,59))
-    {
-      time = "Evening";
-      return time; 
-    }
-    else
-    {
-      time = "Night";
-      return time; 
-    }
+    let time = "Night";
+    return time;
 }
 
   CheckTodaysWater = async (index, number) => {
@@ -84,33 +60,119 @@ constructor() {
       waterstatus: index,
       watertype: number,
     };
+    let time = this.TimeOfDay();
     let user = this.HandleGetUserId();
     let batch = firebase.firestore().batch()
     const today = new Date();
     console.log(check)
-    if(check)
+    if(check == true && time == "Morning")
     {
-    waterCollection.doc(user).collection('water')
-    .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
-    .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
-    .get().then(function(querySnapshot) {
-      querySnapshot.docs.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
-        batch.update(docRef, newDocumentBody)
+      waterCollection.doc(user).collection('water')
+      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
+      .where("timeofday", "==", "Morning")
+      .get().then(function(querySnapshot) {
+        console.log(querySnapshot.size)
+              if(querySnapshot.size == 0)
+              {
+                waterCollection.doc(user).collection('water').add({
+                  createdat: new Date(),
+                  waterstatus: index,
+                  watertype: number,
+                  timeofday: time,
+                })
+              }
+              else
+              {
+                waterCollection.doc(user).collection('water')
+                .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
+                .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
+                .where("timeofday", "==", "Morning")
+                .get().then(function(querySnapshot) {
+                  querySnapshot.docs.forEach((doc) => {
+                    console.log(doc.id, " => ", doc.data());
+                    const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
+                    batch.update(docRef, newDocumentBody)
+                  })
+                    batch.commit().then(() => {
+                    console.log('Morning water document was found and has been updated')
+                  })
+                })
+              }
+          })
+    
+  }
+  else if(check == true && time == "Mid-day")
+    {
+      waterCollection.doc(this.HandleGetUserId()).collection('water')
+      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
+      .where("timeofday", "==", "Mid-day")
+      .get().then(function(querySnapshot) {
+        console.log(querySnapshot.size)
+          if(querySnapshot.size == 0)
+          {
+            waterCollection.doc(user).collection('water').add({
+              createdat: new Date(),
+              waterstatus: index,
+              watertype: number,
+              timeofday: time,
+            })
+          }
+          else
+          {
+            waterCollection.doc(user).collection('water')
+            .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
+            .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
+            .where("timeofday", "==", "Mid-day")
+            .get().then(function(querySnapshot) {
+              querySnapshot.docs.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
+                batch.update(docRef, newDocumentBody)
+              })
+                batch.commit().then(() => {
+                console.log('Mid-day water document was found and has been updated')
+              })
+            })
+          }
       })
-        batch.commit().then(() => {
-        console.log('water document was found')
-      })
-    })
   }
   else
-  {
-    waterCollection.doc(user).collection('water').add({
-      createdat: new Date(),
-      waterstatus: index,
-      watertype: number,
-    })
+    {
+      waterCollection.doc(this.HandleGetUserId()).collection('water')
+      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
+      .where("timeofday", "==", "Night")
+      .get().then(function(querySnapshot) {
+        console.log(querySnapshot.size)
+          if(querySnapshot.size == 0)
+          {
+            waterCollection.doc(user).collection('water').add({
+              createdat: new Date(),
+              waterstatus: index,
+              watertype: number,
+              timeofday: time,
+            })
+          }
+          else
+          {
+            waterCollection.doc(user).collection('water')
+            .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
+            .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
+            .where("timeofday", "==", "Night")
+            .get().then(function(querySnapshot) {
+              querySnapshot.docs.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
+                batch.update(docRef, newDocumentBody)
+              })
+                batch.commit().then(() => {
+                console.log('Night water document was found and has been updated')
+              })
+            })
+          }
+      })
   }
 }
 
