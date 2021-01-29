@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation'
 import WelcomeScreen from './screens/AppSwitchNavigator/WelcomeScreen'
+import DiaryScreen from './screens/DiaryScreen'
 import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/LoginScreen'
 import LoadingScreen from './screens/LoadingScreen'
@@ -35,6 +36,13 @@ const AppDrawerNavigator = createDrawerNavigator({
             title:'Home',
             drawerIcon:() => <Ionicons name="ios-home" size={24} />
         }
+    },
+    DiaryScreen:{
+        screen: DiaryScreen,
+        navigationOptions: {
+            title: 'Diary',
+            drawerIcon:() => <FontAwesome name="book" size={24} />
+        }  
     },
     CalendarScreen:{
         screen: CalendarScreen,
