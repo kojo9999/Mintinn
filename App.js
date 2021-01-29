@@ -8,6 +8,7 @@ import LoadingScreen from './screens/LoadingScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import CalendarScreen from './screens/CalendarScreen'
 import NutritionScreen from './screens/NutritionScreen'
+import WaterScreen from './screens/WaterScreen'
 import SleepScreen from './screens/SleepScreen'
 import firebase from 'firebase/app'
 import {firebaseConfig} from './config/config'
@@ -17,11 +18,11 @@ import {Ionicons, MaterialCommunityIcons, FontAwesome} from '@expo/vector-icons'
 class App extends React.Component{
     constructor(){
         super();
-        //this.initializeFirebase();
-    }
-    //initializeFirebase = () => {
-        //!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : null  
-    //};
+    //     this.initializeFirebase();
+     }
+    // initializeFirebase = () => {
+    //     !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : null  
+    // };
     render(){
     return <AppContainer/>;
 }
@@ -45,8 +46,15 @@ const AppDrawerNavigator = createDrawerNavigator({
     NutritionScreen:{
         screen: NutritionScreen,
         navigationOptions: {
-            title:'Nutrition',
+            title:'Food',
             drawerIcon:() => <MaterialCommunityIcons name="food-apple" size={24} />
+        }
+    },
+    WaterScreen:{
+        screen: WaterScreen,
+        navigationOptions: {
+            title:'Water',
+            drawerIcon:() => <MaterialCommunityIcons name="water" size={24} />
         }
     },
     SleepScreen:{
