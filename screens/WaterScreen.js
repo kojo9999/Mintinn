@@ -48,9 +48,9 @@ constructor() {
     }
 }
 
-  CheckTodaysWater = async (index, number) => {
+  CheckTodaysWater = async (InputValue) => {
   const today = new Date();
-  let addwater = (check) => this.addWaterStatus(index, number, check)
+  let addwater = (check) => this.addWaterStatus(InputValue ,check)
   waterCollection.doc(this.HandleGetUserId()).collection('water')
   .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
   .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
@@ -67,11 +67,10 @@ constructor() {
       })
   };
 
-  addWaterStatus = async (index, number, check) => {
+  addWaterStatus = async (InputValue, check) => {
     const newDocumentBody = {
       updatedat: new Date(),
-      waterstatus: index,
-      watertype: number,
+      waterstatus: InputValue,
     };
     let time = this.TimeOfDay();
     let user = this.HandleGetUserId();
@@ -90,8 +89,7 @@ constructor() {
               {
                 waterCollection.doc(user).collection('water').add({
                   createdat: new Date(),
-                  waterstatus: index,
-                  watertype: number,
+                  waterstatus: InputValue,
                   timeofday: time,
                 })
               }
@@ -127,8 +125,7 @@ constructor() {
           {
             waterCollection.doc(user).collection('water').add({
               createdat: new Date(),
-              waterstatus: index,
-              watertype: number,
+              waterstatus: InputValue,
               timeofday: time,
             })
           }
@@ -163,8 +160,7 @@ constructor() {
           {
             waterCollection.doc(user).collection('water').add({
               createdat: new Date(),
-              waterstatus: index,
-              watertype: number,
+              waterstatus: InputValue,
               timeofday: time,
             })
           }
@@ -194,8 +190,8 @@ render() {
     <View style={styles.container}>
     <Text style={styles.time}>{this.TimeOfDay()}</Text>
     <Text style={styles.Question}>How much water have you drank today?</Text>
-        {this.state.Amounts.map((number,index) => {
-            return(<TouchableOpacity style={styles.button} key={index} onPress={() => this.CheckTodaysWater(index, number)}><Text style={styles.Text}>{number}</Text></TouchableOpacity>)
+        {this.state.Amounts.map((Amount, InputValue) => {
+            return(<TouchableOpacity style={styles.button} key={InputValue} onPress={() => this.CheckTodaysWater(InputValue)}></TouchableOpacity>)
         })}
         {/* <Text style={styles.Question}>Amout of water ive drank is : {this.state.watertype} </Text> */}
     </View>
