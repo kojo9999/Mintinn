@@ -3,9 +3,11 @@ import {
   Text,
   View,
   StyleSheet,
+  Image
 } 
 from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Slider from "@react-native-community/slider";
 import "firebase/auth";
 import "firebase/firestore";
 import firebase from "firebase/app";
@@ -19,7 +21,8 @@ constructor() {
     Amounts: ["none","Small Amount","Medium Amount","Large Amount"],
     watertype: "",
     createdat : "",
-    userId: ""
+    userId: "",
+    sliderValue: 1,
     }
 } 
 
@@ -34,17 +37,17 @@ constructor() {
     if(new Date(today.getFullYear(), today.getMonth(), today.getDate(),today.getHours(), today.getMinutes(), today.getSeconds()) <= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11,59,59))
     {
       time = "Morning"
-      return time;
+      return time.toLowerCase();
     }
     else if (new Date(today.getFullYear(), today.getMonth(), today.getDate(),today.getHours(), today.getMinutes(), today.getSeconds()) <= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18,0,0))
     {
-      time = "Mid-day"
-      return time;
+      time = "Afternoon"
+      return time.toLowerCase();
     }
     else
     {
-      time = "Night"
-      return time;
+      time = "Evening"
+      return time.toLowerCase();
     }
 }
 
@@ -185,15 +188,22 @@ constructor() {
   }
 }
 
+
+handleSliderChange = (sliderValue) => {
+   this.setState({sliderValue})
+}
+
 render() {
     return (
     <View style={styles.container}>
-    <Text style={styles.time}>{this.TimeOfDay()}</Text>
-    <Text style={styles.Question}>How much water have you drank today?</Text>
-        {this.state.Amounts.map((Amount, InputValue) => {
-            return(<TouchableOpacity style={styles.button} key={InputValue} onPress={() => this.CheckTodaysWater(InputValue)}></TouchableOpacity>)
-        })}
-        {/* <Text style={styles.Question}>Amout of water ive drank is : {this.state.watertype} </Text> */}
+    <Text style={styles.Question}>{`How much water have you drank this ${this.TimeOfDay()} ?`}</Text>
+    <View style={styles.waterImages}>
+    {[...Array(this.state.sliderValue - 1)].map((e, i) => <Image source={require("../images/water.png")} style={styles.waterImage} key={i}></Image>)}
+    </View>
+    
+      {/* <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater(InputValue)}></TouchableOpacity>    */}
+      <Slider style={styles.slider} value={this.state.sliderValue} maximumValue={4} minimumValue={1} step={1} onValueChange={this.handleSliderChange}/>
+      <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableOpacity>
     </View>
     );
 }
@@ -201,7 +211,7 @@ render() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -209,8 +219,7 @@ const styles = StyleSheet.create({
     height:50,
     width:200,
     borderRadius:30,
-    marginBottom:10,
-    backgroundColor:'blue',
+    backgroundColor:'black',
     justifyContent:'center',
     alignItems:'center'
   },
@@ -220,7 +229,24 @@ const styles = StyleSheet.create({
   Question:{
     color:'black'
   },
-  time:{
-    fontSize: 20
+  slider: {
+    marginBottom: 80,
+    minWidth: 300
   },
+  submit: {
+    color: "white"
+  },
+  waterImage: {
+    width: 80,
+    height: 80
+  },
+  waterImages: {
+    minHeight:80,
+    marginBottom: 40,
+    marginTop: 40,
+    flexDirection: "row",
+    
+  }
+
+
 });

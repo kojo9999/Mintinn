@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import * as Progress from "react-native-progress";
+// import * as Progress from "react-native-progress";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import "firebase/auth";
 import "firebase/firestore";
