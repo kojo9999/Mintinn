@@ -80,12 +80,12 @@ constructor() {
     let batch = firebase.firestore().batch()
     const today = new Date();
     console.log(check)
-    if(check == true && time == "Morning")
+    if(check == true && time == "morning")
     {
       waterCollection.doc(user).collection('water')
       .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
-      .where("timeofday", "==", "Morning")
+      .where("timeofday", "==", "morning")
       .get().then(function(querySnapshot) {
         console.log(querySnapshot.size)
               if(querySnapshot.size == 0)
@@ -101,7 +101,7 @@ constructor() {
                 waterCollection.doc(user).collection('water')
                 .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
                 .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
-                .where("timeofday", "==", "Morning")
+                .where("timeofday", "==", "morning")
                 .get().then(function(querySnapshot) {
                   querySnapshot.docs.forEach((doc) => {
                     console.log(doc.id, " => ", doc.data());
@@ -116,12 +116,12 @@ constructor() {
           })
     
   }
-  else if(check == true && time == "Mid-day")
+  else if(check == true && time == "afternoon")
     {
       waterCollection.doc(user).collection('water')
       .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
-      .where("timeofday", "==", "Mid-day")
+      .where("timeofday", "==", "afternoon")
       .get().then(function(querySnapshot) {
         console.log(querySnapshot.size)
           if(querySnapshot.size == 0)
@@ -137,7 +137,7 @@ constructor() {
             waterCollection.doc(user).collection('water')
             .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
             .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
-            .where("timeofday", "==", "Mid-day")
+            .where("timeofday", "==", "afternoon")
             .get().then(function(querySnapshot) {
               querySnapshot.docs.forEach((doc) => {
                 console.log(doc.id, " => ", doc.data());
@@ -145,7 +145,7 @@ constructor() {
                 batch.update(docRef, newDocumentBody)
               })
                 batch.commit().then(() => {
-                console.log('Mid-day water document was found and has been updated')
+                console.log('Afternoon water document was found and has been updated')
               })
             })
           }
@@ -156,7 +156,7 @@ constructor() {
       waterCollection.doc(user).collection('water')
       .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
-      .where("timeofday", "==", "Night")
+      .where("timeofday", "==", "evening")
       .get().then(function(querySnapshot) {
         console.log(querySnapshot.size)
           if(querySnapshot.size == 0)
@@ -172,7 +172,7 @@ constructor() {
             waterCollection.doc(user).collection('water')
             .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0))
             .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59))
-            .where("timeofday", "==", "Night")
+            .where("timeofday", "==", "evening")
             .get().then(function(querySnapshot) {
               querySnapshot.docs.forEach((doc) => {
                 console.log(doc.id, " => ", doc.data());
@@ -180,7 +180,7 @@ constructor() {
                 batch.update(docRef, newDocumentBody)
               })
                 batch.commit().then(() => {
-                console.log('Night water document was found and has been updated')
+                console.log('Evening water document was found and has been updated')
               })
             })
           }
