@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
-// import * as Progress from "react-native-progress";
+import * as Progress from "react-native-progress";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import "firebase/auth";
 import "firebase/firestore";
@@ -17,15 +17,22 @@ export default class CalendarScreen extends React.Component {
 
     getWaterProgress = async () => {
         const today = new Date();
-        waterCollection.doc(this.HandleGetUserId()).collection('water')
+        let diaryData = [];
+        let userId = this.HandleGetUserId();
+        waterCollection.doc(userId).collection('water')
             .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
             .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-            .get().then(function (querySnapshot) {
-                querySnapshot.docs.forEach((doc) => {
-                    console.log(doc.id, " => ", doc.data(waterstatus));
-
+            .get().then((snapshot) => {
+                snapshot.docs.forEach((doc) => {
+                    const newWaterData={
+                        createdat: doc.data().createdat,
+                        waterstatus: doc.data().waterstatus,
+                    }
+                    diaryData.push(newWaterData);
                 })
-        })
+                console.log("check for returned value",diaryData);
+                return diaryData;
+            })
     }
 
 
@@ -35,6 +42,8 @@ export default class CalendarScreen extends React.Component {
     };
 
     render() {
+        let data = this.getWaterProgress();
+        console.log("returned data =", data)
         return (
             <View style={StyleSheet.container}>
                 <Text>Water Progress</Text>
