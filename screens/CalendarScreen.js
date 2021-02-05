@@ -12,7 +12,6 @@ export default class CalendarScreen extends React.Component {
     constructor() {
         super();
         this.state = {
-            
         }
     }
 
