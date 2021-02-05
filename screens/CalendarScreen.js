@@ -50,7 +50,6 @@ export default class CalendarScreen extends React.Component {
                 <Text>Water Progress</Text>
                 <Progress.Bar progress={0.17} width={200} />
                 <TouchableOpacity style={styles.button} onPress={() => this.getWaterProgress()}><Text style={styles.Text}>Test</Text></TouchableOpacity>
-                {/* <Text>{data}</Text> */}
             </View>
         );
     }
