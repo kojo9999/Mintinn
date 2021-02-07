@@ -5,6 +5,7 @@ import WelcomeScreen from './screens/AppSwitchNavigator/WelcomeScreen'
 import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/LoginScreen'
 import LoadingScreen from './screens/LoadingScreen'
+import InfoScreen from './screens/InfoScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import CalendarScreen from './screens/CalendarScreen'
 import NutritionScreen from './screens/NutritionScreen'
@@ -62,6 +63,13 @@ const AppDrawerNavigator = createDrawerNavigator({
         navigationOptions: {
             title:'Sleep',
             drawerIcon:() => <MaterialCommunityIcons name="sleep" size={24} />
+        }
+    },
+    InfoScreen:{
+        screen: InfoScreen,
+        navigationOptions: {
+            title:'Info',
+            drawerIcon:() => <MaterialCommunityIcons name="food-apple" size={24} />
         }
     },
     SettingsScreen: {
