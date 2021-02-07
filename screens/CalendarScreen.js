@@ -20,6 +20,7 @@ export default class CalendarScreen extends React.Component {
     getWaterProgress = async () => {
         const today = new Date();
         let userId = this.HandleGetUserId();
+        var waterData = this.state.water;
         waterCollection.doc(userId).collection('water')
             .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
             .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
@@ -29,8 +30,9 @@ export default class CalendarScreen extends React.Component {
                         createdat: doc.data().createdat,
                         waterstatus: doc.data().waterstatus,
                     }
-                    this.state.water.push(newWaterData); 
+                    waterData.push(newWaterData); 
                 })
+                this.setState({water: waterData});
                 console.log("check for returned Water value",this.state.water);
             })
         }
@@ -38,6 +40,7 @@ export default class CalendarScreen extends React.Component {
         getFoodProgress = async () => {
             const today = new Date();
             let userId = this.HandleGetUserId();
+            var foodData = this.state.food;
             waterCollection.doc(userId).collection('food')
                 .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
                 .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
@@ -45,10 +48,11 @@ export default class CalendarScreen extends React.Component {
                     snapshot.docs.forEach((doc) => {
                         const newFoodData={
                             createdat: doc.data().createdat,
-                            foodstatus: doc.data().foodstatus,
+                            foodamount: doc.data().foodamount,
                         }
-                        this.state.food.push(newFoodData); 
+                        foodData.push(newFoodData);
                     })
+                    this.setState({food: foodData})
                     console.log("check for returned Food value",this.state.food);
                 })
             }
@@ -56,6 +60,7 @@ export default class CalendarScreen extends React.Component {
             getSleepProgress = async () => {
                 const today = new Date();
                 let userId = this.HandleGetUserId();
+                var sleepData = this.state.sleep;
                 waterCollection.doc(userId).collection('sleep')
                     .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
                     .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
@@ -63,10 +68,11 @@ export default class CalendarScreen extends React.Component {
                         snapshot.docs.forEach((doc) => {
                             const newSleepData={
                                 createdat: doc.data().createdat,
-                                sleepstatus: doc.data().sleepstatus,
+                                sleepamount: doc.data().sleepamount,
                             }
-                            this.state.sleep.push(newSleepData); 
+                            sleepData.push(doc.data());
                         })
+                        this.setState({sleep: sleepData});
                         console.log("check for returned Sleep value",this.state.sleep);
                     })
                 }
@@ -80,6 +86,7 @@ export default class CalendarScreen extends React.Component {
         this.getWaterProgress()
         this.getSleepProgress()
         this.getFoodProgress()
+        console.log("Check Sleep State after call:", this.state.sleep)
     }
 
     render() {
@@ -88,8 +95,17 @@ export default class CalendarScreen extends React.Component {
                 <Text>Water Progress</Text>
                 <Progress.Bar progress={0.17} width={200} />
                 {/* <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater()}><Text style={styles.Text}>Test</Text></TouchableOpacity> */}
-                {this.state.water.map((data,index) => {
-            return(<Text style={styles.Text} key={index}>{data}</Text>)
+                <Text>Sleep Array Data</Text>
+            {this.state.sleep.map((data, index) => {
+                return(<Text style={styles.text} key={index}>{data.sleepamount}</Text>)
+            })}
+            <Text>Water Array Data</Text>
+            {this.state.water.map((data, index) => {
+                return(<Text style={styles.text} key={index}>{data.waterstatus}</Text>)
+            })}
+            <Text>Food Array Data</Text>
+            {this.state.food.map((data, index) => {
+                return(<Text style={styles.text} key={index}>{data.foodamount}</Text>)
             })}
             </View>
         );
