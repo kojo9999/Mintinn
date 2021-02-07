@@ -12,13 +12,14 @@ export default class CalendarScreen extends React.Component {
         super();
         this.state = {
             water: [],
-            sleep: [],
-            food: []
+            food: [],
+            sleep: []
         }
     }
 
     getWaterProgress = async () => {
         const today = new Date();
+        let waterdata = [];
         let userId = this.HandleGetUserId();
         waterCollection.doc(userId).collection('water')
             .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
@@ -29,47 +30,51 @@ export default class CalendarScreen extends React.Component {
                         createdat: doc.data().createdat,
                         waterstatus: doc.data().waterstatus,
                     }
-                    this.state.water.push(newWaterData); 
+                    waterdata.push(newWaterData);
+                    console.log('returned water value',waterdata) 
                 })
-                console.log("check for returned Water value",this.state.water);
+                this.setState({water: waterdata})
+                    console.log('returned water value',this.state.water) 
             })
         }
 
-        getFoodProgress = async () => {
-            const today = new Date();
-            let userId = this.HandleGetUserId();
-            waterCollection.doc(userId).collection('food')
-                .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-                .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-                .get().then((snapshot) => {
-                    snapshot.docs.forEach((doc) => {
-                        const newFoodData={
-                            createdat: doc.data().createdat,
-                            foodstatus: doc.data().foodstatus,
-                        }
-                        this.state.food.push(newFoodData); 
-                    })
-                    console.log("check for returned Food value",this.state.food);
-                })
-            }
+        // getFoodProgress = async () => {
+        //     const today = new Date();
+        //     let userId = this.HandleGetUserId();
+        //     waterCollection.doc(userId).collection('food')
+        //         .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
+        //         .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+        //         .get().then((snapshot) => {
+        //             snapshot.docs.forEach((doc) => {
+        //                 const newFoodData={
+        //                     createdat: doc.data().createdat,
+        //                     foodstatus: doc.data().foodstatus,
+        //                 }
+        //                 this.setState({food: this.state.food.push(newFoodData)}) 
+        //                 console.log('returned newFoodData data', newFoodData) 
+        //                 console.log('returned food value',this.state.food)
+        //             })
+        //         })
+        //     }
 
-            getSleepProgress = async () => {
-                const today = new Date();
-                let userId = this.HandleGetUserId();
-                waterCollection.doc(userId).collection('sleep')
-                    .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-                    .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-                    .get().then((snapshot) => {
-                        snapshot.docs.forEach((doc) => {
-                            const newSleepData={
-                                createdat: doc.data().createdat,
-                                sleepstatus: doc.data().sleepstatus,
-                            }
-                            this.state.sleep.push(newSleepData); 
-                        })
-                        console.log("check for returned Sleep value",this.state.sleep);
-                    })
-                }
+        //     getSleepProgress = async () => {
+        //         const today = new Date();
+        //         let userId = this.HandleGetUserId();
+        //         waterCollection.doc(userId).collection('sleep')
+        //             .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
+        //             .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+        //             .get().then((snapshot) => {
+        //                 snapshot.docs.forEach((doc) => {
+        //                     const newSleepData={
+        //                         createdat: doc.data().createdat,
+        //                         sleepstatus: doc.data().sleepstatus,
+        //                     }
+        //                     this.setState({sleep: this.state.sleep.push(newSleepData)})
+        //                     console.log('returned newSleepData data', newSleepData)
+        //                     console.log('returned sleep value', this.state.sleep)
+        //                 })
+        //             })
+        //         }    
 
     HandleGetUserId = () => {
         let userId = firebase .auth().currentUser.uid;
@@ -77,9 +82,10 @@ export default class CalendarScreen extends React.Component {
     };
 
     componentDidMount() {
-        this.getWaterProgress()
-        this.getSleepProgress()
-        this.getFoodProgress()
+    this.getWaterProgress()
+    
+    // this.getFoodProgress()
+    // this.getSleepProgress()
     }
 
     render() {
@@ -88,9 +94,9 @@ export default class CalendarScreen extends React.Component {
                 <Text>Water Progress</Text>
                 <Progress.Bar progress={0.17} width={200} />
                 {/* <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater()}><Text style={styles.Text}>Test</Text></TouchableOpacity> */}
-                {this.state.water.map((data,index) => {
+                {/* {this.state.water.map((data,index) => {
             return(<Text style={styles.Text} key={index}>{data}</Text>)
-            })}
+            })} */}
             </View>
         );
     }
@@ -104,5 +110,5 @@ const styles = StyleSheet.create({
     },
     Text:{
         color:'black'
-      },
+    },
 });
