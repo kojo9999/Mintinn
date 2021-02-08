@@ -26,58 +26,66 @@ export default class SleepScreen extends React.Component {
     let today = new Date();
     let batch = firebase.firestore().batch();
     let userId = this.HandleGetUserId();
-    sleepCollection
-      .doc(userId)
-      .collection("sleep")
-      .where(
-        "createdat",
-        ">",
-        new Date(
-          today.getFullYear(),
-          today.getMonth(),
-          today.getDate(),
-          0,
-          0,
-          0
+    if (this.state.sleep == 0) {
+      Alert.alert("Alert", "Sleep must must be between 1 - 24 hours ");
+      return;
+    } else if (this.state.sleep >= 24) {
+      Alert.alert("Alert", "Sleep must must be between 1 - 24 hours ");
+      return;
+    } else {
+      sleepCollection
+        .doc(userId)
+        .collection("sleep")
+        .where(
+          "createdat",
+          ">",
+          new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            0,
+            0,
+            0
+          )
         )
-      )
-      .where(
-        "createdat",
-        "<",
-        new Date(
-          today.getFullYear(),
-          today.getMonth(),
-          today.getDate(),
-          23,
-          59,
-          59
+        .where(
+          "createdat",
+          "<",
+          new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            23,
+            59,
+            59
+          )
         )
-      )
-      .get()
-      .then((snapshot) => {
-        console.log("Sleep Doc instances retrieved:", snapshot.size);
-        if (snapshot.size == 0) {
-          sleepCollection.doc(userId).collection("sleep").add({
-            createdat: new Date(),
-            sleepamount: this.state.sleep,
-          });
-        } else if (snapshot.size == 1) {
-          snapshot.docs.forEach((doc) => {
-            const newSleepDoc = {
+        .get()
+        .then((snapshot) => {
+          console.log("Sleep Doc instances retrieved:", snapshot.size);
+          if (snapshot.size == 0) {
+            sleepCollection.doc(userId).collection("sleep").add({
               createdat: new Date(),
               sleepamount: this.state.sleep,
-            };
-            const docRef = sleepCollection
-              .doc(userId)
-              .collection("sleep")
-              .doc(doc.id);
-            batch.update(docRef, newSleepDoc);
-            batch.commit().then(() => {
-              console.log("Sleep document was found and has been updated");
             });
-          });
-        }
-      });
+          } else if (snapshot.size == 1) {
+            snapshot.docs.forEach((doc) => {
+              const newSleepDoc = {
+                createdat: new Date(),
+                sleepamount: this.state.sleep,
+              };
+              const docRef = sleepCollection
+                .doc(userId)
+                .collection("sleep")
+                .doc(doc.id);
+              batch.update(docRef, newSleepDoc);
+              batch.commit().then(() => {
+                console.log("Sleep document was found and has been updated");
+              });
+            });
+          }
+        });
+    }
   };
   render() {
     let input = "";
@@ -88,11 +96,15 @@ export default class SleepScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Image style={styles.sleepIcon} source={require("../images/sleeping.png")} ></Image>
+        <Image
+          style={styles.sleepIcon}
+          source={require("../images/sleeping.png")}
+        ></Image>
         <Text>How long have you slept?</Text>
         <TextInput
           style={styles.input}
           placeholder="Number of hours"
+          keyboardType="numeric"
           onChangeText={(sleepInput) => this.setState({ sleep: sleepInput })}
         />
         <TouchableOpacity
@@ -133,8 +145,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
   sleepIcon: {
-     width: 80,
-     height:80,
-     marginBottom: 20
-  }
+    width: 80,
+    height: 80,
+    marginBottom: 20,
+  },
 });
