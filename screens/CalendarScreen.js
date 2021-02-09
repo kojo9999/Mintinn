@@ -18,52 +18,43 @@ export default class CalendarScreen extends React.Component {
     constructor() {
         super();
         this.state = {
-            water: [],
-            food: [],
+            foodData: [],
+            foodDate: [],
+            waterData: [],
+            waterDate: [],
             sleep: []
         }
     }
 
+    getFoodProgress = async () => {
+      const today = new Date();
+      let userId = this.HandleGetUserId();
+      waterCollection.doc(userId).collection('food')
+          .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
+          .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+            .get().then((snapshot) => {
+              snapshot.docs.forEach((doc) => {
+                this.state.foodData.push(doc.data().foodamount);
+                this.state.foodDate.push(doc.data().createdat);
+                console.log(doc.data().foodamount)
+              })
+          })
+      }
+
     getWaterProgress = async () => {
         const today = new Date();
-        let waterdata = [];
         let userId = this.HandleGetUserId();
-        var waterData = this.state.water;
         waterCollection.doc(userId).collection('water')
             .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
             .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
             .get().then((snapshot) => {
-                snapshot.docs.forEach((doc) => {
-                    const newWaterData={
-                        createdat: doc.data().createdat,
-                        waterstatus: doc.data().waterstatus,
-                    }
-                    waterData.push(newWaterData); 
-                })
-                this.setState({water: waterData});
-                console.log("check for returned Water value",this.state.water);
+              snapshot.docs.forEach((doc) => {
+                this.state.waterData.push(doc.data().waterstatus);
+                this.state.waterDate.push(doc.data().createdat);
+                console.log(doc.data().waterstatus)
+              })
             })
         }
-
-        getFoodProgress = async () => {
-            const today = new Date();
-            let userId = this.HandleGetUserId();
-            var foodData = this.state.food;
-            waterCollection.doc(userId).collection('food')
-                .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-                .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-                .get().then((snapshot) => {
-                    snapshot.docs.forEach((doc) => {
-                        const newFoodData={
-                            createdat: doc.data().createdat,
-                            foodamount: doc.data().foodamount,
-                        }
-                        foodData.push(newFoodData);
-                    })
-                    this.setState({food: foodData})
-                    console.log("check for returned Food value",this.state.food);
-                })
-            }
 
             getSleepProgress = async () => {
                 const today = new Date();
@@ -81,7 +72,7 @@ export default class CalendarScreen extends React.Component {
                             sleepData.push(newSleepData);
                         })
                         this.setState({sleep: sleepData});
-                        console.log("check for returned Sleep value",this.state.sleep);
+                        // console.log("check for returned Sleep value",this.state.sleep);
                     })
                 }
 
@@ -90,18 +81,15 @@ export default class CalendarScreen extends React.Component {
         return userId;
     };
 
-    componentDidMount() {
-        this.getWaterProgress()
-        this.getSleepProgress()
-        this.getFoodProgress()
-        console.log("Check Sleep State after call:", this.state.sleep)
+    async componentDidMount () {
+        await  this.getWaterProgress()
+        await  this.getFoodProgress()
+        await  this.getSleepProgress()
+        console.log("water here boi =>",this.state.waterData)
+        console.log("food here boi =>",this.state.foodData)
     }
-
     render() {
-        const dataSleep = [1, 2, 5, 4, 3, 2, 5, 1, 3 ,2];
-        const dataFood = [5, 4, 3, 9, 8, 3, 5];
-        const dataWater = [5, 9, 3, 6, 8, 3, 5];
-
+        const dataSleep = [1];
         return (
           <View style={styles.viewWrapper}>
             <View style={styles.statsContainer}>
@@ -120,7 +108,7 @@ export default class CalendarScreen extends React.Component {
             <Text style={styles.chartTitle}>Food</Text>
               <AreaChart
                 style={styles.areaChart}
-                data={dataFood}
+                data={this.state.foodData}
                 contentInset={{ top: 20, bottom: 20 }}
                 curve={shape.curveNatural}
                 svg={{ fill: "rgba(64, 247, 147, 0.8)" }}
@@ -132,7 +120,7 @@ export default class CalendarScreen extends React.Component {
             <Text style={styles.chartTitle}>Water</Text>
               <AreaChart
                 style={styles.areaChart}
-                data={dataWater}
+                data={this.state.waterData}
                 contentInset={{ top: 20, bottom: 20 }}
                 curve={shape.curveNatural}
                 svg={{ fill: "rgba(64, 146, 247, 0.8)" }}
