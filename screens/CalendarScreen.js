@@ -5,6 +5,13 @@ import "firebase/auth";
 import "firebase/firestore";
 import firebase from "firebase/app";
 import { db } from '../config/config'
+import {
+    YAxis,
+    XAxis,
+    Grid,
+    AreaChart,
+  } from "react-native-svg-charts";
+import * as shape from "d3-shape";
 const waterCollection = db().collection('profile');
 
 export default class CalendarScreen extends React.Component {
@@ -91,35 +98,72 @@ export default class CalendarScreen extends React.Component {
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                <Text>Water Progress</Text>
-                <Progress.Bar progress={0.17} width={200} />
-                {/* <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater()}><Text style={styles.Text}>Test</Text></TouchableOpacity> */}
-                <Text>Sleep Array Data</Text>
-            {this.state.sleep.map((data, index) => {
-                return(<Text style={styles.text} key={index}>{data.sleepamount}</Text>)
-            })}
-            <Text>Water Array Data</Text>
-            {this.state.water.map((data, index) => {
-                return(<Text style={styles.text} key={index}>{data.waterstatus}</Text>)
-            })}
-            <Text>Food Array Data</Text>
-            {this.state.food.map((data, index) => {
-                return(<Text style={styles.text} key={index}>{data.foodamount}</Text>)
-            })}
-            </View>
-        );
-    }
-}
+        const dataSleep = [1, 2, 5, 4, 3, 2, 5, 1, 3 ,2];
+        const dataFood = [5, 4, 3, 9, 8, 3, 5];
+        const dataWater = [5, 9, 3, 6, 8, 3, 5];
 
-const styles = StyleSheet.create({
-    container: {
+        return (
+          <View style={styles.viewWrapper}>
+            <View style={styles.statsContainer}>
+               <Text style={styles.chartTitle}>Sleep</Text>
+              <AreaChart
+                style={styles.areaChart}
+                data={dataSleep}
+                contentInset={{ top: 20, bottom: 20 }}
+                curve={shape.curveNatural}
+                svg={{ fill: "rgba(169, 64, 245, 0.8)" }}
+              >
+               
+              </AreaChart>
+            </View>
+            <View style={styles.statsContainer}>
+            <Text style={styles.chartTitle}>Food</Text>
+              <AreaChart
+                style={styles.areaChart}
+                data={dataFood}
+                contentInset={{ top: 20, bottom: 20 }}
+                curve={shape.curveNatural}
+                svg={{ fill: "rgba(64, 247, 147, 0.8)" }}
+              >
+               
+              </AreaChart>
+            </View>
+            <View style={styles.statsContainer}>
+            <Text style={styles.chartTitle}>Water</Text>
+              <AreaChart
+                style={styles.areaChart}
+                data={dataWater}
+                contentInset={{ top: 20, bottom: 20 }}
+                curve={shape.curveNatural}
+                svg={{ fill: "rgba(64, 146, 247, 0.8)" }}
+              >
+                
+              </AreaChart>
+            </View>
+          </View>
+        );
+      }
+    }
+    
+    const styles = StyleSheet.create({
+      viewWrapper: {
+        height: "100%",
+        margin: 20,
+      },
+      statsContainer: {
+        height: 150,
+        marginBottom: 20
+      },
+      areaChart: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    Text:{
-        color:'black'
-    },
-});
+        height: 150,
+        borderColor: "rgba(196, 196, 196, 0.8)",
+        borderRadius: 10,
+        overflow: "hidden",
+        borderWidth: 1,
+        
+      },
+      chartTitle: {
+          marginBottom: 10
+      }
+    });
