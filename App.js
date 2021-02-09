@@ -11,6 +11,7 @@ import CalendarScreen from './screens/CalendarScreen'
 import NutritionScreen from './screens/NutritionScreen'
 import WaterScreen from './screens/WaterScreen'
 import SleepScreen from './screens/SleepScreen'
+import QuestionScreen from './screens/QuestionScreen'
 import firebase from 'firebase/app'
 import {firebaseConfig} from './config/config'
 import {createDrawerNavigator} from 'react-navigation-drawer'
@@ -69,6 +70,13 @@ const AppDrawerNavigator = createDrawerNavigator({
         screen: InfoScreen,
         navigationOptions: {
             title:'Info',
+            drawerIcon:() => <MaterialCommunityIcons name="food-apple" size={24} />
+        }
+    },
+    QuestionScreen:{
+        screen: QuestionScreen,
+        navigationOptions: {
+            title:'Questions',
             drawerIcon:() => <MaterialCommunityIcons name="food-apple" size={24} />
         }
     },
