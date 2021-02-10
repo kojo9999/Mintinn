@@ -18,7 +18,7 @@ export default class WaterScreen extends React.Component {
 constructor() {
     super();
     this.state = {
-    Amounts: ["none","Small Amount","Medium Amount","Large Amount"],
+    amount: ["none","Small Amount","Medium Amount","Large Amount"],
     watertype: "",
     createdat : "",
     userId: "",
@@ -196,12 +196,18 @@ handleSliderChange = (sliderValue) => {
 render() {
     return (
     <View style={styles.container}>
-    <Text style={styles.Question}>{`How much water have you drank this ${this.TimeOfDay()} ?`}</Text>
+    <Text style={styles.Question}>{`What amount of water have you drank this ${this.TimeOfDay()}?`}</Text>
     <View style={styles.waterImages}>
-    {[...Array(this.state.sliderValue - 1)].map((e, i) => <Image source={require("../images/water.png")} style={styles.waterImage} key={i}></Image>)}
+    <View style={styles.arrayImages}>{[...Array(this.state.sliderValue -1)].map((e, i) => <Image source={require("../images/waterfull.png")} style={styles.waterImage} key={i}></Image>)}</View>
+    {this.state.sliderValue == 1? <Image source={require("../images/waterempty.png")} style={styles.waterImage}></Image> : null}
+   
     </View>
-    
-      {/* <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater(InputValue)}></TouchableOpacity>    */}
+    <View style={styles.imageLabel}>
+    {this.state.sliderValue == 1? <View><Text>None</Text></View>: null}
+    {this.state.sliderValue == 2? <View><Text>Small</Text></View>: null}
+    {this.state.sliderValue == 3? <View><Text>Medium</Text></View>: null}
+    {this.state.sliderValue == 4? <View><Text>Large</Text></View>: null}
+    </View>
       <Slider style={styles.slider} value={this.state.sliderValue} maximumValue={4} minimumValue={1} step={1} onValueChange={this.handleSliderChange}/>
       <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableOpacity>
     </View>
@@ -237,6 +243,7 @@ const styles = StyleSheet.create({
     color: "white"
   },
   waterImage: {
+    
     width: 80,
     height: 80
   },
@@ -244,8 +251,16 @@ const styles = StyleSheet.create({
     minHeight:80,
     marginBottom: 40,
     marginTop: 40,
-    flexDirection: "row",
+    flexDirection: "column",
+    justifyContent: "center"
     
+  },
+  arrayImages:{
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  imageLabel: {
+    marginBottom: 20
   }
 
 
