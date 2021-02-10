@@ -10,6 +10,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Slider from "@react-native-community/slider";
 import "firebase/auth";
 import "firebase/firestore";
+import Collapsible from 'react-native-collapsible'
+import {Ionicons} from '@expo/vector-icons'
 import firebase from "firebase/app";
 import {db} from '../config/config'
 const waterCollection = db().collection('profile');
@@ -25,6 +27,11 @@ constructor() {
     sliderValue: 1,
     }
 } 
+
+toggleExpanded = () => {
+  this.setState({ collapsed: !this.state.collapsed });
+};
+
 
   HandleGetUserId=()=>{
     let userId = firebase.auth().currentUser.uid;
@@ -195,7 +202,26 @@ handleSliderChange = (sliderValue) => {
 
 render() {
     return (
+  
     <View style={styles.container}>
+      <View style={styles.infoContainer}>
+       <TouchableOpacity onPress={this.toggleExpanded}>
+            <View style={styles.header}>
+            <Ionicons name="ios-information-circle" size={28} color="black"/>
+          
+            </View>
+            
+          </TouchableOpacity>
+          <Collapsible collapsed={this.state.collapsed} align="center">
+            <View style={styles.content}>
+              <Text>Regularly drinking water:</Text>
+              <Text>Helps working Joints and Muscles</Text>
+              <Text>Helps cleanse your body</Text>
+              <Text>Keeps your body cool</Text>
+              <Text>Keeps skin healthy</Text>
+            </View>
+          </Collapsible>
+          </View>
     <Text style={styles.Question}>{`What amount of water have you drank this ${this.TimeOfDay()}?`}</Text>
     <View style={styles.waterImages}>
     <View style={styles.arrayImages}>{[...Array(this.state.sliderValue -1)].map((e, i) => <Image source={require("../images/waterfull.png")} style={styles.waterImage} key={i}></Image>)}</View>
@@ -261,6 +287,17 @@ const styles = StyleSheet.create({
   },
   imageLabel: {
     marginBottom: 20
+  },
+  content: {
+    maxHeight: 200
+  },
+  infoContainer: {
+    marginTop: -80,
+    marginBottom: 30,
+    height: 200,
+    alignItems: "center",
+    justifyContent: "center",
+
   }
 
 
