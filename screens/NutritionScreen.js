@@ -177,7 +177,7 @@ export default class FoodScreen extends React.Component {
           <Text style={styles.submit}>Submit</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.skip} onPress={() => this.addFood(0)}>
-          <Text>I haven't eaten yet</Text>
+          <Text style={styles.notEatenLink}>I haven't eaten yet</Text>
         </TouchableOpacity>
       </View>
     );
@@ -226,5 +226,11 @@ const styles = StyleSheet.create({
   },
   skip: {
     marginTop: 20,
+  },
+  notEatenLink: {
+    color: "rgb(0, 41, 130)",
+    padding: 7,
+    borderColor: "rgb(156, 156, 156)",
+    borderWidth: 1
   },
 });
