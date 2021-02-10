@@ -10,6 +10,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Slider from "@react-native-community/slider";
 import "firebase/auth";
 import "firebase/firestore";
+import Collapsible from 'react-native-collapsible'
+import {Ionicons} from '@expo/vector-icons'
 import firebase from "firebase/app";
 import {db} from '../config/config'
 const waterCollection = db().collection('profile');
@@ -18,13 +20,18 @@ export default class WaterScreen extends React.Component {
 constructor() {
     super();
     this.state = {
-    Amounts: ["none","Small Amount","Medium Amount","Large Amount"],
+    amount: ["none","Small Amount","Medium Amount","Large Amount"],
     watertype: "",
     createdat : "",
     userId: "",
     sliderValue: 1,
     }
 } 
+
+toggleExpanded = () => {
+  this.setState({ collapsed: !this.state.collapsed });
+};
+
 
   HandleGetUserId=()=>{
     let userId = firebase.auth().currentUser.uid;
@@ -195,13 +202,38 @@ handleSliderChange = (sliderValue) => {
 
 render() {
     return (
+  
     <View style={styles.container}>
-    <Text style={styles.Question}>{`How much water have you drank this ${this.TimeOfDay()} ?`}</Text>
+      <View style={styles.infoContainer}>
+       <TouchableOpacity onPress={this.toggleExpanded}>
+            <View style={styles.header}>
+            <Ionicons name="ios-information-circle" size={28} color="black"/>
+          
+            </View>
+            
+          </TouchableOpacity>
+          <Collapsible collapsed={this.state.collapsed} align="center">
+            <View style={styles.content}>
+              <Text>Regularly drinking water:</Text>
+              <Text>Helps working Joints and Muscles</Text>
+              <Text>Helps cleanse your body</Text>
+              <Text>Keeps your body cool</Text>
+              <Text>Keeps skin healthy</Text>
+            </View>
+          </Collapsible>
+          </View>
+    <Text style={styles.Question}>{`What amount of water have you drank this ${this.TimeOfDay()}?`}</Text>
     <View style={styles.waterImages}>
-    {[...Array(this.state.sliderValue - 1)].map((e, i) => <Image source={require("../images/water.png")} style={styles.waterImage} key={i}></Image>)}
+    <View style={styles.arrayImages}>{[...Array(this.state.sliderValue -1)].map((e, i) => <Image source={require("../images/waterfull.png")} style={styles.waterImage} key={i}></Image>)}</View>
+    {this.state.sliderValue == 1? <Image source={require("../images/waterempty.png")} style={styles.waterImage}></Image> : null}
+   
     </View>
-    
-      {/* <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater(InputValue)}></TouchableOpacity>    */}
+    <View style={styles.imageLabel}>
+    {this.state.sliderValue == 1? <View><Text>None</Text></View>: null}
+    {this.state.sliderValue == 2? <View><Text>Small</Text></View>: null}
+    {this.state.sliderValue == 3? <View><Text>Medium</Text></View>: null}
+    {this.state.sliderValue == 4? <View><Text>Large</Text></View>: null}
+    </View>
       <Slider style={styles.slider} value={this.state.sliderValue} maximumValue={4} minimumValue={1} step={1} onValueChange={this.handleSliderChange}/>
       <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableOpacity>
     </View>
@@ -237,6 +269,7 @@ const styles = StyleSheet.create({
     color: "white"
   },
   waterImage: {
+    
     width: 80,
     height: 80
   },
@@ -244,8 +277,27 @@ const styles = StyleSheet.create({
     minHeight:80,
     marginBottom: 40,
     marginTop: 40,
-    flexDirection: "row",
+    flexDirection: "column",
+    justifyContent: "center"
     
+  },
+  arrayImages:{
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  imageLabel: {
+    marginBottom: 20
+  },
+  content: {
+    maxHeight: 200
+  },
+  infoContainer: {
+    marginTop: -80,
+    marginBottom: 30,
+    height: 200,
+    alignItems: "center",
+    justifyContent: "center",
+
   }
 
 
