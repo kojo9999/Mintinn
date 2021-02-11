@@ -5,6 +5,8 @@ import * as firebase from "firebase";
 import { Alert } from "react-native";
 import { db } from "../config/config";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Collapsible from 'react-native-collapsible'
+import {Ionicons} from '@expo/vector-icons'
 const sleepCollection = db().collection("profile");
 
 export default class SleepScreen extends React.Component {
@@ -17,10 +19,16 @@ export default class SleepScreen extends React.Component {
     };
   }
 
+  
+  toggleExpanded = () => {
+    this.setState({ collapsed: !this.state.collapsed });
+  };
+
   HandleGetUserId = () => {
     let userId = firebase.auth().currentUser.uid;
     return userId;
   };
+
 
   saveSleep = () => {
     let today = new Date();
@@ -88,14 +96,26 @@ export default class SleepScreen extends React.Component {
     }
   };
   render() {
-    let input = "";
-    const saveSleepInput = (sleepInput) => {
-      const input = sleepInput;
-      return input;
-    };
 
     return (
       <View style={styles.container}>
+         <View style={styles.infoContainer}>
+       <TouchableOpacity onPress={this.toggleExpanded}>
+            <View style={styles.header}>
+            <Ionicons name="ios-information-circle" size={28} color="black"/>
+            </View>
+            
+          </TouchableOpacity>
+          <Collapsible collapsed={this.state.collapsed} align="center">
+            <View style={styles.content}>
+              <Text>Regularly drinking water:</Text>
+              <Text>Helps working Joints and Muscles</Text>
+              <Text>Helps cleanse your body</Text>
+              <Text>Keeps your body cool</Text>
+              <Text>Keeps skin healthy</Text>
+            </View>
+          </Collapsible>
+          </View>
         <Image
           style={styles.sleepIcon}
           source={require("../images/sleeping.png")}
@@ -149,4 +169,15 @@ const styles = StyleSheet.create({
     height: 80,
     marginBottom: 20,
   },
+  content: {
+    maxHeight: 200
+  },
+  infoContainer: {
+    marginTop: -80,
+    marginBottom: 30,
+    height: 200,
+    alignItems: "center",
+    justifyContent: "center",
+
+  }
 });
