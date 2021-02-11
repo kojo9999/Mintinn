@@ -6,18 +6,24 @@ import "firebase/firestore";
 import firebase from "firebase/app";
 import { db } from "../config/config";
 import Slider from "@react-native-community/slider";
+import Collapsible from 'react-native-collapsible';
+import {Ionicons} from '@expo/vector-icons';
 const foodCollection = db().collection("profile");
 
 export default class FoodScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      Amounts: ["Nothing", "Unhealthy", "Healthy"],
       createdat: "",
       userId: "",
       sliderValue: 1,
     };
   }
+
+  toggleExpanded = () => {
+    this.setState({ collapsed: !this.state.collapsed });
+  };
+  
 
   HandleGetUserId = () => {
     let userId = firebase.auth().currentUser.uid;
@@ -139,6 +145,21 @@ export default class FoodScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+          <View style={styles.infoContainer}>
+       <TouchableOpacity onPress={this.toggleExpanded}>
+            <View style={styles.header}>
+            <Ionicons name="ios-information-circle" size={28} color="black"/>
+          
+            </View>
+            
+          </TouchableOpacity>
+          <Collapsible collapsed={this.state.collapsed} align="center">
+            <View style={styles.content}>
+              <Text>Food Info</Text>
+              
+            </View>
+          </Collapsible>
+          </View>
         <Text
           style={styles.Question}
         >{`How have you eaten ${this.TimeOfDay()}?`}</Text>
@@ -149,7 +170,7 @@ export default class FoodScreen extends React.Component {
                 source={require("../images/diet.png")}
                 style={styles.foodImage}
               ></Image>
-              <Text style={styles.imageText}>Healthy</Text>
+           
             </View>
           ) : null}
           {this.state.sliderValue == 2 ? (
@@ -158,9 +179,13 @@ export default class FoodScreen extends React.Component {
                 source={require("../images/burger.png")}
                 style={styles.foodImage}
               ></Image>
-              <Text style={styles.imageText}>Unhealthy</Text>
+          
             </View>
           ) : null}
+        </View>
+        <View style={styles.imageLabel}>
+        {this.state.sliderValue == 1? <View><Text>Healthy</Text></View>: null}
+        {this.state.sliderValue == 2? <View><Text>Unhealthy</Text></View>: null}
         </View>
         <Slider
           style={styles.slider}
@@ -177,7 +202,7 @@ export default class FoodScreen extends React.Component {
           <Text style={styles.submit}>Submit</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.skip} onPress={() => this.addFood(0)}>
-          <Text>I haven't eaten yet</Text>
+          <Text style={styles.notEatenLink}>I haven't eaten yet</Text>
         </TouchableOpacity>
       </View>
     );
@@ -227,4 +252,23 @@ const styles = StyleSheet.create({
   skip: {
     marginTop: 20,
   },
+  notEatenLink: {
+    color: "rgb(0, 41, 130)",
+    padding: 1,
+    borderBottomColor: "rgb(156, 156, 156)",
+    borderBottomWidth: 1
+  },
+  content: {
+    maxHeight: 200
+  },
+  infoContainer: {
+    marginTop: -80,
+    marginBottom: 30,
+    height: 200,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  imageLabel: {
+    marginBottom: 20
+  }
 });
