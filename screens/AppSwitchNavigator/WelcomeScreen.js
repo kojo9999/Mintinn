@@ -60,8 +60,7 @@ export default class WelcomeScreen extends React.Component {
       <View style={styles.Container }>
         
         
-        
-        <Ionicons style={styles.User} name="ios-contact" size={100} md="md-contact"/>
+        <View style={styles.userContainer}><Image source={require("../../images/logo.png")} style={styles.user}></Image></View>
         {this.state.isLoading ? (
           <View
             styles={[
@@ -125,8 +124,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#FFBC78"
   },
-  User: {
-    marginBottom: 50
+  user: {
+    height: 80,
+    width: 80,
+  },
+  userContainer: {
+    backgroundColor: "black",
+    borderRadius: 100,
+    marginBottom:60,
+    padding: 5
   },
   TextInputEmail: {
     height: 40,
