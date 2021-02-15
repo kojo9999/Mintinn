@@ -111,6 +111,11 @@ export default class FoodScreen extends React.Component {
           59
         )
       )
+      .where(
+        "timeOfDay",
+        "==",
+        time
+      )
       .get()
       .then((snapshot) => {
         if (snapshot.size == 0) {
