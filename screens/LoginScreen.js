@@ -20,7 +20,6 @@ import "firebase/firestore";
 import {db} from '../config/config'
 const profileCollection = db().collection('profile');
 
-const image = { uri: "https://media.istockphoto.com/photos/yellow-defocused-light-background-for-christmas-picture-id621116812?k=6&m=621116812&s=170667a&w=0&h=2ZIiSOS9ctAsXGxwlAM-LPRkIoGBUFqaCnNlaVUfL14=" };
 const googleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2015/09/google-favicon-vector-400x400.png"}
 const facebookLogo = { uri: "https://pngimg.com/uploads/facebook_logos/facebook_logos_PNG19752.png"}
 const appleLogo = { uri: "https://seeklogo.net/wp-content/uploads/2013/07/apple-mac-vector-logo.png"}
@@ -118,7 +117,7 @@ export default class LoginSCreen extends React.Component {
       <View
         style={styles.Container}
       >
-        <Ionicons style={styles.User} name="ios-contact" size={100} md="md-contact"/>
+        <View style={styles.userContainer}><Image source={require("../../images/logo.png")} style={styles.user}></Image></View>
         {this.state.isLoading ? (
           <View
             styles={[
@@ -187,8 +186,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#FFBC78"
   },
-  User: {
-    marginBottom: 50
+  user: {
+    height: 80,
+    width: 80,
+  },
+  userContainer: {
+    backgroundColor: "black",
+    borderRadius: 100,
+    marginBottom:60,
+    padding: 5
   },
   TextInputUsername: {
     height: 40,
