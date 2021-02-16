@@ -117,7 +117,7 @@ export default class LoginSCreen extends React.Component {
       <View
         style={styles.Container}
       >
-        <View style={styles.userContainer}><Image source={require("../../images/logo.png")} style={styles.user}></Image></View>
+        <View style={styles.userContainer}><Image source={require("../images/logo.png")} style={styles.user}></Image></View>
         {this.state.isLoading ? (
           <View
             styles={[
