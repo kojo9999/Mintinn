@@ -18,7 +18,7 @@ constructor() {
     waterData: [],
     weeklywaterData: [],
     waterDate: [],
-    sleep: []
+    sleep: [],
   }
 }
 
@@ -119,12 +119,13 @@ async componentDidMount () {
     return (
       <View style={styles.graphContainer}>
         <View style={styles.filters}>
-          <TouchableOpacity style={styles.filterButton}><Text>1 Week</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.outterLeftFilterButton}><Text>1 Week</Text></TouchableOpacity>
           <TouchableOpacity style={styles.filterButton}><Text>2 Weeks</Text></TouchableOpacity>
           <TouchableOpacity style={styles.filterButton}><Text>1 Month</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}><Text>3 Months</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.outterRightFilterButton}><Text>3 Months</Text></TouchableOpacity>
         </View>
-        <Text>Sleep</Text>
+        <View style={styles.graphWrapper}>
+        <Text style={styles.graphLabel}>Sleep</Text>
         <LineChart
       
           data={{
@@ -144,28 +145,30 @@ async componentDidMount () {
             ],
           }}
           width={Dimensions.get("window").width} // from react-native
-          height={200}
+          height={180}
           // yAxisLabel="$"
           // yAxisSuffix="k"
           yAxisInterval={1} // optional, defaults to 1
           chartConfig={{
-            backgroundColor: "#1e1440",
-            backgroundGradientFrom: "#1e1440",
-            backgroundGradientTo: "#1a1138",
+            backgroundColor: "#ffffff",
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#ffffff",
             decimalPlaces: 0, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            color: (opacity = 1) => `rgba(74, 73, 73, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
            
             propsForDots: {
               r: "6",
               strokeWidth: "2",
-              stroke: "#6b52bf",
+              stroke: "#4a4949",
             },
           }}
           bezier
           style={styles.graph}
         />
-        <Text>Food</Text>
+        </View>
+        <View style={styles.graphWrapper}>
+        <Text style={styles.graphLabel}>Food</Text>
         <LineChart
       
           data={{
@@ -185,28 +188,30 @@ async componentDidMount () {
             ],
           }}
           width={Dimensions.get("window").width} // from react-native
-          height={200}
+          height={180}
           // yAxisLabel="$"
           // yAxisSuffix="k"
           yAxisInterval={1} // optional, defaults to 1
           chartConfig={{
-            backgroundColor: "#1d5428",
-            backgroundGradientFrom: "#194522",
-            backgroundGradientTo: "#1d5428",
+            backgroundColor: "#ffffff",
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#ffffff",
             decimalPlaces: 0, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            color: (opacity = 1) => `rgba(74, 73, 73, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
            
             propsForDots: {
               r: "6",
               strokeWidth: "2",
-              stroke: "#579c65",
+              stroke: "#4a4949",
             },
           }}
           bezier
           style={styles.graph}
         />
-        <Text>Water</Text>
+        </View>
+        <View style={styles.graphWrapper}>
+        <Text style={styles.graphLabel}>Water</Text>
         <LineChart
       
       
@@ -227,27 +232,28 @@ async componentDidMount () {
             ],
           }}
           width={Dimensions.get("window").width} // from react-native
-          height={200}
+          height={180}
           // yAxisLabel="$"
           // yAxisSuffix="k"
           yAxisInterval={1} // optional, defaults to 1
           chartConfig={{
-            backgroundColor: "#2a4d6e",
-            backgroundGradientFrom: "#213d57",
-            backgroundGradientTo: "#2a4d6e",
+            backgroundColor: "#ffffff",
+            backgroundGradientFrom: "#ffffff",
+            backgroundGradientTo: "#ffffff",
             decimalPlaces: 0, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            color: (opacity = 1) => `rgba(74, 73, 73, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
            
             propsForDots: {
               r: "6",
               strokeWidth: "2",
-              stroke: "#5f81a1",
+              stroke: "#4a4949",
             },
           }}
           bezier
           style={styles.graph}
         />
+        </View>
         
       </View>
     );
@@ -259,23 +265,53 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5FCFF",
+    backgroundColor: "white",
     borderWidth: 1,
     flexDirection: "column",
   },
+  graphWrapper: {
+    backgroundColor: "white"
+  },
+  graphLabel: {
+    marginLeft: 30,
+    marginBottom: 5,
+    marginTop: 10
+  },
   graph: {
+    marginLeft: 30,
+    marginRight: 30,
     borderRadius: 16,
-    margin: 10
+    borderColor: "#d6d6d6",
+    borderWidth: 2
+    
   },
   filters: {
-    marginTop: 50,
+    marginBottom: 1,
     justifyContent: "center",
     flexDirection: "row",
   },
   filterButton: {
     padding: 5,
-    margin: 1,
-    backgroundColor: "gray",
-    borderRadius: 10
+    borderColor: "#d6d6d6",
+    borderWidth: 1,
+    backgroundColor: "white"
+
+    
+  },
+  outterLeftFilterButton: {
+    padding: 5,
+    borderColor: "#d6d6d6",
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderBottomLeftRadius: 10,
+    borderTopLeftRadius: 10
+  },
+  outterRightFilterButton: {
+    padding: 5,
+    borderColor: "#d6d6d6",
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderBottomRightRadius: 10,
+    borderTopRightRadius: 10
   }
 });
