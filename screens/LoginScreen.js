@@ -69,6 +69,19 @@ export default class LoginSCreen extends React.Component {
     }
   };
   onSignUp = async () => {
+    if(this.usernameValidator() == false){
+      this.setState({ error: "Please try again" })
+    }
+    else if(this.EmailValidator() == false){
+      this.setState({ error: "Please try again" })
+    }
+    else if(this.passwordValidator() == false){
+      this.setState({ error: "Please try again" })
+    }
+    else if(this.confirmPasswordValidator() == false){
+      this.setState({ error: "Please try again" })
+    }
+    else{
     if (this.state.email && this.state.password) {
       this.setState({ isLoading: true });
       try {
@@ -110,6 +123,7 @@ export default class LoginSCreen extends React.Component {
     } else {
       this.setState({ error: "please enter an Email and Password" });
     }
+  }
   };
 
   HandleGetUserId = () => {
@@ -120,12 +134,15 @@ export default class LoginSCreen extends React.Component {
   usernameValidator = () => {
     if (this.state.username == "") {
       this.setState({ usernameError: "Username field cannot be left empty" })
+      return false;
     }
     else if (this.state.username.length < 5) {
       this.setState({ usernameError: "Your username must have 5 characters or more" })
+      return false;
     }
     else {
       this.setState({ usernameError: "" })
+      return true;
     }
   };
 
@@ -133,9 +150,11 @@ export default class LoginSCreen extends React.Component {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(this.state.email) == false) {
       this.setState({ emailError: "This is not a valid email" })
+      return false;
     }
     else {
       this.setState({ emailError: "" })
+      return true;
     }
   };
 
@@ -143,18 +162,22 @@ export default class LoginSCreen extends React.Component {
     let strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
     if (strongRegex.test(this.state.password) == false) {
       this.setState({ passwordError: "The password requires special character (@,#), Capital letter, Numbers and min Length 8 " })
+      return false;
     }
     else {
       this.setState({ passwordError: "" })
+      return true;
     }
   };
 
   confirmPasswordValidator = () => {
     if (this.state.password !== this.state.confirmPassword) {
       this.setState({ confirmPasswordError: "Confirm Password and Password do not match" })
+      return false;
     }
     else {
       this.setState({ confirmPasswordError: "" })
+      return true;
     }
   };
 
@@ -331,6 +354,4 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
   }
-
-
 });
