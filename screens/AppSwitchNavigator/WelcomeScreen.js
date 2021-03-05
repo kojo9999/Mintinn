@@ -25,6 +25,7 @@ export default class WelcomeScreen extends React.Component {
     this.state = {
       email: "",
       password: "",
+      error: "",
       isLoading: false,
     };
   }
@@ -44,14 +45,14 @@ export default class WelcomeScreen extends React.Component {
         this.setState({ isLoading: false });
         switch (error.code) {
           case "auth/user-not-found":
-            alert("A user with that email does not exist. try signing up");
+            this.setState({ error:"A user with that email does not exist. try signing up"});
             break;
           case "auth/invalid-email":
-            alert("Please enter an email address");
+            this.setState({ error:"Please enter an email address"});
         }
       }
     } else {
-      alert("Please enter in an email and password");
+      this.setState({ error:"Please enter in an email and password"});
     }
   };
   render() {
@@ -60,8 +61,7 @@ export default class WelcomeScreen extends React.Component {
       <View style={styles.Container }>
         
         
-        
-        <Ionicons style={styles.User} name="ios-contact" size={100} md="md-contact"/>
+        <View style={styles.userContainer}><Image source={require("../../images/logo.png")} style={styles.user}></Image></View>
         {this.state.isLoading ? (
           <View
             styles={[
@@ -92,6 +92,7 @@ export default class WelcomeScreen extends React.Component {
           secureTextEntry
           onChangeText={(password) => this.setState({ password })}
         />
+        <Text style={styles.error}>{this.state.error}</Text>
         <TouchableOpacity style={styles.Button} onPress={this.onSignIn}><Text style={styles.SignInBtnText}>Sign In</Text></TouchableOpacity>
         <Text style={styles.authIconsText}>Sign in with</Text>
         <View
@@ -125,8 +126,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#FFBC78"
   },
-  User: {
-    marginBottom: 50
+  user: {
+    height: 80,
+    width: 80,
+  },
+  userContainer: {
+    backgroundColor: "black",
+    borderRadius: 100,
+    marginBottom:60,
+    padding: 5
   },
   TextInputEmail: {
     height: 40,
@@ -177,7 +185,9 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
     margin: 2
-    
+  },
+  error: {
+    color: 'red',
   }
   
 });
