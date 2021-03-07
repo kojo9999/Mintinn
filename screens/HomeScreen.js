@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   headerView: {
+    marginTop: 20,
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",
