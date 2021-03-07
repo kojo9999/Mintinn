@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Dimensions, StyleSheet } from "react-native";
+import { View, Text, Dimensions, StyleSheet, ScrollView, StatusBar } from "react-native";
 import "firebase/auth";
 import "firebase/firestore";
 import firebase from "firebase/app";
@@ -19,6 +19,8 @@ constructor() {
     weeklywaterData: [],
     waterDate: [],
     sleep: [],
+    startDate: "",
+    endDate: ""
   }
 }
 
@@ -96,6 +98,10 @@ HandleGetUserId = () => {
     return userId;
 };
 
+setDateRange = (StartDate, EndDate) => {
+  this.setState({StartDate, EndDate})
+}
+
 refresh = () =>
   { 
     let refreshFoodData = (this.state.foodData)
@@ -117,12 +123,13 @@ async componentDidMount () {
 
     
     return (
-      <View style={styles.graphContainer}>
+      <ScrollView style={styles.graphContainer}>
+        <View style={styles.graphs}>
         <View style={styles.filters}>
-          <TouchableOpacity style={styles.outterLeftFilterButton}><Text>1 Week</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}><Text>2 Weeks</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}><Text>1 Month</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.outterRightFilterButton}><Text>3 Months</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.outterLeftFilterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 7)}><Text>1 Week</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 14)}><Text>2 Weeks</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 28)}><Text>1 Month</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.outterRightFilterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 84)}><Text>3 Months</Text></TouchableOpacity>
         </View>
         <View style={styles.graphWrapper}>
         <Text style={styles.graphLabel}>Sleep</Text>
@@ -254,8 +261,8 @@ async componentDidMount () {
           style={styles.graph}
         />
         </View>
-        
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -263,10 +270,15 @@ async componentDidMount () {
 const styles = StyleSheet.create({
   graphContainer: {
     flex: 1,
+    paddingTop: StatusBar.currentHeight,
+    
+  },
+  graphs: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white",
-    borderWidth: 1,
+    height: 750,
     flexDirection: "column",
   },
   graphWrapper: {
