@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  StatusBar
 } from "react-native";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -128,6 +129,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   headerView: {
+ 
+    paddingTop: StatusBar.currentHeight + 10,
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",
