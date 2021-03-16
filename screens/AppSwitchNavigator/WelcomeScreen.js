@@ -55,6 +55,18 @@ export default class WelcomeScreen extends React.Component {
       this.setState({ error:"Please enter in an email and password"});
     }
   };
+
+  passwordValidator = () => {
+    if (this.state.password == "") {
+      this.setState({ error: "Please enter an password" })
+      return false;
+    }
+    else {
+      this.setState({ error: "" })
+      return true;
+    }
+  };
+  
   render() {
     return (
       <ImageBackground source={require("../../images/authBackground.png")} style={styles.image}>
@@ -90,6 +102,7 @@ export default class WelcomeScreen extends React.Component {
           placeholder="Password"
           placeholderTextColor="black"
           secureTextEntry
+          onBlur={() => this.passwordValidator()}
           onChangeText={(password) => this.setState({ password })}
         />
         <Text style={styles.error}>{this.state.error}</Text>
