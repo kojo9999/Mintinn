@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
   ImageBackground,
   SnapshotViewIOS,
-
 }
   from "react-native";
+import { CheckBox } from 'react-native-elements'
 import firebase from "firebase/app";
 import "firebase/auth";
 import colors from "../assets/colors";
@@ -39,6 +39,8 @@ export default class LoginSCreen extends React.Component {
       confirmPasswordError: "",
       error: '',
       isLoading: false,
+      checked: false,
+      checkedError: "",
     };
   }
 
@@ -69,61 +71,64 @@ export default class LoginSCreen extends React.Component {
     }
   };
   onSignUp = async () => {
-    if(this.usernameValidator() == false){
+    if (this.TermsAndConditions() == false) {
       this.setState({ error: "Please try again" })
     }
-    else if(this.EmailValidator() == false){
+    else if (this.usernameValidator() == false) {
       this.setState({ error: "Please try again" })
     }
-    else if(this.passwordValidator() == false){
+    else if (this.EmailValidator() == false) {
       this.setState({ error: "Please try again" })
     }
-    else if(this.confirmPasswordValidator() == false){
+    else if (this.passwordValidator() == false) {
       this.setState({ error: "Please try again" })
     }
-    else{
-    if (this.state.email && this.state.password) {
-      this.setState({ isLoading: true });
-      try {
-        const responce = await firebase
-          .auth()
-          .createUserWithEmailAndPassword(
-            this.state.email,
-            this.state.password
-          );
-        if (responce) {
+    else if (this.confirmPasswordValidator() == false) {
+      this.setState({ error: "Please try again" })
+    }
+    else {
+      if (this.state.email && this.state.password) {
+        this.setState({ isLoading: true });
+        try {
+          const responce = await firebase
+            .auth()
+            .createUserWithEmailAndPassword(
+              this.state.email,
+              this.state.password
+            );
+          if (responce) {
+            this.setState({ isLoading: false });
+            this.onSignIn(this.state.email, this.state.password);
+            profileCollection.doc(this.HandleGetUserId()).set({
+              username: this.state.username,
+            });
+            profileCollection.doc(this.HandleGetUserId()).collection('water').add({
+              createdat: "",
+              waterstatus: ""
+            });
+            profileCollection.doc(this.HandleGetUserId()).collection('sleep').add({
+              createdat: "",
+              sleepstatus: ""
+            });
+            profileCollection.doc(this.HandleGetUserId()).collection('food').add({
+              createdat: "",
+              foodstatus: ""
+            });
+            profileCollection.doc(this.HandleGetUserId()).collection('feelings').add({
+              createdat: "",
+              feelingstatus: ""
+            });
+          }
+        } catch (error) {
           this.setState({ isLoading: false });
-          this.onSignIn(this.state.email, this.state.password);
-          profileCollection.doc(this.HandleGetUserId()).set({
-            username: this.state.username,
-          });
-          profileCollection.doc(this.HandleGetUserId()).collection('water').add({
-            createdat: "",
-            waterstatus: ""
-          });
-          profileCollection.doc(this.HandleGetUserId()).collection('sleep').add({
-            createdat: "",
-            sleepstatus: ""
-          });
-          profileCollection.doc(this.HandleGetUserId()).collection('food').add({
-            createdat: "",
-            foodstatus: ""
-          });
-          profileCollection.doc(this.HandleGetUserId()).collection('feelings').add({
-            createdat: "",
-            feelingstatus: ""
-          });
+          if (error.code == "auth/email-already-in-use") {
+            this.setState({ error: "Email already Exists. Try another email" });
+          }
         }
-      } catch (error) {
-        this.setState({ isLoading: false });
-        if (error.code == "auth/email-already-in-use") {
-          this.setState({ error: "Email already Exists. Try another email" });
-        }
+      } else {
+        this.setState({ error: "please enter an Email and Password" });
       }
-    } else {
-      this.setState({ error: "please enter an Email and Password" });
     }
-  }
   };
 
   HandleGetUserId = () => {
@@ -181,6 +186,18 @@ export default class LoginSCreen extends React.Component {
     }
   };
 
+  TermsAndConditions = () => {
+    if (this.state.checked == false) {
+      this.setState({ checkedError: "Please confirm that you have read the terms and conditions" })
+      return false;
+    }
+    else {
+      this.setState({ confirmPasswordError: "" })
+      return true;
+    }
+  }
+
+
   render() {
     return (
       <ImageBackground source={require("../images/authBackground.png")} style={styles.image}>
@@ -213,6 +230,7 @@ export default class LoginSCreen extends React.Component {
             onChangeText={(username) => this.setState({ username })}
           />
           <Text style={styles.error}>{this.state.usernameError}</Text>
+
           <TextInput
             style={styles.TextInputEmail}
             placeholder="Email"
@@ -222,6 +240,7 @@ export default class LoginSCreen extends React.Component {
             onChangeText={(email) => this.setState({ email })}
           />
           <Text style={styles.error}>{this.state.emailError}</Text>
+
           <TextInput
             style={styles.TextInputPassword}
             placeholder="Password"
@@ -231,6 +250,7 @@ export default class LoginSCreen extends React.Component {
             onChangeText={(password) => this.setState({ password })}
           />
           <Text style={styles.error}>{this.state.passwordError}</Text>
+
           <TextInput
             style={styles.TextInputCPassword}
             placeholder="Confirm Password"
@@ -240,6 +260,17 @@ export default class LoginSCreen extends React.Component {
             onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
           />
           <Text style={styles.error}>{this.state.confirmPasswordError}</Text>
+          <Text style={styles.authIconsText}>By clicking this button you are agreeing that you have read the tearms and conditions</Text>
+          <CheckBox
+            center
+            iconRight
+            checkedIcon='dot-circle-o'
+            uncheckedIcon='circle-o'
+            checked={this.state.checked}
+            onPress={() => this.setState({ checked: !this.state.checked })}
+          />
+          <Text style={styles.error}>{this.state.checkedError}</Text>
+
           <Text style={styles.error}>{this.state.error}</Text>
           <TouchableOpacity style={styles.Button} onPress={this.onSignUp} title="Signup" ><Text style={styles.SignInBtnText}>Sign Up</Text></TouchableOpacity>
           <Text style={styles.authIconsText}>Sign up with</Text>
