@@ -48,11 +48,11 @@ class HomeScreen extends Component {
             source={require("../images/clouds.png")}
             style={styles.image}
           >
-            <Text style={styles.title}>Diary Calendar</Text>
+            <Text style={styles.title}>Diary Statistics</Text>
             <Text style={styles.diaryDescription}>
-              You calendar can be used to see an overview of your daily progress
+              You Statistics can be used to see an overview of your daily progress
             </Text>
-            <TouchableOpacity style={styles.downArrow}></TouchableOpacity>
+            <TouchableOpacity style={styles.downArrow} onPress={() => this.props.navigation.navigate("CalendarScreen")}></TouchableOpacity>
           </ImageBackground>
         </View>
         <Text style={styles.subActText}>More activites ...</Text>
@@ -62,19 +62,19 @@ class HomeScreen extends Component {
               <ImageBackground
                 source={require("../images/sleep.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Sleep</Text><TouchableOpacity style={styles.subDownArrow}></TouchableOpacity></ImageBackground>
+              ><Text style={styles.title}>Sleep</Text><TouchableOpacity style={styles.subDownArrow} onPress={() => this.props.navigation.navigate("SleepScreen")}></TouchableOpacity></ImageBackground>
             </View>
             <View style={styles.subActWindow}>
               <ImageBackground
                 source={require("../images/water.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Water</Text><TouchableOpacity style={styles.subDownArrow}></TouchableOpacity></ImageBackground>
+              ><Text style={styles.title}>Water</Text><TouchableOpacity style={styles.subDownArrow} onPress={() => this.props.navigation.navigate("WaterScreen")}></TouchableOpacity></ImageBackground>
             </View>
             <View style={styles.subActWindow}>
               <ImageBackground
                 source={require("../images/food.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Food</Text><TouchableOpacity style={styles.subDownArrow}></TouchableOpacity></ImageBackground>
+              ><Text style={styles.title}>Food</Text><TouchableOpacity style={styles.subDownArrow} onPress={() => this.props.navigation.navigate("NutritionScreen")}></TouchableOpacity></ImageBackground>
             </View>
           </ScrollView>
         </View>
