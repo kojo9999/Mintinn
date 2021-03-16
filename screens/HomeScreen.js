@@ -33,6 +33,7 @@ class HomeScreen extends Component {
             name="ios-menu"
             size={50}
             md="md-menu"
+            onPress={() => this.props.navigation.openDrawer()}
           />
           <Text style={styles.headerTitle}>Dashboard</Text>
           <Ionicons
