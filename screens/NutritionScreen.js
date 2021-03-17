@@ -7,7 +7,7 @@ import firebase from "firebase/app";
 import { db } from "../config/config";
 import Slider from "@react-native-community/slider";
 import Collapsible from 'react-native-collapsible';
-import {Ionicons} from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 const foodCollection = db().collection("profile");
 
 export default class FoodScreen extends React.Component {
@@ -17,13 +17,14 @@ export default class FoodScreen extends React.Component {
       createdat: "",
       userId: "",
       sliderValue: 1,
+      error: ""
     };
   }
 
   toggleExpanded = () => {
     this.setState({ collapsed: !this.state.collapsed });
   };
-  
+
 
   HandleGetUserId = () => {
     let userId = firebase.auth().currentUser.uid;
@@ -73,7 +74,7 @@ export default class FoodScreen extends React.Component {
   };
 
   addFood = async (inputValue) => {
-    console.log("addFood2() is being called");
+    //console.log("addFood2() is being called");
     let userId = this.HandleGetUserId();
     let batch = firebase.firestore().batch();
     const today = new Date();
@@ -125,6 +126,7 @@ export default class FoodScreen extends React.Component {
             foodamount: inputValue,
             timeOfDay: time,
           });
+          this.setState({ error: "Your " + time + " food entry has been uploaded" })
         } else {
           snapshot.docs.forEach((doc) => {
             console.log("docs found with todays date", time);
@@ -135,7 +137,7 @@ export default class FoodScreen extends React.Component {
             if (doc.data().timeOfDay == time) {
               batch.update(docRef, newFoodDoc);
               batch.commit().then(() => {
-                console.log("food document was found");
+                this.setState({ error: "Your " + time + " food entry has been updated" })
               });
             }
           });
@@ -150,21 +152,21 @@ export default class FoodScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <View style={styles.infoContainer}>
-       <TouchableOpacity onPress={this.toggleExpanded}>
+        <View style={styles.infoContainer}>
+          <TouchableOpacity onPress={this.toggleExpanded}>
             <View style={styles.header}>
-            <Ionicons name="ios-information-circle" size={28} color="black"/>
-          
+              <Ionicons name="ios-information-circle" size={28} color="black" />
+
             </View>
-            
+
           </TouchableOpacity>
           <Collapsible collapsed={this.state.collapsed} align="center">
             <View style={styles.content}>
               <Text>Food Info</Text>
-              
+
             </View>
           </Collapsible>
-          </View>
+        </View>
         <Text
           style={styles.Question}
         >{`How have you eaten ${this.TimeOfDay()}?`}</Text>
@@ -175,7 +177,7 @@ export default class FoodScreen extends React.Component {
                 source={require("../images/diet.png")}
                 style={styles.foodImage}
               ></Image>
-           
+
             </View>
           ) : null}
           {this.state.sliderValue == 2 ? (
@@ -184,13 +186,13 @@ export default class FoodScreen extends React.Component {
                 source={require("../images/burger.png")}
                 style={styles.foodImage}
               ></Image>
-          
+
             </View>
           ) : null}
         </View>
         <View style={styles.imageLabel}>
-        {this.state.sliderValue == 1? <View><Text>Healthy</Text></View>: null}
-        {this.state.sliderValue == 2? <View><Text>Unhealthy</Text></View>: null}
+          {this.state.sliderValue == 1 ? <View><Text>Healthy</Text></View> : null}
+          {this.state.sliderValue == 2 ? <View><Text>Unhealthy</Text></View> : null}
         </View>
         <Slider
           style={styles.slider}
@@ -200,6 +202,7 @@ export default class FoodScreen extends React.Component {
           step={1}
           onValueChange={this.handleSliderChange}
         />
+        <Text>{this.state.error}</Text>
         <TouchableOpacity
           style={styles.button}
           onPress={() => this.addFood(this.state.sliderValue)}
