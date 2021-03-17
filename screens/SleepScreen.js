@@ -16,10 +16,10 @@ export default class SleepScreen extends React.Component {
       createdAt: "",
       sleep: "",
       sleepInput: "",
+      error: ""
     };
   }
 
-  
   toggleExpanded = () => {
     this.setState({ collapsed: !this.state.collapsed });
   };
@@ -29,16 +29,38 @@ export default class SleepScreen extends React.Component {
     return userId;
   };
 
+  sleepValidator = () => {
+    const numericRegex = /^([0-9]{1,24})+$/
+    if (this.state.sleep == "") {
+      this.setState({ error: "Sleep field cannot be left empty" })
+      return false;
+    }
+    else if (numericRegex.test(this.state.sleep) == false) {
+      this.setState({ error: "Sleep can only be a number" })
+      return false;
+    }
+    else if (this.state.sleep == 0)
+    {
+      this.setState({ error: "Sleep must must be between 1 - 24 hours" })
+      return false;
+    }
+    else if (this.state.sleep >= 24)
+    {
+      this.setState({ error: "Sleep must must be between 1 - 24 hours" })
+      return false;
+    }
+    else
+    {
+      this.setState({ error: "" })
+      return true;
+    }
+  };
 
   saveSleep = () => {
     let today = new Date();
     let batch = firebase.firestore().batch();
     let userId = this.HandleGetUserId();
-    if (this.state.sleep == 0) {
-      Alert.alert("Alert", "Sleep must must be between 1 - 24 hours ");
-      return;
-    } else if (this.state.sleep >= 24) {
-      Alert.alert("Alert", "Sleep must must be between 1 - 24 hours ");
+    if (this.sleepValidator() == false) {
       return;
     } else {
       sleepCollection
@@ -76,6 +98,7 @@ export default class SleepScreen extends React.Component {
               createdat: new Date(),
               sleepamount: this.state.sleep,
             });
+            this.setState({ error: "Your Sleep entry has been uploaded" })
           } else if (snapshot.size == 1) {
             snapshot.docs.forEach((doc) => {
               const newSleepDoc = {
@@ -88,7 +111,7 @@ export default class SleepScreen extends React.Component {
                 .doc(doc.id);
               batch.update(docRef, newSleepDoc);
               batch.commit().then(() => {
-                console.log("Sleep document was found and has been updated");
+              this.setState({ error: "Your Sleep entry has been updated" })
               });
             });
           }
@@ -125,8 +148,10 @@ export default class SleepScreen extends React.Component {
           style={styles.input}
           placeholder="Number of hours"
           keyboardType="numeric"
+          onBlur={() => this.sleepValidator()}
           onChangeText={(sleepInput) => this.setState({ sleep: sleepInput })}
         />
+        <Text>{this.state.error}</Text>
         <TouchableOpacity
           style={styles.button}
           onPress={() => this.saveSleep()}
