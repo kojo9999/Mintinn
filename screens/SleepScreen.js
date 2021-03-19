@@ -14,7 +14,7 @@ export default class SleepScreen extends React.Component {
     super(props);
     this.state = {
       createdAt: "",
-      sleep: "",
+      sleep: 0,
       sleepInput: "",
       error: ""
     };
@@ -103,7 +103,7 @@ export default class SleepScreen extends React.Component {
             snapshot.docs.forEach((doc) => {
               const newSleepDoc = {
                 createdat: new Date(),
-                sleepamount: this.state.sleep,
+                sleepamount: Number(this.state.sleep),
               };
               const docRef = sleepCollection
                 .doc(userId)
