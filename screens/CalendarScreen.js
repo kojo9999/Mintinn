@@ -15,12 +15,12 @@ export default class CalendarScreen extends Component {
     super();
     this.state = {
       foodData: [],
-      weeklyfoodData: [],
+      weeklyfoodData: [0,0,0,0,0,0,0],
       foodDate: [],
       waterData: [],
-      weeklywaterData: [],
+      weeklywaterData: [0,0,0,0,0,0,0],
       waterDate: [],
-      sleep: [],
+      sleepData: [0,0,0,0,0,0,0],
       startDate: "",
       endDate: ""
     }
@@ -28,6 +28,7 @@ export default class CalendarScreen extends Component {
 
   getFoodProgress = async () => {
     const today = new Date();
+    let food = []
     let userId = this.HandleGetUserId();
     let weekago = (new Date(new Date() - (86400000 * 6)))
     waterCollection.doc(userId).collection('food')
@@ -35,15 +36,17 @@ export default class CalendarScreen extends Component {
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
-          this.state.foodData.push(doc.data().foodamount);
-          this.state.foodDate.push(doc.data().createdat);
-          console.log(doc.data().foodamount)
+          food.push(doc.data().foodamount);
+          //this.state.foodDate.push(doc.data().createdat);
+          //console.log(doc.data().foodamount)
         })
       })
+      this.setState({foodData: food})
   }
 
   getWaterProgress = async () => {
     const today = new Date();
+    let water = [];
     let userId = this.HandleGetUserId();
     let weekago = (new Date(new Date() - (86400000 * 6)))
     waterCollection.doc(userId).collection('water')
@@ -51,34 +54,32 @@ export default class CalendarScreen extends Component {
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
-          this.state.waterData.push(doc.data().waterstatus);
-          this.state.waterDate.push(doc.data().createdat);
-          // console.log(doc.data().waterstatus)
+          water.push(doc.data().waterstatus);
+          //this.state.waterDate.push(doc.data().createdat);
+          //console.log("water data",doc.data().waterstatus)
         })
       })
+      this.setState({waterData: water})
   }
 
   getSleepProgress = async () => {
     const today = new Date();
     let userId = this.HandleGetUserId();
-    var sleepData = this.state.sleep;
+    let sleep = [];
+    let weekago = (new Date(new Date() - (86400000 * 6)))
     waterCollection.doc(userId).collection('sleep')
-      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+    .where("createdat", ">", new Date(weekago.getFullYear(), weekago.getMonth(), weekago.getDate(), 0, 0, 0))
+    .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
-          const newSleepData = {
-            createdat: doc.data().createdat,
-            sleepamount: doc.data().sleepamount,
-          }
-          sleepData.push(newSleepData);
+          sleep.push(doc.data().sleepamount);
+          //console.log("sleep data",doc.data().sleepamount)
         })
-        this.setState({ sleep: sleepData });
-        // console.log("check for returned Sleep value",this.state.sleep);
       })
+      this.setState({sleepData: sleep});
   }
 
-    getAverageProgress = async () => {
+  getAverageFood = async () => {
     let data = this.state.foodData;
     const empty = newdata => newdata.length = 0;
     empty(this.state.weeklyfoodData)
@@ -89,9 +90,24 @@ export default class CalendarScreen extends Component {
     let day3 = Number(((data[12] + data[13] + data[14]) / 3).toFixed());
     let day2 = Number(((data[15] + data[16] + data[17]) / 3).toFixed());
     let day1 = Number(((data[18] + data[19] + data[20]) / 3).toFixed());
-    this.state.weeklyfoodData.push(day7, day6, day5, day4, day3, day2, day1);
-    
-    console.log("averaged data",this.state.weeklyfoodData)
+    this.setState({weeklyfoodData: [day7, day6, day5, day4, day3, day2, day1]});
+    //console.log("averaged food data", this.state.weeklyfoodData)
+  };
+
+  getAverageWater = async () => {
+    let data = this.state.waterData;
+    const empty = newdata => newdata.length = 0;
+    empty(this.state.weeklywaterData)
+    let day7 = Number(((data[0] + data[1] + data[2]) / 3).toFixed());
+
+    let day6 = Number(((data[4] + data[4] + data[5]) / 3).toFixed());
+    let day5 = Number(((data[6] + data[7] + data[8]) / 3).toFixed());
+    let day4 = Number(((data[9] + data[10] + data[11]) / 3).toFixed());
+    let day3 = Number(((data[12] + data[13] + data[14]) / 3).toFixed());
+    let day2 = Number(((data[15] + data[16] + data[17]) / 3).toFixed());
+    let day1 = Number(((data[18] + data[19] + data[20]) / 3).toFixed());
+    this.setState({weeklywaterData: [day7, day6, day5, day4, day3, day2, day1]});
+    //console.log("averaged water data", this.state.weeklywaterData)
   };
 
   // getAverageProgress = () => {
@@ -101,7 +117,6 @@ export default class CalendarScreen extends Component {
   //   }
   //   console.log("Average data =>", this.state.weeklyfoodData)
   // }
-
 
   HandleGetUserId = () => {
     let userId = firebase.auth().currentUser.uid;
@@ -127,7 +142,8 @@ export default class CalendarScreen extends Component {
     await this.getFoodProgress()
     await this.getSleepProgress()
     setTimeout(() => {
-    this.getAverageProgress()
+      this.getAverageFood()
+      this.getAverageWater()
     }, 1000);
   }
   render() {
@@ -148,14 +164,7 @@ export default class CalendarScreen extends Component {
                 labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                 datasets: [
                   {
-                    data: [
-                      1,
-                      2,
-                      3,
-                      1,
-                      2,
-                      3,
-                    ],
+                    data: this.state.sleepData
                   },
                 ],
               }}
@@ -190,14 +199,7 @@ export default class CalendarScreen extends Component {
                 labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                 datasets: [
                   {
-                    data: [
-                      1,
-                      2,
-                      3,
-                      1,
-                      2,
-                      3,
-                    ],
+                    data: this.state.weeklyfoodData
                   },
                 ],
               }}
@@ -231,14 +233,7 @@ export default class CalendarScreen extends Component {
                 labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                 datasets: [
                   {
-                    data: [
-                      1,
-                      2,
-                      3,
-                      1,
-                      2,
-                      3,
-                    ],
+                    data: this.state.weeklywaterData
                   },
                 ],
               }}
