@@ -41,8 +41,8 @@ const AppDrawerNavigator = createDrawerNavigator({
     CalendarScreen:{
         screen: CalendarScreen,
         navigationOptions: {
-            title:'Calendar',
-            drawerIcon:() => <FontAwesome name="calendar-check-o" size={24} />
+            title:'statistics',
+            drawerIcon:() => <FontAwesome name="line-chart" size={24} />
         }
     },
     NutritionScreen:{
@@ -66,18 +66,18 @@ const AppDrawerNavigator = createDrawerNavigator({
             drawerIcon:() => <MaterialCommunityIcons name="sleep" size={24} />
         }
     },
-    InfoScreen:{
-        screen: InfoScreen,
-        navigationOptions: {
-            title:'Info',
-            drawerIcon:() => <MaterialCommunityIcons name="food-apple" size={24} />
-        }
-    },
     QuestionScreen:{
         screen: QuestionScreen,
         navigationOptions: {
             title:'Questions',
-            drawerIcon:() => <MaterialCommunityIcons name="food-apple" size={24} />
+            drawerIcon:() => <MaterialCommunityIcons name="account-question" size={24} />
+        }
+    },
+    InfoScreen:{
+        screen: InfoScreen,
+        navigationOptions: {
+            title:'Info',
+            drawerIcon:() => <FontAwesome name="info" size={24} />
         }
     },
     SettingsScreen: {
@@ -92,7 +92,11 @@ const AppDrawerNavigator = createDrawerNavigator({
 const LoginStackNavigator = createSwitchNavigator({
     WelcomeScreen,
     LoginScreen,
-    LoadingScreen
+    LoadingScreen,
+    CalendarScreen,
+    SleepScreen,
+    WaterScreen,
+    NutritionScreen
 });
 
 const AppSwitchNavigator = createSwitchNavigator({
