@@ -224,12 +224,12 @@ export default class WaterScreen extends React.Component {
 
         </View>
         <View style={styles.imageLabel}>
-          {this.state.sliderValue == 1 ? <View><Text>None</Text></View> : null}
-          {this.state.sliderValue == 2 ? <View><Text>Small</Text></View> : null}
-          {this.state.sliderValue == 3 ? <View><Text>Medium</Text></View> : null}
-          {this.state.sliderValue == 4 ? <View><Text>Large</Text></View> : null}
+          {this.state.sliderValue == 0 ? <View><Text>None</Text></View> : null}
+          {this.state.sliderValue == 1 ? <View><Text>Small</Text></View> : null}
+          {this.state.sliderValue == 2 ? <View><Text>Medium</Text></View> : null}
+          {this.state.sliderValue == 3 ? <View><Text>Large</Text></View> : null}
         </View>
-        <Slider style={styles.slider} value={this.state.sliderValue} maximumValue={4} minimumValue={1} step={1} onValueChange={this.handleSliderChange} />
+        <Slider style={styles.slider} value={this.state.sliderValue} maximumValue={3} minimumValue={0} step={1} onValueChange={this.handleSliderChange} />
         <Text>{this.state.outputText}</Text>
         <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableOpacity>
       </View>
