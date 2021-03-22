@@ -8,6 +8,7 @@ import {
   LineChart
 } from "react-native-chart-kit";
 import { db } from '../config/config'
+import { Ionicons } from "@expo/vector-icons";
 const waterCollection = db().collection('profile');
 export default class CalendarScreen extends Component {
 
@@ -99,7 +100,6 @@ export default class CalendarScreen extends Component {
     const empty = newdata => newdata.length = 0;
     empty(this.state.weeklywaterData)
     let day7 = Number(((data[0] + data[1] + data[2]) / 3).toFixed());
-
     let day6 = Number(((data[4] + data[4] + data[5]) / 3).toFixed());
     let day5 = Number(((data[6] + data[7] + data[8]) / 3).toFixed());
     let day4 = Number(((data[9] + data[10] + data[11]) / 3).toFixed());
@@ -151,6 +151,13 @@ export default class CalendarScreen extends Component {
       <ScrollView style={styles.graphContainer}>
         <View style={styles.graphs}>
           <View style={styles.filters}>
+          <Ionicons
+            style={styles.headerItem}
+            name="ios-menu"
+            size={50}
+            md="md-menu"
+            onPress={() => this.props.navigation.openDrawer()}
+          />
             <TouchableOpacity style={styles.outterLeftFilterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 7)}><Text>1 Week</Text></TouchableOpacity>
             <TouchableOpacity style={styles.filterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 14)}><Text>2 Weeks</Text></TouchableOpacity>
             <TouchableOpacity style={styles.filterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 28)}><Text>1 Month</Text></TouchableOpacity>
@@ -271,7 +278,10 @@ const styles = StyleSheet.create({
   graphContainer: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
-
+  },
+  headerItem: {
+    flex: 1,
+    textAlign: "center",
   },
   graphs: {
     flex: 1,

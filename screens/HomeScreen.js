@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   headerView: {
- 
     paddingTop: StatusBar.currentHeight + 10,
     alignSelf: "stretch",
     flexDirection: "row",

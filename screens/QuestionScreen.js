@@ -6,6 +6,7 @@ import "firebase/firestore";
 import firebase from "firebase/app";
 import { db } from "../config/config";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Ionicons } from '@expo/vector-icons'
 const AnswerCollection = db().collection("profile");
 const QuestionCollection = db().collection("questions");
 var currentQuestion = -1;
@@ -87,7 +88,16 @@ export default class QuestionScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Daily Questions</Text>
+      <View style={styles.headerView}>
+          <Ionicons
+            style={styles.headerItem}
+            name="ios-menu"
+            size={50}
+            md="md-menu"
+            onPress={() => this.props.navigation.openDrawer()}
+          />
+        <Text style={styles.headerTitle}>Daily Questions</Text>
+        </View>
         <View style={styles.buttonContainer}>
           <Text style={styles.question}>{this.state.activeQuestion}</Text>
 
@@ -136,6 +146,22 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     marginBottom: 80
+  },
+  headerView: {
+    paddingTop: StatusBar.currentHeight + 10,
+    alignSelf: "stretch",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerItem: {
+    flex: 1,
+    textAlign: "center",
+  },
+  headerTitle: {
+    fontSize: 24,
+    marginLeft: 50,
+    marginRight: 50,
   },
   buttonContainer: {
     flex: 1,

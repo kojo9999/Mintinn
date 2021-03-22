@@ -9,8 +9,10 @@ import {
   Text,
   View,
   TouchableOpacity,
+  StatusBar
 } from 'react-native';
 import Constants from 'expo-constants';
+import { Ionicons } from '@expo/vector-icons'
 import * as Animatable from 'react-native-animatable';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
@@ -50,6 +52,15 @@ class InfoScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+              <View style={styles.headerView}>
+          <Ionicons
+            style={styles.headerItem}
+            name="ios-menu"
+            size={50}
+            md="md-menu"
+            onPress={() => this.props.navigation.openDrawer()}
+          />
+        </View>
         <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
         <OpenURLButton contentContainerStyle={{ paddingTop: 30 }} url={hseHome}>HSE</OpenURLButton>
         <OpenURLButton contentContainerStyle={{ paddingTop: 30 }} url={hseNutrition}>Nutrition</OpenURLButton>
@@ -68,5 +79,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5FCFF',
     paddingTop: Constants.statusBarHeight,
+  },
+  headerView: {
+    paddingTop: StatusBar.currentHeight + 10,
+    alignSelf: "stretch",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerItem: {
+    flex: 1,
+    textAlign: "center",
   },
 });
