@@ -15,8 +15,10 @@ export default class QuestionScreen extends React.Component {
     super();
     this.state = {
       questions: [],
-      answers: [],
+      answers: ["Strongly Agree", "Slightly Agree", "No Opinion", "Slightly Disagree", "Strongly Disagree"],
       activeQuestion: "",
+      outputText: "",
+      questionNumber: 1
     };
   }
 
@@ -38,7 +40,27 @@ export default class QuestionScreen extends React.Component {
     });
   };
 
-  saveAnswers = ([]) => {};
+  addQuestionsAndAnswers = (answer, question) => {
+    let userId = this.HandleGetUserId();
+    let batch = firebase.firestore().batch();
+    const today = new Date();
+    AnswerCollection.doc(userId).collection('water')
+      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+      .get().then(function (querySnapshot) {
+        console.log(querySnapshot.size)
+        if (querySnapshot.size == 0) {
+          AnswerCollection.doc(userId).collection('questions').add({
+            createdAt: new Date(),
+            question: question,
+            answer: answer
+          })
+        }
+      })
+      this.setState({ outputText: "Your answer to question" + this.state.questionNumber + " has been uploaded" })
+      this.setState({ questionNumber: this.state.questionNumber+1 })
+    this.nextQuestion();
+  };
 
   nextQuestion = () => {
     currentQuestion++;
@@ -49,8 +71,6 @@ export default class QuestionScreen extends React.Component {
       });
       console.log(currentQuestion);
       console.log(this.state.questions[currentQuestion].Question);
-    } else {
-      currentQuestion = 0;
     }
   };
 
@@ -73,35 +93,39 @@ export default class QuestionScreen extends React.Component {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.nextQuestion()}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answers[0], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>Strongly Agree</Text>
+            <Text style={styles.text}>{this.state.answers[0]}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answers[1], this.state.activeQuestion)}
+          >
+            <Text style={styles.text}>{this.state.answers[1]}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.nextQuestion()}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answers[2], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>Slightly Agree</Text>
+            <Text style={styles.text}>{this.state.answers[2]}</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.nextQuestion()}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answers[3], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>No Opinion</Text>
+            <Text style={styles.text}>{this.state.answers[3]}</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.nextQuestion()}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answers[4], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>Slightly Disagree</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.nextQuestion()}
-          >
-            <Text style={styles.text}>Strongly Disagree</Text>
+            <Text style={styles.text}>{this.state.answers[4]}</Text>
           </TouchableOpacity>
         </View>
+        <Text>{this.state.outputText}</Text>
       </View>
     );
   }
