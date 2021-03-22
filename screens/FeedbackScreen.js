@@ -141,7 +141,7 @@ export default class FeedbackScreen extends React.Component {
         <Card.Title>Sleep Advice</Card.Title>
           <Card.Image source={require('../images/water.jpg')}>
             <Text style={{marginBottom: 75}}>
-              Your water intake seems to be below average. Why not look for info below from HSE?
+              Your sleep time seems to be below average. Why not look for info below from HSE?
             </Text>
             <Button
                 icon={<Icon name='code' color='#ffffff' />}
@@ -174,7 +174,7 @@ export default class FeedbackScreen extends React.Component {
     this.setState({feedbackCard: <Card>
       <Card.Title>Food Advice</Card.Title>
       <Text style={{marginBottom: 10}}>
-            Your food intake seems to be that of a 5 year old. Why not look for info below from HSE?
+            Your nutritional intake seems to be below average. Why not look for info below from HSE?
           </Text>
         <Card.Image source={require('../images/food.jpg')}>
           <Button
