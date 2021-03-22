@@ -114,7 +114,7 @@ export default class LoginSCreen extends React.Component {
               createdat: "",
               foodstatus: ""
             });
-            profileCollection.doc(this.HandleGetUserId()).collection('feelings').add({
+            profileCollection.doc(this.HandleGetUserId()).collection('questions').add({
               createdat: "",
               feelingstatus: ""
             });
