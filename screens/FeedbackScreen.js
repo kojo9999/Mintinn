@@ -8,23 +8,22 @@ import { db } from "../config/config";
 import Collapsible from 'react-native-collapsible';
 import { Ionicons } from '@expo/vector-icons';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
-const foodCollection = db().collection("profile");
+const waterCollection = db().collection("profile");
 
 export default class FeedbackScreen extends React.Component {
   constructor() {
     super();
     this.state = {
       foodData: [],
-      weeklyfoodAverage: 0,
-      foodDate: [],
+      foodAverage: 0,
       waterData: [],
-      weeklywaterAverage: 0,
+      waterAverage: 0,
       waterDate: [],
       sleepData: [0,0,0,0,0,0,0],
-      sleepDataAverage: 0,
+      sleepAverage: 0,
       startDate: "",
-      endDate: ""
-
+      endDate: "",
+      feedbackCard: <Text>No Feedback Right Now</Text>
     };
   }
 
@@ -39,7 +38,6 @@ export default class FeedbackScreen extends React.Component {
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           food.push(doc.data().foodamount);
-          //console.log(doc.data().foodamount)
         })
       })
       this.setState({foodData: food})
@@ -87,8 +85,8 @@ export default class FeedbackScreen extends React.Component {
     let day3 = Number(((data[12] + data[13] + data[14]) / 3).toFixed());
     let day2 = Number(((data[15] + data[16] + data[17]) / 3).toFixed());
     let day1 = Number(((data[18] + data[19] + data[20]) / 3).toFixed());
-    this.setState({weeklyfoodAverage: day7 + day6 + day5 + day4 + day3 + day2 + day1/14});
-    //console.log("averaged food data", this.state.weeklyfoodData)
+    let average = (day7 + day6 + day5 + day4 + day3 + day2 + day1)/14
+    this.setState({foodAverage: average});
   };
 
   getAverageWater = async () => {
@@ -102,42 +100,110 @@ export default class FeedbackScreen extends React.Component {
     let day3 = Number(((data[12] + data[13] + data[14]) / 3).toFixed());
     let day2 = Number(((data[15] + data[16] + data[17]) / 3).toFixed());
     let day1 = Number(((data[18] + data[19] + data[20]) / 3).toFixed());
-    this.setState({weeklywaterAverage: day7 + day6 + day5 + day4 + day3 + day2 + day1/14});
-    //console.log("averaged water data", this.state.weeklywaterData)
+    let average = (day7 + day6 + day5 + day4 + day3 + day2 + day1)/14
+    this.setState({waterAverage: average});
   };
 
   getAverageSleep = async () => {
-    let data = this.state.SleepData;
+    let data = this.state.sleepData;
     const empty = newdata => newdata.length = 0;
-    this.setState({weeklySleepAverage: data[0] + data[1] + data[2] + data[3] + data[4] + data[5] + data[6]/56});
-    //console.log("averaged water data", this.state.weeklywaterData)
+    let average = (data[0] + data[1] + data[2] + data[3] + data[4] + data[5] + data[6])/56
+    console.log("sleep", data)
+    this.setState({sleepAverage: average});
+    
   };
 
   getLowestAverage = async() => {
 
-    let averages = [this.state.weeklySleepAverage -1,this.state.weeklywaterAverage -1,this.state.weeklyfoodAverage - 1]
+    let averages = [this.state.sleepAverage-1,this.state.waterAverage-1,this.state.foodAverage-1]
     let words = ["sleep","water","food"]
-    let worst = Math.min(averages)
+    let worst = Math.min(averages[0],averages[1],averages[2])
+    console.log("worst", worst)
+    let lowest = ""
 
     for(let i=0;i<3;i++)
     {
       if(averages[i]== worst)
       {
-        return words[i]
+        lowest = words[i]
       }
+      
     }
 
+    console.log("lowest: ", lowest)
 
+ 
 
-  
-
+    if(lowest == "sleep")
+    {
+     
+      this.setState({feedbackCard: <Card>
+        <Card.Title>Sleep Advice</Card.Title>
+          <Card.Image source={require('../images/water.jpg')}>
+            <Text style={{marginBottom: 75}}>
+              Your water intake seems to be below average. Why not look for info below from HSE?
+            </Text>
+            <Button
+                icon={<Icon name='code' color='#ffffff' />}
+                buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                title='Visit HSE'
+              onPress={ ()=> Linking.openURL('https://www.hse.ie') }/>
+          </Card.Image>
+    </Card>}) 
+    }
+  else if(lowest == "water")
+  {
+    
+    this.setState({feedbackCard: <Card>
+      <Card.Title>Water Advice</Card.Title>
+        <Card.Image source={require('../images/water.jpg')}>
+          <Text style={{marginBottom: 75}}>
+            Your water intake seems to be below average. Why not look for info below from HSE?
+          </Text>
+          <Button
+              icon={<Icon name='code' color='#ffffff' />}
+              buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+              title='Visit HSE'
+            onPress={ ()=> Linking.openURL('https://www.hse.ie') }/>
+        </Card.Image>
+  </Card>} )
   }
+  else if(lowest == "food")
+  {
 
-  
+    this.setState({feedbackCard: <Card>
+      <Card.Title>Food Advice</Card.Title>
+      <Text style={{marginBottom: 10}}>
+            Your food intake seems to be that of a 5 year old. Why not look for info below from HSE?
+          </Text>
+        <Card.Image source={require('../images/food.jpg')}>
+          <Button
+              icon={<Icon name='code' color='#ffffff' />}
+              buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+              title='Visit HSE'
+            onPress={ ()=> Linking.openURL('https://www.hse.ie') }/>
+        </Card.Image>
+  </Card>} )
+    
+  } 
+ }
 
-  toggleExpanded = () => {
-    this.setState({ collapsed: !this.state.collapsed });
-  };
+    componentDidMount() {
+      this.getFoodProgress()
+      this.getWaterProgress()
+      this.getSleepProgress()
+    
+      setTimeout(() => {
+        this.getAverageFood()
+        this.getAverageWater()
+        this.getAverageSleep()
+        this.getLowestAverage()
+      }, 1000);
+     
+      
+    }
+
+    
 
 
   HandleGetUserId = () => {
@@ -214,47 +280,7 @@ export default class FeedbackScreen extends React.Component {
         </View>
 
         <ScrollView>
-        <Card>
-            <Card.Title>Water Advice</Card.Title>
-              <Card.Image source={require('../images/water.jpg')}>
-                <Text style={{marginBottom: 75}}>
-                  Your water intake seems to be below average. Why not look for info below from HSE?
-                </Text>
-                <Button
-                    icon={<Icon name='code' color='#ffffff' />}
-                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-                    title='Visit HSE'
-                  onPress={ ()=> Linking.openURL('https://www.hse.ie') }/>
-              </Card.Image>
-        </Card>
-
-        <Card>
-            <Card.Title>Water Advice</Card.Title>
-              <Card.Image source={require('../images/water.jpg')}>
-                <Text style={{marginBottom: 75}}>
-                  Your water intake seems to be below average. Why not look for info below from HSE?
-                </Text>
-                <Button
-                    icon={<Icon name='code' color='#ffffff' />}
-                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-                    title='Visit HSE'
-                  onPress={ ()=> Linking.openURL('https://www.hse.ie') }/>
-              </Card.Image>
-        </Card>
-
-        <Card>
-            <Card.Title>Water Advice</Card.Title>
-              <Card.Image source={require('../images/water.jpg')}>
-                <Text style={{marginBottom: 75}}>
-                  Your water intake seems to be below average. Why not look for info below from HSE?
-                </Text>
-                <Button
-                    icon={<Icon name='code' color='#ffffff' />}
-                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-                    title='Visit HSE'
-                  onPress={ ()=> Linking.openURL('https://www.hse.ie') }/>
-              </Card.Image>
-        </Card>
+        {this.state.feedbackCard}
         </ScrollView>
         
 
