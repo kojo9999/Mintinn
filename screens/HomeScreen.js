@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -36,10 +36,16 @@ class HomeScreen extends Component {
             onPress={() => this.props.navigation.openDrawer()}
           />
           <Text style={styles.headerTitle}>Dashboard</Text>
-         
+          <Ionicons
+            style={styles.headerItem}
+            name="ios-contact"
+            size={50}
+            md="md-contact"
+          />
         </View>
 
         <View style={styles.diaryAct}>
+        <TouchableOpacity style={styles.touchable} onPress={() => this.props.navigation.navigate("CalendarScreen")}>
           <ImageBackground
             source={require("../images/clouds.png")}
             style={styles.image}
@@ -48,29 +54,37 @@ class HomeScreen extends Component {
             <Text style={styles.diaryDescription}>
               You Statistics can be used to see an overview of your daily progress
             </Text>
-            <TouchableOpacity style={styles.downArrow} onPress={() => this.props.navigation.navigate("CalendarScreen")}></TouchableOpacity>
           </ImageBackground>
+          </TouchableOpacity>
         </View>
         <Text style={styles.subActText}>More activites ...</Text>
         <View style={styles.subAct}>
           <ScrollView horizontal={true}>
             <View style={styles.subActWindow}>
-              <ImageBackground
+            <TouchableOpacity style={styles.touchable} onPress={() => this.props.navigation.navigate("SleepScreen")}>
+            <ImageBackground
                 source={require("../images/sleep.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Sleep</Text><TouchableOpacity style={styles.subDownArrow} onPress={() => this.props.navigation.navigate("SleepScreen")}></TouchableOpacity></ImageBackground>
+              ><Text style={styles.title}>Sleep</Text></ImageBackground>
+            </TouchableOpacity>
             </View>
             <View style={styles.subActWindow}>
-              <ImageBackground
+            <TouchableOpacity style={styles.touchable} onPress={() => this.props.navigation.navigate("WaterScreen")}>
+            <ImageBackground
                 source={require("../images/water.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Water</Text><TouchableOpacity style={styles.subDownArrow} onPress={() => this.props.navigation.navigate("WaterScreen")}></TouchableOpacity></ImageBackground>
+              ><Text style={styles.title}>Water</Text>
+              </ImageBackground>
+            </TouchableOpacity>
             </View>
             <View style={styles.subActWindow}>
+            <TouchableOpacity style={styles.touchable} onPress={() => this.props.navigation.navigate("NutritionScreen")}>
               <ImageBackground
                 source={require("../images/food.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Food</Text><TouchableOpacity style={styles.subDownArrow} onPress={() => this.props.navigation.navigate("NutritionScreen")}></TouchableOpacity></ImageBackground>
+              ><Text style={styles.title}>Food</Text>
+              </ImageBackground>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
@@ -89,13 +103,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     marginLeft: 50,
-    marginRight: 140,
+    marginRight: 50,
   },
   diaryAct: {
-    backgroundColor: "#FDD7E4",
     alignSelf: "stretch",
     textAlign: "center",
-    backgroundColor: "black",
     height: 350,
     borderRadius: 20,
     marginLeft: 20,
@@ -117,7 +129,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   subActWindow: {
-    backgroundColor: "orange",
     borderRadius: 20,
     height: 160,
     width: 160,
@@ -142,6 +153,11 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingLeft: 20,
     paddingRight: 20
+  },
+  touchable:{
+    flex: 1,
+    borderRadius: 20,
+    overflow: "hidden",
   },
   title: {
     fontSize: 20,
@@ -168,7 +184,3 @@ const styles = StyleSheet.create({
     color: "white"
   }
 });
-
-{
-  /* onPress={() => this.props.navigation.navigate("WelcomeScreen")} */
-}
