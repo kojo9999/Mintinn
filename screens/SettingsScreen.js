@@ -46,10 +46,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    headerItem: {
+    headerView: {
+        paddingTop: StatusBar.currentHeight + 10,
+        alignSelf: "stretch",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerItem: {
         flex: 1,
         marginLeft: 30
-    },
+      },
     button: {
         height: 50,
         width: 200,
