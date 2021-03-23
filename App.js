@@ -12,10 +12,11 @@ import NutritionScreen from './screens/NutritionScreen'
 import WaterScreen from './screens/WaterScreen'
 import SleepScreen from './screens/SleepScreen'
 import QuestionScreen from './screens/QuestionScreen'
+import FeedbackScreen from './screens/FeedbackScreen'
 import firebase from 'firebase/app'
 import {firebaseConfig} from './config/config'
 import {createDrawerNavigator} from 'react-navigation-drawer'
-import {Ionicons, MaterialCommunityIcons, FontAwesome} from '@expo/vector-icons'
+import {Ionicons, MaterialCommunityIcons, FontAwesome, Entypo} from '@expo/vector-icons'
 
 class App extends React.Component{
     constructor(){
@@ -73,6 +74,13 @@ const AppDrawerNavigator = createDrawerNavigator({
             drawerIcon:() => <MaterialCommunityIcons name="account-question" size={24} />
         }
     },
+    FeedbackScreen:{
+        screen: FeedbackScreen,
+        navigationOptions: {
+            title:'Feedback',
+            drawerIcon:() => <Entypo name="swap" size={24} />
+        }
+    },
     InfoScreen:{
         screen: InfoScreen,
         navigationOptions: {
@@ -96,7 +104,9 @@ const LoginStackNavigator = createSwitchNavigator({
     CalendarScreen,
     SleepScreen,
     WaterScreen,
-    NutritionScreen
+    NutritionScreen,
+    QuestionScreen,
+    FeedbackScreen
 });
 
 const AppSwitchNavigator = createSwitchNavigator({

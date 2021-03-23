@@ -3,7 +3,8 @@ import {
   Text,
   View,
   StyleSheet,
-  Image
+  Image,
+  StatusBar
 }
   from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -39,7 +40,7 @@ export default class WaterScreen extends React.Component {
     return userId;
   }
 
-  TimeOfDay = () => {
+  timeOfDay = () => {
     const today = new Date();
     let time = "";
     if (new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes(), today.getSeconds()) <= new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11, 59, 59)) {
@@ -56,141 +57,44 @@ export default class WaterScreen extends React.Component {
     }
   }
 
-  CheckTodaysWater = async (InputValue) => {
+  addwater = async (inputValue) => {
+    let user = this.HandleGetUserId();
+    let batch = firebase.firestore().batch();
     const today = new Date();
-    let addwater = (check) => this.addWaterStatus(InputValue, check)
-    waterCollection.doc(this.HandleGetUserId()).collection('water')
+    const time = this.timeOfDay();
+    console.log(time);
+    const newWaterDoc = {
+      updatedAt: new Date(),
+      waterstatus: inputValue,
+      timeOfDay: time,
+    };
+    waterCollection.doc(user).collection('water')
       .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-      .get().then(function (querySnapshot) {
-        console.log(querySnapshot.size)
-        if (querySnapshot.size == 0) {
-          addwater(false);
+      .where("timeOfDay", "==", time)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.size == 0) {
+          console.log("No docs found with today's date: creating new doc");
+          waterCollection.doc(user).collection("water").add({
+            createdat: new Date(),
+            waterstatus: inputValue,
+            timeOfDay: time,
+          });
+          this.setState({ outputText: "Your " + time + " water entry has been uploaded" })
+        } else {
+          snapshot.docs.forEach((doc) => {
+            console.log("docs found with todays date", time);
+            let docRef = waterCollection.doc(user).collection("water").doc(doc.id);
+            if (doc.data().timeOfDay == time) {
+              batch.update(docRef, newWaterDoc);
+              batch.commit().then(() => {
+                this.setState({ outputText: "Your " + time + " water entry has been updated" })
+              });
+            }
+          });
         }
-        else {
-          addwater(true);
-        }
-      })
-  };
-
-  addWaterStatus = async (InputValue, check) => {
-    const newDocumentBody = {
-      updatedat: new Date(),
-      waterstatus: InputValue,
-    };
-    let morningAdd = this.setState({ outputText: "Your morning water entry has been uploaded" })
-    let morningUpdate = this.setState({ outputText: "Your morning water entry has been updated" })
-    let afternoonAdd = this.setState({ outputText: "Your afternoon water entry has been uploaded" })
-    let afternoonUpdate = this.setState({ outputText: "Your afternoon water entry has been updated" })
-    let eveningAdd = this.setState({ outputText: "Your evening water entry has been uploaded" })
-    let eveningUpdate = this.setState({ outputText: "Your evening water entry has been updated" })
-    let time = this.TimeOfDay();
-    let user = this.HandleGetUserId();
-    let batch = firebase.firestore().batch()
-    const today = new Date();
-    if (check == true && time == "morning") {
-      waterCollection.doc(user).collection('water')
-        .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-        .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-        .where("timeofday", "==", "morning")
-        .get().then(function (querySnapshot) {
-          console.log(querySnapshot.size)
-          if (querySnapshot.size == 0) {
-            waterCollection.doc(user).collection('water').add({
-              createdat: new Date(),
-              waterstatus: InputValue,
-              timeofday: time,
-            })
-            return morningAdd
-          }
-          else {
-            waterCollection.doc(user).collection('water')
-              .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-              .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-              .where("timeofday", "==", "morning")
-              .get().then(function (querySnapshot) {
-                querySnapshot.docs.forEach((doc) => {
-                  console.log(doc.id, " => ", doc.data());
-                  const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
-                  batch.update(docRef, newDocumentBody)
-                })
-                batch.commit().then(() => {
-                  console.log('Morning water document was found and has been updated')
-                  return morningUpdate
-                })
-              })
-          }
-        })
-
-    }
-    else if (check == true && time == "afternoon") {
-      waterCollection.doc(user).collection('water')
-        .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-        .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-        .where("timeofday", "==", "afternoon")
-        .get().then(function (querySnapshot) {
-          console.log(querySnapshot.size)
-          if (querySnapshot.size == 0) {
-            waterCollection.doc(user).collection('water').add({
-              createdat: new Date(),
-              waterstatus: InputValue,
-              timeofday: time,
-            })
-            return afternoonAdd
-          }
-          else {
-            waterCollection.doc(user).collection('water')
-              .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-              .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-              .where("timeofday", "==", "afternoon")
-              .get().then(function (querySnapshot) {
-                querySnapshot.docs.forEach((doc) => {
-                  console.log(doc.id, " => ", doc.data());
-                  const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
-                  batch.update(docRef, newDocumentBody)
-                })
-                batch.commit().then(() => {
-                  console.log('Afternoon water document was found and has been updated')
-                  return afternoonUpdate
-                })
-              })
-          }
-        })
-    }
-    else {
-      waterCollection.doc(user).collection('water')
-        .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-        .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-        .where("timeofday", "==", "evening")
-        .get().then(function (querySnapshot) {
-          console.log(querySnapshot.size)
-          if (querySnapshot.size == 0) {
-            waterCollection.doc(user).collection('water').add({
-              createdat: new Date(),
-              waterstatus: InputValue,
-              timeofday: time,
-            })
-          return eveningAdd
-          }
-          else {
-            waterCollection.doc(user).collection('water')
-              .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-              .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-              .where("timeofday", "==", "evening")
-              .get().then(function (querySnapshot) {
-                querySnapshot.docs.forEach((doc) => {
-                  console.log(doc.id, " => ", doc.data());
-                  const docRef = waterCollection.doc(user).collection('water').doc(doc.id)
-                  batch.update(docRef, newDocumentBody)
-                })
-                batch.commit().then(() => {
-                  console.log('Evening water document was found and has been updated')
-                  return eveningUpdate
-                })    
-              })
-          }
-        })
-    }
+      });
   }
 
   handleSliderChange = (sliderValue) => {
@@ -199,8 +103,16 @@ export default class WaterScreen extends React.Component {
 
   render() {
     return (
-
       <View style={styles.container}>
+        <View style={styles.headerView}>
+          <Ionicons
+            style={styles.headerItem}
+            name="ios-menu"
+            size={50}
+            md="md-menu"
+            onPress={() => this.props.navigation.openDrawer()}
+          />
+        </View>
         <View style={styles.infoContainer}>
           <TouchableOpacity onPress={this.toggleExpanded}>
             <View style={styles.header}>
@@ -217,7 +129,7 @@ export default class WaterScreen extends React.Component {
             </View>
           </Collapsible>
         </View>
-        <Text style={styles.Question}>{`What amount of water have you drank this ${this.TimeOfDay()}?`}</Text>
+        <Text style={styles.Question}>{`What amount of water have you drank this ${this.timeOfDay()}?`}</Text>
         <View style={styles.waterImages}>
           <View style={styles.arrayImages}>{[...Array(this.state.sliderValue - 1)].map((e, i) => <Image source={require("../images/waterfull.png")} style={styles.waterImage} key={i}></Image>)}</View>
           {this.state.sliderValue == 1 ? <Image source={require("../images/waterempty.png")} style={styles.waterImage}></Image> : null}
@@ -231,7 +143,7 @@ export default class WaterScreen extends React.Component {
         </View>
         <Slider style={styles.slider} value={this.state.sliderValue} maximumValue={4} minimumValue={1} step={1} onValueChange={this.handleSliderChange} />
         <Text>{this.state.outputText}</Text>
-        <TouchableOpacity style={styles.button} onPress={() => this.CheckTodaysWater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => this.addwater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableOpacity>
       </View>
 
     );
@@ -243,6 +155,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  headerView: {
+    paddingTop: StatusBar.currentHeight + -100,
+    alignSelf: "stretch",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerItem: {
+    flex: 1,
+    marginLeft: 30
   },
   button: {
     height: 50,

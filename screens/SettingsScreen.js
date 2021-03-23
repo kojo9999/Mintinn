@@ -1,13 +1,15 @@
 import React from "react";
 import { Component } from "react";
 import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    StatusBar
 } from "react-native";
 import firebase from "firebase/app";
 import "firebase/auth";
+import { Ionicons } from "@expo/vector-icons";
 
 class SettingsScreen extends Component {
     signOut = async () => {
@@ -21,6 +23,13 @@ class SettingsScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Ionicons
+                    style={styles.headerItem}
+                    name="ios-menu"
+                    size={50}
+                    md="md-menu"
+                    onPress={() => this.props.navigation.openDrawer()}
+                />
                 <TouchableOpacity style={styles.button}
                     onPress={() => this.signOut()}>
                     <Text style={styles.signout}>Sign Out</Text>
@@ -37,6 +46,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    headerView: {
+        paddingTop: StatusBar.currentHeight + 10,
+        alignSelf: "stretch",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerItem: {
+        flex: 1,
+        marginLeft: 30
+      },
     button: {
         height: 50,
         width: 200,

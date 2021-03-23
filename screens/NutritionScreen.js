@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, StatusBar } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import "firebase/auth";
 import "firebase/firestore";
@@ -152,6 +152,15 @@ export default class FoodScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+      <View style={styles.headerView}>
+          <Ionicons
+            style={styles.headerItem}
+            name="ios-menu"
+            size={50}
+            md="md-menu"
+            onPress={() => this.props.navigation.openDrawer()}
+          />
+        </View>
         <View style={styles.infoContainer}>
           <TouchableOpacity onPress={this.toggleExpanded}>
             <View style={styles.header}>
@@ -222,6 +231,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  headerView: {
+    paddingTop: StatusBar.currentHeight + -100,
+    alignSelf: "stretch",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerItem: {
+    flex: 1,
+    marginLeft: 30
   },
   button: {
     height: 50,
