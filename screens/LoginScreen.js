@@ -260,7 +260,7 @@ export default class LoginSCreen extends React.Component {
             onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
           />
           <Text style={styles.error}>{this.state.confirmPasswordError}</Text>
-          <Text style={styles.authIconsText}>By clicking this button you are agreeing that you have read the tearms and conditions</Text>
+          <Text style={styles.authIconsText}>By clicking this button you are confirming you are the of age 18 or over</Text>
           <CheckBox
             center
             iconRight
@@ -370,7 +370,9 @@ const styles = StyleSheet.create({
     color: 'blue',
   },
   authIconsText: {
-    marginBottom: 5
+    marginBottom: 0,
+    fontSize: 12,
+    textAlign: "center"
   },
   authIcons: {
     marginBottom: 50,
