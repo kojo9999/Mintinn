@@ -45,7 +45,7 @@ export default class QuestionScreen extends React.Component {
     let userId = this.HandleGetUserId();
     let batch = firebase.firestore().batch();
     const today = new Date();
-    AnswerCollection.doc(userId).collection('water')
+    AnswerCollection.doc(userId).collection('questions')
       .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
       .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
       .get().then(function (querySnapshot) {
