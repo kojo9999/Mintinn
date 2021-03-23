@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     },
     headerItem: {
         flex: 1,
-        textAlign: "center",
+        marginLeft: 30
     },
     button: {
         height: 50,

@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   headerItem: {
     flex: 1,
-    textAlign: "center",
+    marginLeft: 30
   },
   graphs: {
     flex: 1,

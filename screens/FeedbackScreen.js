@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, ScrollView, StyleSheet, Image,Linking } from "react-native";
+import { Text, View, ScrollView, StyleSheet, Image,Linking, StatusBar} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import "firebase/auth";
 import "firebase/firestore";
@@ -257,19 +257,16 @@ export default class FeedbackScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.headerView}>
+          <Ionicons
+            style={styles.headerItem}
+            name="ios-menu"
+            size={50}
+            md="md-menu"
+            onPress={() => this.props.navigation.openDrawer()}
+          /></View>
         <View style={styles.infoContainer}>
-          <TouchableOpacity onPress={this.toggleExpanded}>
-            <View style={styles.header}>
-              <Ionicons name="ios-information-circle" size={28} color="black" />
 
-            </View>
-          </TouchableOpacity>
-
-          <Collapsible collapsed={this.state.collapsed} align="center">
-            <View style={styles.content}>
-              <Text>View Your Customized Daily Feedback Here</Text>
-            </View>
-          </Collapsible>
           <Image source={require("../images/feedback.png")} style={styles.foodImage}></Image>
         </View>
 
@@ -295,6 +292,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  headerView: {
+    paddingTop: StatusBar.currentHeight + 10,
+    alignSelf: "stretch",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerItem: {
+    flex: 1,
+    marginLeft: 30
   },
   button: {
     height: 50,
