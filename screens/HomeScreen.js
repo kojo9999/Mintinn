@@ -36,12 +36,6 @@ class HomeScreen extends Component {
             onPress={() => this.props.navigation.openDrawer()}
           />
           <Text style={styles.headerTitle}>Dashboard</Text>
-          <Ionicons
-            style={styles.headerItem}
-            name="ios-contact"
-            size={50}
-            md="md-contact"
-          />
         </View>
 
         <View style={styles.diaryAct}>
@@ -94,7 +88,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     marginLeft: 50,
-    marginRight: 50,
+    marginRight: 150,
   },
   diaryAct: {
     backgroundColor: "#FDD7E4",
