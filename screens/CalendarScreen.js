@@ -168,7 +168,7 @@ export default class CalendarScreen extends Component {
             <LineChart
 
               data={{
-                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                labels: ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"],
                 datasets: [
                   {
                     data: this.state.sleepData
@@ -203,7 +203,7 @@ export default class CalendarScreen extends Component {
             <LineChart
 
               data={{
-                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                labels: ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"],
                 datasets: [
                   {
                     data: this.state.weeklyfoodData
@@ -237,7 +237,7 @@ export default class CalendarScreen extends Component {
             <Text style={styles.graphLabel}>Water</Text>
             <LineChart
               data={{
-                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                labels: ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"],
                 datasets: [
                   {
                     data: this.state.weeklywaterData
