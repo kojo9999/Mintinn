@@ -5,7 +5,8 @@ import {
     Text,
     TouchableOpacity,
     View,
-    StatusBar
+    StatusBar,
+    ImageBackground
 } from "react-native";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -20,10 +21,16 @@ class SettingsScreen extends Component {
             alert("unable to sign out right now");
         }
     };
+
+    componentDidMount(){
+        this.signOut()
+    }
+    
     render() {
         return (
+            <ImageBackground source={require("../images/authBackground.png")} style={styles.image}>
             <View style={styles.container}>
-                <Ionicons
+                {/* <Ionicons
                     style={styles.headerItem}
                     name="ios-menu"
                     size={50}
@@ -33,8 +40,9 @@ class SettingsScreen extends Component {
                 <TouchableOpacity style={styles.button}
                     onPress={() => this.signOut()}>
                     <Text style={styles.signout}>Sign Out</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
+            </ImageBackground>
         );
     }
 }
@@ -56,6 +64,12 @@ const styles = StyleSheet.create({
       headerItem: {
         flex: 1,
         marginLeft: 30
+      },
+      image: {
+        flex: 1,
+        resizeMode: "cover",
+        justifyContent: "center",
+        backgroundColor: "#FFBC78"
       },
     button: {
         height: 50,
