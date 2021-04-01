@@ -16,12 +16,13 @@ export default class CalendarScreen extends Component {
     super();
     this.state = {
       foodData: [],
-      weeklyfoodData: [0,0,0,0,0,0,0],
+      weeklyfoodData: [0, 0, 0, 0, 0, 0, 0],
       foodDate: [],
       waterData: [],
-      weeklywaterData: [0,0,0,0,0,0,0],
+      weeklywaterData: [0, 0, 0, 0, 0, 0, 0],
       waterDate: [],
-      sleepData: [0,0,0,0,0,0,0],
+      sleepData: [],
+      weeklySleepData: [0, 0, 0, 0, 0, 0, 0],
       startDate: "",
       endDate: ""
     }
@@ -39,10 +40,10 @@ export default class CalendarScreen extends Component {
         snapshot.docs.forEach((doc) => {
           food.push(doc.data().foodamount);
           //this.state.foodDate.push(doc.data().createdat);
-          //console.log(doc.data().foodamount)
+          console.log(doc.data().foodamount)
         })
       })
-      this.setState({foodData: food})
+    this.setState({ foodData: food })
   }
 
   getWaterProgress = async () => {
@@ -60,7 +61,7 @@ export default class CalendarScreen extends Component {
           //console.log("water data",doc.data().waterstatus)
         })
       })
-      this.setState({waterData: water})
+    this.setState({ waterData: water })
   }
 
   getSleepProgress = async () => {
@@ -69,15 +70,52 @@ export default class CalendarScreen extends Component {
     let sleep = [];
     let weekago = (new Date(new Date() - (86400000 * 6)))
     waterCollection.doc(userId).collection('sleep')
-    .where("createdat", ">", new Date(weekago.getFullYear(), weekago.getMonth(), weekago.getDate(), 0, 0, 0))
-    .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+      .where("createdat", ">", new Date(weekago.getFullYear(), weekago.getMonth(), weekago.getDate(), 0, 0, 0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           sleep.push(doc.data().sleepamount);
           //console.log("sleep data",doc.data().sleepamount)
         })
       })
-      this.setState({sleepData: sleep});
+    this.setState({ sleepData: sleep });
+  }
+
+  getWeeklySleep = async () => {
+    let data = this.state.sleepData;
+    const empty = newdata => newdata.length = 0;
+    empty(this.state.weeklySleepData)
+    let day7 = Number(data[0]);
+    let day6 = Number(data[1]);
+    let day5 = Number(data[2]);
+    let day4 = Number(data[3]);
+    let day3 = Number(data[4]);
+    let day2 = Number(data[5]);
+    let day1 = Number(data[6]);
+    if (data.length == 0) {
+      this.setState({ weeklySleepData: [0, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 1) {
+      this.setState({ weeklySleepData: [day7, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 2) {
+      this.setState({ weeklySleepData: [day7, day6, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 3) {
+      this.setState({ weeklySleepData: [day7, day6, day5, 0, 0, 0, 0] });
+    }
+    else if (data.length == 4) {
+      this.setState({ weeklySleepData: [day7, day6, day5, day4, 0, 0, 0] });
+    }
+    else if (data.length == 5) {
+      this.setState({ weeklySleepData: [day7, day6, day5, day4, day3, 0, 0] });
+    }
+    else if (data.length == 6) {
+      this.setState({ weeklySleepData: [day7, day6, day5, day4, day3, day2, 0] });
+    }
+    else {
+      this.setState({ weeklySleepData: [day7, day6, day5, day4, day3, day2, day1] });
+    }
   }
 
   getAverageFood = async () => {
@@ -85,14 +123,36 @@ export default class CalendarScreen extends Component {
     const empty = newdata => newdata.length = 0;
     empty(this.state.weeklyfoodData)
     let day7 = Number(((data[0] + data[1] + data[2]) / 3).toFixed());
-    let day6 = Number(((data[4] + data[4] + data[5]) / 3).toFixed());
+    let day6 = Number(((data[3] + data[4] + data[5]) / 3).toFixed());
     let day5 = Number(((data[6] + data[7] + data[8]) / 3).toFixed());
     let day4 = Number(((data[9] + data[10] + data[11]) / 3).toFixed());
     let day3 = Number(((data[12] + data[13] + data[14]) / 3).toFixed());
     let day2 = Number(((data[15] + data[16] + data[17]) / 3).toFixed());
     let day1 = Number(((data[18] + data[19] + data[20]) / 3).toFixed());
-    this.setState({weeklyfoodData: [day7, day6, day5, day4, day3, day2, day1]});
-    //console.log("averaged food data", this.state.weeklyfoodData)
+    if (data.length == 0) {
+      this.setState({ weeklywaterData: [0, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 3) {
+      this.setState({ weeklyfoodData: [day7, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 6) {
+      this.setState({ weeklyfoodData: [day7, day6, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 9) {
+      this.setState({ weeklyfoodData: [day7, day6, day5, 0, 0, 0, 0] });
+    }
+    else if (data.length == 12) {
+      this.setState({ weeklyfoodData: [day7, day6, day5, day4, 0, 0, 0] });
+    }
+    else if (data.length == 15) {
+      this.setState({ weeklyfoodData: [day7, day6, day5, day4, day3, 0, 0] });
+    }
+    else if (data.length == 18) {
+      this.setState({ weeklyfoodData: [day7, day6, day5, day4, day3, day2, 0] });
+    }
+    else {
+      this.setState({ weeklyfoodData: [day7, day6, day5, day4, day3, day2, day1] });
+    }
   };
 
   getAverageWater = async () => {
@@ -100,14 +160,36 @@ export default class CalendarScreen extends Component {
     const empty = newdata => newdata.length = 0;
     empty(this.state.weeklywaterData)
     let day7 = Number(((data[0] + data[1] + data[2]) / 3).toFixed());
-    let day6 = Number(((data[4] + data[4] + data[5]) / 3).toFixed());
+    let day6 = Number(((data[3] + data[4] + data[5]) / 3).toFixed());
     let day5 = Number(((data[6] + data[7] + data[8]) / 3).toFixed());
     let day4 = Number(((data[9] + data[10] + data[11]) / 3).toFixed());
     let day3 = Number(((data[12] + data[13] + data[14]) / 3).toFixed());
     let day2 = Number(((data[15] + data[16] + data[17]) / 3).toFixed());
     let day1 = Number(((data[18] + data[19] + data[20]) / 3).toFixed());
-    this.setState({weeklywaterData: [day7, day6, day5, day4, day3, day2, day1]});
-    //console.log("averaged water data", this.state.weeklywaterData)
+    if (data.length == 0) {
+      this.setState({ weeklywaterData: [0, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 3) {
+      this.setState({ weeklywaterData: [day7, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 6) {
+      this.setState({ weeklywaterData: [day7, day6, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 9) {
+      this.setState({ weeklywaterData: [day7, day6, day5, 0, 0, 0, 0] });
+    }
+    else if (data.length == 12) {
+      this.setState({ weeklywaterData: [day7, day6, day5, day4, 0, 0, 0] });
+    }
+    else if (data.length == 15) {
+      this.setState({ weeklywaterData: [day7, day6, day5, day4, day3, 0, 0] });
+    }
+    else if (data.length == 18) {
+      this.setState({ weeklywaterData: [day7, day6, day5, day4, day3, day2, 0] });
+    }
+    else {
+      this.setState({ weeklywaterData: [day7, day6, day5, day4, day3, day2, day1] });
+    }
   };
 
   // getAverageProgress = () => {
@@ -144,20 +226,22 @@ export default class CalendarScreen extends Component {
     setTimeout(() => {
       this.getAverageFood()
       this.getAverageWater()
+      this.getWeeklySleep()
     }, 1000);
   }
+
   render() {
     return (
       <ScrollView style={styles.graphContainer}>
         <View style={styles.graphs}>
           <View style={styles.filters}>
-          <Ionicons
-            style={styles.headerItem}
-            name="ios-menu"
-            size={50}
-            md="md-menu"
-            onPress={() => this.props.navigation.openDrawer()}
-          />
+            <Ionicons
+              style={styles.headerItem}
+              name="ios-menu"
+              size={50}
+              md="md-menu"
+              onPress={() => this.props.navigation.openDrawer()}
+            />
             <TouchableOpacity style={styles.outterLeftFilterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 7)}><Text>1 Week</Text></TouchableOpacity>
             <TouchableOpacity style={styles.filterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 14)}><Text>2 Weeks</Text></TouchableOpacity>
             <TouchableOpacity style={styles.filterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 28)}><Text>1 Month</Text></TouchableOpacity>
@@ -171,7 +255,7 @@ export default class CalendarScreen extends Component {
                 labels: ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"],
                 datasets: [
                   {
-                    data: this.state.sleepData
+                    data: this.state.weeklySleepData
                   },
                 ],
               }}
