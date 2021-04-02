@@ -1,13 +1,15 @@
 import React from "react";
+import { Audio } from "expo-av";
+import { Snackbar } from "react-native-paper"
 import {
   Text,
   View,
   StyleSheet,
   Image,
-  StatusBar
+  StatusBar,
 }
   from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableNativeFeedback, TouchableOpacity } from "react-native-gesture-handler";
 import Slider from "@react-native-community/slider";
 import "firebase/auth";
 import "firebase/firestore";
@@ -26,8 +28,14 @@ export default class WaterScreen extends React.Component {
       createdat: "",
       userId: "",
       sliderValue: 1,
-      outputText: ""
+      outputText: "",
+      snackbarShow: false
     }
+  }
+
+  handleSnackbar = () => {
+    this.setState({snackbarShow: true})
+    setTimeout(()=> {this.setState({snackbarShow: false})}, 2000)
   }
 
   toggleExpanded = () => {
@@ -58,6 +66,7 @@ export default class WaterScreen extends React.Component {
   }
 
   addwater = async (inputValue) => {
+    this.handleSnackbar()
     let user = this.HandleGetUserId();
     let batch = firebase.firestore().batch();
     const today = new Date();
@@ -96,6 +105,8 @@ export default class WaterScreen extends React.Component {
         }
       });
   }
+
+  
 
   handleSliderChange = (sliderValue) => {
     this.setState({ sliderValue })
@@ -142,9 +153,20 @@ export default class WaterScreen extends React.Component {
           {this.state.sliderValue == 4 ? <View><Text>Large</Text></View> : null}
         </View>
         <Slider style={styles.slider} value={this.state.sliderValue} maximumValue={4} minimumValue={1} step={1} onValueChange={this.handleSliderChange} />
-        <Text>{this.state.outputText}</Text>
-        <TouchableOpacity style={styles.button} onPress={() => this.addwater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableOpacity>
+
+        <View style={styles.button}><TouchableNativeFeedback style={styles.button} background={TouchableNativeFeedback.Ripple('#000', true)} onPress={() => this.addwater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableNativeFeedback></View>
+        <Snackbar
+        visible={this.state.snackbarShow}
+          action={{
+          label: 'OK',
+          onPress: () => {
+            this.setState({snackbarShow: false})
+          },
+        }}>
+        {this.state.outputText}
+      </Snackbar>
       </View>
+      
 
     );
   }
@@ -157,7 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerView: {
-    paddingTop: StatusBar.currentHeight + -100,
+    marginTop: StatusBar.currentHeight -120 ,
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",
@@ -171,9 +193,10 @@ const styles = StyleSheet.create({
     height: 50,
     width: 200,
     borderRadius: 30,
-    backgroundColor: 'black',
+    backgroundColor: '#32a852',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    overflow: 'hidden'
   },
   Text: {
     color: 'white'
@@ -182,7 +205,7 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   slider: {
-    marginBottom: 80,
+    marginBottom: 140,
     minWidth: 300
   },
   submit: {
@@ -212,7 +235,7 @@ const styles = StyleSheet.create({
     maxHeight: 200
   },
   infoContainer: {
-    marginTop: -80,
+    marginTop: -60,
     marginBottom: 30,
     height: 200,
     alignItems: "center",
