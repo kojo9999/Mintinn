@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerView: {
-    marginTop: StatusBar.currentHeight -140 ,
+    marginTop: StatusBar.currentHeight -120 ,
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",
