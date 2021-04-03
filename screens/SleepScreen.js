@@ -1,10 +1,11 @@
 import React, { Component, useState } from "react";
+import { Snackbar } from "react-native-paper"
 import { View, Text, StyleSheet, TextInput, Button, Image, StatusBar } from "react-native";
 import "firebase/firestore";
 import * as firebase from "firebase";
 import { Alert } from "react-native";
 import { db } from "../config/config";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, TouchableNativeFeedback } from "react-native-gesture-handler";
 import Collapsible from 'react-native-collapsible'
 import {Ionicons} from '@expo/vector-icons'
 const sleepCollection = db().collection("profile");
@@ -16,8 +17,18 @@ export default class SleepScreen extends React.Component {
       createdAt: "",
       sleep: 0,
       sleepInput: "",
-      error: ""
+      error: "",
+      snackbarShow: false,
     };
+  }
+
+  handleSnackbar = () => {
+    this.setState({snackbarShow: true})
+    setTimeout(()=> {this.setState({snackbarShow: false})}, 3000)
+  }
+  
+  onDismissSnackBar = () => {
+    this.setState({snackbarShow: false})
   }
 
   toggleExpanded = () => {
@@ -57,6 +68,7 @@ export default class SleepScreen extends React.Component {
   };
 
   saveSleep = () => {
+    this.handleSnackbar()
     let today = new Date();
     let batch = firebase.firestore().batch();
     let userId = this.HandleGetUserId();
@@ -160,13 +172,19 @@ export default class SleepScreen extends React.Component {
           onBlur={() => this.sleepValidator()}
           onChangeText={(sleepInput) => this.setState({ sleep: sleepInput })}
         />
-        <Text>{this.state.error}</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.saveSleep()}
-        >
-          <Text style={styles.submit}>Submit</Text>
-        </TouchableOpacity>
+      
+        <View style={styles.button}><TouchableNativeFeedback style={styles.button} background={TouchableNativeFeedback.Ripple('#000', true)} onPress={() => this.saveSleep()}><Text style={styles.submit}>Submit</Text></TouchableNativeFeedback></View>
+        <Snackbar
+        visible={this.state.snackbarShow}
+        onDismiss={this.onDismissSnackBar}
+          action={{
+          label: 'OK',
+          onPress: () => {
+            this.setState({snackbarShow: false})
+          },
+        }}>
+        {this.state.error}
+      </Snackbar>
       </View>
     );
   }
@@ -179,7 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerView: {
-    paddingTop: StatusBar.currentHeight - 100,
+    marginTop: StatusBar.currentHeight -120 ,
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",
@@ -195,16 +213,17 @@ const styles = StyleSheet.create({
     padding: 8,
     margin: 10,
     width: 200,
-    marginBottom: 40,
+    marginBottom: 160,
     marginTop: 40,
   },
   button: {
     height: 50,
     width: 200,
     borderRadius: 30,
-    backgroundColor: "black",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#32a852',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden'
   },
   submit: {
     color: "white",
@@ -218,7 +237,7 @@ const styles = StyleSheet.create({
     maxHeight: 200
   },
   infoContainer: {
-    marginTop: -80,
+    marginTop: -60,
     marginBottom: 30,
     height: 200,
     alignItems: "center",
