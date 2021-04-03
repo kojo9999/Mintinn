@@ -35,7 +35,7 @@ export default class WaterScreen extends React.Component {
 
   handleSnackbar = () => {
     this.setState({snackbarShow: true})
-    setTimeout(()=> {this.setState({snackbarShow: false})}, 2000)
+    setTimeout(()=> {this.setState({snackbarShow: false})}, 3000)
   }
 
   onDismissSnackBar = () => {

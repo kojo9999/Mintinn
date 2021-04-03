@@ -27,6 +27,7 @@ export default class FoodScreen extends React.Component {
     this.setState({snackbarShow: true})
     setTimeout(()=> {this.setState({snackbarShow: false})}, 3000)
   }
+  
 
   onDismissSnackBar = () => {
     this.setState({snackbarShow: false})
