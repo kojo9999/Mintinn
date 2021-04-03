@@ -38,6 +38,10 @@ export default class WaterScreen extends React.Component {
     setTimeout(()=> {this.setState({snackbarShow: false})}, 2000)
   }
 
+  onDismissSnackBar = () => {
+    this.setState({snackbarShow: false})
+  }
+
   toggleExpanded = () => {
     this.setState({ collapsed: !this.state.collapsed });
   };
@@ -157,6 +161,7 @@ export default class WaterScreen extends React.Component {
         <View style={styles.button}><TouchableNativeFeedback style={styles.button} background={TouchableNativeFeedback.Ripple('#000', true)} onPress={() => this.addwater(this.state.sliderValue)}><Text style={styles.submit}>Submit</Text></TouchableNativeFeedback></View>
         <Snackbar
         visible={this.state.snackbarShow}
+        onDismiss={this.onDismissSnackBar}
           action={{
           label: 'OK',
           onPress: () => {
