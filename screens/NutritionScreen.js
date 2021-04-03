@@ -1,6 +1,7 @@
 import React from "react";
+import { Snackbar } from "react-native-paper"
 import { Text, View, StyleSheet, Image, StatusBar } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, TouchableNativeFeedback } from "react-native-gesture-handler";
 import "firebase/auth";
 import "firebase/firestore";
 import firebase from "firebase/app";
@@ -17,9 +18,20 @@ export default class FoodScreen extends React.Component {
       createdat: "",
       userId: "",
       sliderValue: 1,
-      error: ""
+      error: "",
+      snackbarShow: false
     };
   }
+
+  handleSnackbar = () => {
+    this.setState({snackbarShow: true})
+    setTimeout(()=> {this.setState({snackbarShow: false})}, 3000)
+  }
+
+  onDismissSnackBar = () => {
+    this.setState({snackbarShow: false})
+  }
+
 
   toggleExpanded = () => {
     this.setState({ collapsed: !this.state.collapsed });
@@ -75,6 +87,7 @@ export default class FoodScreen extends React.Component {
 
   addFood = async (inputValue) => {
     //console.log("addFood2() is being called");
+    this.handleSnackbar()
     let userId = this.HandleGetUserId();
     let batch = firebase.firestore().batch();
     const today = new Date();
@@ -211,16 +224,22 @@ export default class FoodScreen extends React.Component {
           step={1}
           onValueChange={this.handleSliderChange}
         />
-        <Text>{this.state.error}</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.addFood(this.state.sliderValue)}
-        >
-          <Text style={styles.submit}>Submit</Text>
-        </TouchableOpacity>
+       
+        <View style={styles.button}><TouchableNativeFeedback style={styles.button} background={TouchableNativeFeedback.Ripple('#000', true)} onPress={() => this.addFood(0)}><Text style={styles.submit}>Submit</Text></TouchableNativeFeedback></View>
         <TouchableOpacity style={styles.skip} onPress={() => this.addFood(0)}>
           <Text style={styles.notEatenLink}>I haven't eaten yet</Text>
         </TouchableOpacity>
+        <Snackbar
+        visible={this.state.snackbarShow}
+        onDismiss={this.onDismissSnackBar}
+          action={{
+          label: 'OK',
+          onPress: () => {
+            this.setState({snackbarShow: false})
+          },
+        }}>
+        {this.state.error}
+      </Snackbar>
       </View>
     );
   }
@@ -233,7 +252,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerView: {
-    paddingTop: StatusBar.currentHeight + -100,
+    marginTop: StatusBar.currentHeight -120 ,
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",
@@ -247,9 +266,10 @@ const styles = StyleSheet.create({
     height: 50,
     width: 200,
     borderRadius: 30,
-    backgroundColor: "black",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#32a852',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden'
   },
   Text: {
     color: "white",
@@ -258,7 +278,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   slider: {
-    marginBottom: 80,
+    marginBottom: 90,
     minWidth: 300,
   },
   submit: {
@@ -290,11 +310,12 @@ const styles = StyleSheet.create({
     maxHeight: 200
   },
   infoContainer: {
-    marginTop: -80,
+    marginTop: -60,
     marginBottom: 30,
     height: 200,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+
   },
   imageLabel: {
     marginBottom: 20
