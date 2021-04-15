@@ -278,7 +278,6 @@ export default class CalendarScreen extends Component {
                   stroke: "#4a4949",
                 },
               }}
-              bezier
               style={styles.graph}
             />
           </View>
@@ -313,7 +312,6 @@ export default class CalendarScreen extends Component {
                   stroke: "#4a4949",
                 },
               }}
-              bezier
               style={styles.graph}
             />
           </View>
@@ -347,7 +345,6 @@ export default class CalendarScreen extends Component {
                   stroke: "#4a4949",
                 },
               }}
-              bezier
               style={styles.graph}
             />
           </View>
