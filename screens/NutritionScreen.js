@@ -15,22 +15,26 @@ export default class FoodScreen extends React.Component {
   constructor() {
     super();
     this.state = {
+      foodData: [],
       createdat: "",
       userId: "",
       sliderValue: 1,
       error: "",
-      snackbarShow: false
+      snackbarShow: false,
+      morning: "None",
+      afternoon: "None",
+      evening: "None"
     };
   }
 
   handleSnackbar = () => {
-    this.setState({snackbarShow: true})
-    setTimeout(()=> {this.setState({snackbarShow: false})}, 3000)
+    this.setState({ snackbarShow: true })
+    setTimeout(() => { this.setState({ snackbarShow: false }) }, 3000)
   }
-  
+
 
   onDismissSnackBar = () => {
-    this.setState({snackbarShow: false})
+    this.setState({ snackbarShow: false })
   }
 
 
@@ -85,6 +89,42 @@ export default class FoodScreen extends React.Component {
       return time.toLowerCase();
     }
   };
+
+  dailyFoodProgress = () => {
+    const today = new Date();
+    let food = [];
+    let userId = this.HandleGetUserId();
+    foodCollection.doc(userId).collection('food')
+      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+      .get().then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          food.push(doc.data().timeOfDay);
+          //console.log(doc.data().waterstatus)
+        })
+        console.log(food)
+      })
+    setTimeout(() => {
+      this.setState({ foodData: food })
+      console.log("fooddata=>", this.state.foodData)
+      this.Dailycheck()
+    }, 1000);
+  }
+
+  Dailycheck = () => {
+    let check = this.state.foodData
+    for (var i = 0; i < check.length; i++) {
+      if (check[i] == "morning") {
+        this.setState({ morning: "true" })
+      }
+      else if (check[i] == "afternoon") {
+        this.setState({ afternoon: "true" })
+      }
+      else {
+        this.setState({ evening: "true" })
+      }
+    }
+  }
 
   addFood = async (inputValue) => {
     //console.log("addFood2() is being called");
@@ -157,16 +197,26 @@ export default class FoodScreen extends React.Component {
           });
         }
       });
+      setTimeout(() => {
+    this.dailyFoodProgress()
+  }, 1000);
   };
 
   handleSliderChange = (sliderValue) => {
     this.setState({ sliderValue });
   };
 
+  async componentDidMount() {
+    await this.dailyFoodProgress()
+    setTimeout(() => {
+      this.Dailycheck()
+    }, 1000);
+  }
+
   render() {
     return (
       <View style={styles.container}>
-      <View style={styles.headerView}>
+        <View style={styles.headerView}>
           <Ionicons
             style={styles.headerItem}
             name="ios-menu"
@@ -190,6 +240,9 @@ export default class FoodScreen extends React.Component {
             </View>
           </Collapsible>
         </View>
+        <Text>Morning {this.state.morning}</Text>
+        <Text>Afternoon {this.state.afternoon}</Text>
+        <Text>Evening {this.state.evening}</Text>
         <Text
           style={styles.Question}
         >{`How have you eaten ${this.TimeOfDay()}?`}</Text>
@@ -225,22 +278,22 @@ export default class FoodScreen extends React.Component {
           step={1}
           onValueChange={this.handleSliderChange}
         />
-       
+
         <View style={styles.button}><TouchableNativeFeedback style={styles.button} background={TouchableNativeFeedback.Ripple('#000', true)} onPress={() => this.addFood(0)}><Text style={styles.submit}>Submit</Text></TouchableNativeFeedback></View>
         <TouchableOpacity style={styles.skip} onPress={() => this.addFood(0)}>
           <Text style={styles.notEatenLink}>I haven't eaten yet</Text>
         </TouchableOpacity>
         <Snackbar
-        visible={this.state.snackbarShow}
-        onDismiss={this.onDismissSnackBar}
+          visible={this.state.snackbarShow}
+          onDismiss={this.onDismissSnackBar}
           action={{
-          label: 'OK',
-          onPress: () => {
-            this.setState({snackbarShow: false})
-          },
-        }}>
-        {this.state.error}
-      </Snackbar>
+            label: 'OK',
+            onPress: () => {
+              this.setState({ snackbarShow: false })
+            },
+          }}>
+          {this.state.error}
+        </Snackbar>
       </View>
     );
   }
@@ -253,7 +306,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerView: {
-    marginTop: StatusBar.currentHeight -120 ,
+    marginTop: StatusBar.currentHeight - 120,
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",

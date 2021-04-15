@@ -89,8 +89,8 @@ export default class WaterScreen extends React.Component {
     setTimeout(() => {
     this.setState({ waterData: water })
     console.log("waterdata=>",this.state.waterData)
-    }, 1000);
     this.Dailycheck()
+    }, 1000);
   }
 
   addwater = async (inputValue) => {
