@@ -369,13 +369,12 @@ const styles = StyleSheet.create({
     width: 400,
     height: 40,
     borderRadius: 10,
-    paddingRight: 15,
     flex: 1,
     flexDirection: "row",
   },
   headerItem: {
     flex: 1,
-    marginLeft: 30
+    marginLeft: 10
   },
   graphs: {
     flex: 1,
