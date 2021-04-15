@@ -23,13 +23,17 @@ export default class WaterScreen extends React.Component {
   constructor() {
     super();
     this.state = {
+      waterData: [],
       amount: ["none", "Small Amount", "Medium Amount", "Large Amount"],
       watertype: "",
       createdat: "",
       userId: "",
       sliderValue: 1,
       outputText: "",
-      snackbarShow: false
+      snackbarShow: false,
+      morning: "None",
+      afternoon: "None",
+      evening: "None"
     }
   }
 
@@ -45,7 +49,6 @@ export default class WaterScreen extends React.Component {
   toggleExpanded = () => {
     this.setState({ collapsed: !this.state.collapsed });
   };
-
 
   HandleGetUserId = () => {
     let userId = firebase.auth().currentUser.uid;
@@ -67,6 +70,27 @@ export default class WaterScreen extends React.Component {
       time = "Evening"
       return time.toLowerCase();
     }
+  }
+
+  dailyWaterProgress = () => {
+    const today = new Date();
+    let water = [];
+    let userId = this.HandleGetUserId();
+    waterCollection.doc(userId).collection('water')
+      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+      .get().then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+        water.push(doc.data().timeOfDay);
+        //console.log(doc.data().waterstatus)
+      })
+      console.log(water)
+    })  
+    setTimeout(() => {
+    this.setState({ waterData: water })
+    console.log("waterdata=>",this.state.waterData)
+    }, 1000);
+    this.Dailycheck()
   }
 
   addwater = async (inputValue) => {
@@ -108,9 +132,34 @@ export default class WaterScreen extends React.Component {
           });
         }
       });
+      this.dailyWaterProgress()
   }
 
+  Dailycheck = () =>{
+    let check = this.state.waterData
+    for(var i = 0; i < check.length; i++)
+    {
+      if(check[i] == "morning" )
+      {
+        this.setState({morning: "true"})
+      }
+      else if(check[i] == "afternoon" )
+      {
+        this.setState({afternoon: "true"})
+      }
+      else
+      {
+        this.setState({evening: "true"})
+      }
+    }
+  }
   
+  async componentDidMount() {
+    await this.dailyWaterProgress()
+    setTimeout(() => {
+    this.Dailycheck()
+    }, 1000);
+  }
 
   handleSliderChange = (sliderValue) => {
     this.setState({ sliderValue })
@@ -144,6 +193,9 @@ export default class WaterScreen extends React.Component {
             </View>
           </Collapsible>
         </View>
+        <Text>Morning {this.state.morning}</Text>
+        <Text>Afternoon {this.state.afternoon}</Text>
+        <Text>Evening {this.state.evening}</Text>
         <Text style={styles.Question}>{`What amount of water have you drank this ${this.timeOfDay()}?`}</Text>
         <View style={styles.waterImages}>
           <View style={styles.arrayImages}>{[...Array(this.state.sliderValue - 1)].map((e, i) => <Image source={require("../images/waterfull.png")} style={styles.waterImage} key={i}></Image>)}</View>
