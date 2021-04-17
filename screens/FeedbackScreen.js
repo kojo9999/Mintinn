@@ -23,7 +23,8 @@ export default class FeedbackScreen extends React.Component {
       sleepAverage: 0,
       startDate: "",
       endDate: "",
-      feedbackCard: <Text>No Feedback Right Now</Text>
+      feedbackCard: <Text>No Feedback Right Now</Text>,
+      goodFeedbackCard: <Text>No Feedback Right Now</Text>
     };
   }
 
@@ -118,8 +119,11 @@ export default class FeedbackScreen extends React.Component {
     let averages = [this.state.sleepAverage-1,this.state.waterAverage-1,this.state.foodAverage-1]
     let words = ["sleep","water","food"]
     let worst = Math.min(averages[0],averages[1],averages[2])
+    let best = Math.max(averages[0],averages[1],averages[2])
     console.log("worst", worst)
+    console.log("best", best)
     let lowest = ""
+    let highest = ""
 
     for(let i=0;i<3;i++)
     {
@@ -127,10 +131,20 @@ export default class FeedbackScreen extends React.Component {
       {
         lowest = words[i]
       }
+
+      if(averages[i]== best)
+      {
+        highest = words[i]
+      }
       
     }
 
-    console.log("lowest: ", lowest)
+    console.log("lowests: ", lowest)
+    console.log("highest: ", highest)
+
+    console.log("water: ", averages[1])
+    console.log("sleep: ", averages[0])
+    console.log("food: ", averages[2])
 
  
 
@@ -139,10 +153,10 @@ export default class FeedbackScreen extends React.Component {
      
       this.setState({feedbackCard: <Card>
         <Card.Title>Sleep Advice</Card.Title>
-          <Card.Image source={require('../images/water.jpg')}>
-            <Text style={{marginBottom: 75}}>
+        <Text style={{marginBottom: 10}}>
               Your sleep time seems to be below average. Why not look for info below from HSE?
             </Text>
+          <Card.Image source={require('../images/water.jpg')}>
             <Button
                 icon={<Icon name='code' color='#ffffff' />}
                 buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
@@ -156,10 +170,10 @@ export default class FeedbackScreen extends React.Component {
     
     this.setState({feedbackCard: <Card>
       <Card.Title>Water Advice</Card.Title>
-        <Card.Image source={require('../images/water.jpg')}>
-          <Text style={{marginBottom: 75}}>
+      <Text style={{marginBottom: 10}}>
             Your water intake seems to be below average. Why not look for info below from HSE?
           </Text>
+        <Card.Image source={require('../images/water.jpg')}>
           <Button
               icon={<Icon name='code' color='#ffffff' />}
               buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
@@ -186,6 +200,62 @@ export default class FeedbackScreen extends React.Component {
   </Card>} )
     
   } 
+
+
+  if(highest == "sleep")
+  {
+   
+    this.setState({goodFeedbackCard: <Card>
+      <Card.Title>You've Been Sleeping Great!😴</Card.Title>
+      <Text style={{marginBottom: 10}}>
+            Looks like you've been keeping up on your sleep this week. Keep it up!🛌
+          </Text>
+        <Card.Image source={require('../images/sleep.jpg')}>
+          <Button
+              icon={<Icon name='code' color='#ffffff' />}
+              buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+              title='Click for a Surprise!'
+            onPress={ ()=> Linking.openURL('https://www.youtube.com/watch?v=CX45pYvxDiA') }/>
+        </Card.Image>
+  </Card>}) 
+  }
+else if(highest == "water")
+{
+  
+  this.setState({goodFeedbackCard: <Card>
+    <Card.Title>You're a liquid legend!🌊</Card.Title>
+    <Text style={{marginBottom: 10}}>
+          Your water consumation is on the up this week! Keep it up 👍
+        </Text>
+      <Card.Image source={require('../images/water.jpg')}>
+        <Button
+            icon={<Icon name='code' color='#ffffff' />}
+            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+            title='Click for a Surprise!'
+          onPress={ ()=> Linking.openURL('https://www.youtube.com/watch?v=NR5Sr_li7qo') }/>
+      </Card.Image>
+</Card>} )
+}
+else if(highest == "food")
+{
+
+  this.setState({goodFeedbackCard: <Card>
+    <Card.Title>A healthy body is a happy body🥗</Card.Title>
+    <Text style={{marginBottom: 10}}>
+          Good nutriion can prove vital to a good mood. Keep it up!🔥
+        </Text>
+      <Card.Image source={require('../images/food.jpg')}>
+        <Button
+            icon={<Icon name='code' color='#ffffff' />}
+            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+            title='Click for a Surprise!'
+          onPress={ ()=> Linking.openURL('https://www.youtube.com/watch?v=VECljlG--gE') }/>
+      </Card.Image>
+</Card>} )
+  
+} 
+
+
  }
 
     componentDidMount() {
@@ -265,19 +335,35 @@ export default class FeedbackScreen extends React.Component {
             md="md-menu"
             onPress={() => this.props.navigation.openDrawer()}
           /></View>
+           <ScrollView>
         <View style={styles.infoContainer}>
 
           <Image source={require("../images/feedback.png")} style={styles.foodImage}></Image>
         </View>
 
-        <View style={styles.content}>
+        
         <Text style={styles.Question}>
           {`Your Newest Feedback`}
        </Text>
-        </View>
+        
 
-        <ScrollView>
-        {this.state.feedbackCard}
+       
+          <View>{this.state.feedbackCard}</View>
+         <View>{this.state.goodFeedbackCard}</View> 
+         <Card>
+    <Card.Title>You're a liquid legend!🌊</Card.Title>
+    <Text style={{marginBottom: 10}}>
+          Your water consumation is on the up this week! Keep it up 👍
+        </Text>
+      <Card.Image source={require('../images/water.jpg')}>
+        <Button
+            icon={<Icon name='code' color='#ffffff' />}
+            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+            title='Click for a Surprise!'
+          onPress={ ()=> Linking.openURL('https://www.youtube.com/watch?v=NR5Sr_li7qo') }/>
+      </Card.Image>
+</Card>
+        
         </ScrollView>
         
 
@@ -317,6 +403,7 @@ const styles = StyleSheet.create({
   },
   Question: {
     color: "black",
+    textAlign:"center"
   },
   slider: {
     marginBottom: 80,
