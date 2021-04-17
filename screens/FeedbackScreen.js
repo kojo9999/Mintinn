@@ -121,6 +121,7 @@ export default class FeedbackScreen extends React.Component {
     let worst = Math.min(averages[0],averages[1],averages[2])
     let best = Math.max(averages[0],averages[1],averages[2])
     console.log("worst", worst)
+    console.log("best", best)
     let lowest = ""
     let highest = ""
 
@@ -138,7 +139,12 @@ export default class FeedbackScreen extends React.Component {
       
     }
 
-    console.log("lowest: ", lowest)
+    console.log("lowests: ", lowest)
+    console.log("highest: ", highest)
+
+    console.log("water: ", averages[1])
+    console.log("sleep: ", averages[0])
+    console.log("food: ", averages[2])
 
  
 
@@ -147,10 +153,10 @@ export default class FeedbackScreen extends React.Component {
      
       this.setState({feedbackCard: <Card>
         <Card.Title>Sleep Advice</Card.Title>
-          <Card.Image source={require('../images/water.jpg')}>
-            <Text style={{marginBottom: 75}}>
+        <Text style={{marginBottom: 10}}>
               Your sleep time seems to be below average. Why not look for info below from HSE?
             </Text>
+          <Card.Image source={require('../images/water.jpg')}>
             <Button
                 icon={<Icon name='code' color='#ffffff' />}
                 buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
@@ -164,10 +170,10 @@ export default class FeedbackScreen extends React.Component {
     
     this.setState({feedbackCard: <Card>
       <Card.Title>Water Advice</Card.Title>
-        <Card.Image source={require('../images/water.jpg')}>
-          <Text style={{marginBottom: 75}}>
+      <Text style={{marginBottom: 10}}>
             Your water intake seems to be below average. Why not look for info below from HSE?
           </Text>
+        <Card.Image source={require('../images/water.jpg')}>
           <Button
               icon={<Icon name='code' color='#ffffff' />}
               buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
@@ -201,10 +207,10 @@ export default class FeedbackScreen extends React.Component {
    
     this.setState({goodFeedbackCard: <Card>
       <Card.Title>You've Been Sleeping Great!😴</Card.Title>
-        <Card.Image source={require('../images/sleep.jpg')}>
-          <Text style={{marginBottom: 75}}>
+      <Text style={{marginBottom: 10}}>
             Looks like you've been keeping up on your sleep this week. Keep it up!🛌
           </Text>
+        <Card.Image source={require('../images/sleep.jpg')}>
           <Button
               icon={<Icon name='code' color='#ffffff' />}
               buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
@@ -218,10 +224,10 @@ else if(highest == "water")
   
   this.setState({goodFeedbackCard: <Card>
     <Card.Title>You're a liquid legend!🌊</Card.Title>
-      <Card.Image source={require('../images/water.jpg')}>
-        <Text style={{marginBottom: 75}}>
+    <Text style={{marginBottom: 10}}>
           Your water consumation is on the up this week! Keep it up 👍
         </Text>
+      <Card.Image source={require('../images/water.jpg')}>
         <Button
             icon={<Icon name='code' color='#ffffff' />}
             buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
@@ -329,20 +335,35 @@ else if(highest == "food")
             md="md-menu"
             onPress={() => this.props.navigation.openDrawer()}
           /></View>
+           <ScrollView>
         <View style={styles.infoContainer}>
 
           <Image source={require("../images/feedback.png")} style={styles.foodImage}></Image>
         </View>
 
-        <View style={styles.content}>
+        
         <Text style={styles.Question}>
           {`Your Newest Feedback`}
        </Text>
-        </View>
+        
 
-        <ScrollView>
-        {this.state.feedbackCard}
-        {this.state.goodFeedbackCard}
+       
+          <View>{this.state.feedbackCard}</View>
+         <View>{this.state.goodFeedbackCard}</View> 
+         <Card>
+    <Card.Title>You're a liquid legend!🌊</Card.Title>
+    <Text style={{marginBottom: 10}}>
+          Your water consumation is on the up this week! Keep it up 👍
+        </Text>
+      <Card.Image source={require('../images/water.jpg')}>
+        <Button
+            icon={<Icon name='code' color='#ffffff' />}
+            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+            title='Click for a Surprise!'
+          onPress={ ()=> Linking.openURL('https://www.youtube.com/watch?v=NR5Sr_li7qo') }/>
+      </Card.Image>
+</Card>
+        
         </ScrollView>
         
 
@@ -382,6 +403,7 @@ const styles = StyleSheet.create({
   },
   Question: {
     color: "black",
+    textAlign:"center"
   },
   slider: {
     marginBottom: 80,
