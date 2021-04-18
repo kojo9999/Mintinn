@@ -23,6 +23,12 @@ export default class FeedbackScreen extends React.Component {
       sleepAverage: 0,
       startDate: "",
       endDate: "",
+      sleepdates:[],
+      fooddates:[],
+      waterdates:[],
+      sleepstreak:0,
+      foodstreak:0,
+      waterstreak:0,
       feedbackCard: <Text>No Feedback Right Now</Text>,
       goodFeedbackCard: <Text>No Feedback Right Now</Text>
     };
@@ -31,6 +37,7 @@ export default class FeedbackScreen extends React.Component {
   getFoodProgress = async () => {
     const today = new Date();
     let food = []
+    let fooddate = [] 
     let userId = this.HandleGetUserId();
     let weekago = (new Date(new Date() - (86400000 * 6)))
     waterCollection.doc(userId).collection('food')
@@ -39,14 +46,17 @@ export default class FeedbackScreen extends React.Component {
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           food.push(doc.data().foodamount);
+          fooddate.push(doc.data().createdat.seconds)
         })
       })
-      this.setState({foodData: food})
-  }
+      this.setState({foodData: food}) 
+      this.setState({fooddates: fooddate})
+    }
 
   getWaterProgress = async () => {
     const today = new Date();
     let water = [];
+    let waterdate = []
     let userId = this.HandleGetUserId();
     let weekago = (new Date(new Date() - (86400000 * 6)))
     waterCollection.doc(userId).collection('water')
@@ -55,15 +65,18 @@ export default class FeedbackScreen extends React.Component {
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           water.push(doc.data().waterstatus);
+          waterdate.push(doc.data().createdat.seconds)
         })
       })
       this.setState({waterData: water})
+      this.setState({waterdates: waterdate})
   }
 
   getSleepProgress = async () => {
     const today = new Date();
     let userId = this.HandleGetUserId();
     let sleep = [];
+    let sleepdate = []
     let weekago = (new Date(new Date() - (86400000 * 6)))
     waterCollection.doc(userId).collection('sleep')
     .where("createdat", ">", new Date(weekago.getFullYear(), weekago.getMonth(), weekago.getDate(), 0, 0, 0))
@@ -71,9 +84,11 @@ export default class FeedbackScreen extends React.Component {
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           sleep.push(doc.data().sleepamount);
+          sleepdate.push(doc.data().createdat.seconds)
         })
       })
       this.setState({sleepData: sleep});
+      this.setState({sleepdates: sleepdate})
   }
 
   getAverageFood = async () => {
@@ -116,7 +131,7 @@ export default class FeedbackScreen extends React.Component {
 
   getLowestAverage = async() => {
 
-    let averages = [this.state.sleepAverage-1,this.state.waterAverage-1,this.state.foodAverage-1]
+    let averages = [this.state.sleepAverage,this.state.waterAverage,this.state.foodAverage]
     let words = ["sleep","water","food"]
     let worst = Math.min(averages[0],averages[1],averages[2])
     let best = Math.max(averages[0],averages[1],averages[2])
@@ -139,12 +154,12 @@ export default class FeedbackScreen extends React.Component {
       
     }
 
-    console.log("lowests: ", lowest)
-    console.log("highest: ", highest)
+   // console.log("lowests: ", lowest)
+    //console.log("highest: ", highest)
 
-    console.log("water: ", averages[1])
-    console.log("sleep: ", averages[0])
-    console.log("food: ", averages[2])
+   // console.log("water: ", averages[1])
+   // console.log("sleep: ", averages[0])
+   // console.log("food: ", averages[2])
 
  
 
@@ -258,6 +273,58 @@ else if(highest == "food")
 
  }
 
+  getCurrentStreak = async() => {
+   let averages = [this.state.sleepdates,this.state.waterdates,this.state.fooddates]
+  let count = [0,0,0]
+
+ // console.log("Sleep:", averages[0])
+ // console.log("Water:", averages[1])
+ // console.log("Food:", averages[2])
+
+  for(var i = 0;i<3;i++)
+  {
+
+    averages[i].reverse().forEach((el, j) => {
+     
+      if(i==0)
+      {
+        console.log(j)
+        if ((new Date().setUTCHours(0,0,0,0) - new Date(el*1000).setUTCHours(0,0,0,0)) === j * 86400000) 
+        {
+        count[i]++
+        }
+      }
+     
+     else if(((j+1)%3)==0){
+       console.log()
+      if ((new Date().setUTCHours(0,0,0,0) - new Date(el*1000).setUTCHours(0,0,0,0)) === ((((j+1)/3)-1) * 86400000) )
+        {
+        count[i]++
+        }
+     }
+      
+      
+    })
+
+    
+    
+  }
+
+  this.setState({sleepstreak: count[0]})
+  this.setState({waterstreak: count[1]})
+  this.setState({foodstreak: count[2]})
+
+
+  console.log("************************************************")
+  console.log("Sleep Streak: ", count[0])
+  console.log("Water Streak: ", count[1])
+  console.log("Food Streak: ", count[2])
+  console.log("************************************************")
+
+
+ 
+} 
+
     componentDidMount() {
       this.getFoodProgress()
       this.getWaterProgress()
@@ -267,9 +334,13 @@ else if(highest == "food")
         this.getAverageFood()
         this.getAverageWater()
         this.getAverageSleep()
+        this.getCurrentStreak()
+        //console.log("Food Dates: ", this.state.fooddates)
         this.getLowestAverage()
       }, 1000);
      
+
+      
       
     }
 
@@ -350,19 +421,6 @@ else if(highest == "food")
        
           <View>{this.state.feedbackCard}</View>
          <View>{this.state.goodFeedbackCard}</View> 
-         <Card>
-    <Card.Title>You're a liquid legend!🌊</Card.Title>
-    <Text style={{marginBottom: 10}}>
-          Your water consumation is on the up this week! Keep it up 👍
-        </Text>
-      <Card.Image source={require('../images/water.jpg')}>
-        <Button
-            icon={<Icon name='code' color='#ffffff' />}
-            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-            title='Click for a Surprise!'
-          onPress={ ()=> Linking.openURL('https://www.youtube.com/watch?v=NR5Sr_li7qo') }/>
-      </Card.Image>
-</Card>
         
         </ScrollView>
         
