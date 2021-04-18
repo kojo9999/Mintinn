@@ -147,9 +147,13 @@ export default class WaterScreen extends React.Component {
       {
         this.setState({afternoon: "true"})
       }
-      else
+      else if (check[i] == "evening" )
       {
         this.setState({evening: "true"})
+      }
+      else
+      {
+      console.log("no data")
       }
     }
   }
