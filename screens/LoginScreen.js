@@ -71,7 +71,7 @@ export default class LoginSCreen extends React.Component {
     }
   };
   onSignUp = async () => {
-    if (this.TermsAndConditions() == false) {
+    if (this.is18YearsOld() == false) {
       this.setState({ error: "Please try again" })
     }
     else if (this.usernameValidator() == false) {
