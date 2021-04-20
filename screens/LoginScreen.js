@@ -186,9 +186,9 @@ export default class LoginSCreen extends React.Component {
     }
   };
 
-  TermsAndConditions = () => {
+  is18YearsOld = () => {
     if (this.state.checked == false) {
-      this.setState({ checkedError: "Please confirm that you have read the terms and conditions" })
+      this.setState({ checkedError: "Please confirm that you are 18 or older" })
       return false;
     }
     else {
