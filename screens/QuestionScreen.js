@@ -16,7 +16,7 @@ export default class QuestionScreen extends React.Component {
     super();
     this.state = {
       questions: [],
-      answers: ["Strongly Agree", "Slightly Agree", "No Opinion", "Slightly Disagree", "Strongly Disagree"],
+      answers: [5, 4, 3, 2, 1],     
       activeQuestion: "",
       outputText: "",
       questionNumber: 1
@@ -105,34 +105,34 @@ export default class QuestionScreen extends React.Component {
             style={styles.button}
             onPress={() => this.addQuestionsAndAnswers(this.state.answers[0], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>{this.state.answers[0]}</Text>
+            <Text style={styles.text}>Strongly Agree</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
             onPress={() => this.addQuestionsAndAnswers(this.state.answers[1], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>{this.state.answers[1]}</Text>
+            <Text style={styles.text}>Slightly Agree</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => this.addQuestionsAndAnswers(this.state.answers[2], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>{this.state.answers[2]}</Text>
+            <Text style={styles.text}>No Opinion</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
             onPress={() => this.addQuestionsAndAnswers(this.state.answers[3], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>{this.state.answers[3]}</Text>
+            <Text style={styles.text}>Slightly Disagree</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
             onPress={() => this.addQuestionsAndAnswers(this.state.answers[4], this.state.activeQuestion)}
           >
-            <Text style={styles.text}>{this.state.answers[4]}</Text>
+            <Text style={styles.text}>Strongly Disagree</Text>
           </TouchableOpacity>
         </View>
         <Text>{this.state.outputText}</Text>
