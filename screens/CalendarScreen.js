@@ -16,12 +16,13 @@ export default class CalendarScreen extends Component {
     super();
     this.state = {
       foodData: [],
-      weeklyfoodData: [0,0,0,0,0,0,0],
+      weeklyfoodData: [0, 0, 0, 0, 0, 0, 0],
       foodDate: [],
       waterData: [],
-      weeklywaterData: [0,0,0,0,0,0,0],
+      weeklywaterData: [0, 0, 0, 0, 0, 0, 0],
       waterDate: [],
-      sleepData: [0,0,0,0,0,0,0],
+      sleepData: [],
+      weeklySleepData: [0, 0, 0, 0, 0, 0, 0],
       startDate: "",
       endDate: ""
     }
@@ -39,10 +40,10 @@ export default class CalendarScreen extends Component {
         snapshot.docs.forEach((doc) => {
           food.push(doc.data().foodamount);
           //this.state.foodDate.push(doc.data().createdat);
-          //console.log(doc.data().foodamount)
+          console.log(doc.data().foodamount)
         })
       })
-      this.setState({foodData: food})
+    this.setState({ foodData: food })
   }
 
   getWaterProgress = async () => {
@@ -60,7 +61,7 @@ export default class CalendarScreen extends Component {
           //console.log("water data",doc.data().waterstatus)
         })
       })
-      this.setState({waterData: water})
+    this.setState({ waterData: water })
   }
 
   getSleepProgress = async () => {
@@ -69,15 +70,52 @@ export default class CalendarScreen extends Component {
     let sleep = [];
     let weekago = (new Date(new Date() - (86400000 * 6)))
     waterCollection.doc(userId).collection('sleep')
-    .where("createdat", ">", new Date(weekago.getFullYear(), weekago.getMonth(), weekago.getDate(), 0, 0, 0))
-    .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+      .where("createdat", ">", new Date(weekago.getFullYear(), weekago.getMonth(), weekago.getDate(), 0, 0, 0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
       .get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           sleep.push(doc.data().sleepamount);
           //console.log("sleep data",doc.data().sleepamount)
         })
       })
-      this.setState({sleepData: sleep});
+    this.setState({ sleepData: sleep });
+  }
+
+  getWeeklySleep = async () => {
+    let data = this.state.sleepData;
+    const empty = newdata => newdata.length = 0;
+    empty(this.state.weeklySleepData)
+    let day7 = Number(data[0]);
+    let day6 = Number(data[1]);
+    let day5 = Number(data[2]);
+    let day4 = Number(data[3]);
+    let day3 = Number(data[4]);
+    let day2 = Number(data[5]);
+    let day1 = Number(data[6]);
+    if (data.length == 0) {
+      this.setState({ weeklySleepData: [0, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 1) {
+      this.setState({ weeklySleepData: [day7, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 2) {
+      this.setState({ weeklySleepData: [day7, day6, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 3) {
+      this.setState({ weeklySleepData: [day7, day6, day5, 0, 0, 0, 0] });
+    }
+    else if (data.length == 4) {
+      this.setState({ weeklySleepData: [day7, day6, day5, day4, 0, 0, 0] });
+    }
+    else if (data.length == 5) {
+      this.setState({ weeklySleepData: [day7, day6, day5, day4, day3, 0, 0] });
+    }
+    else if (data.length == 6) {
+      this.setState({ weeklySleepData: [day7, day6, day5, day4, day3, day2, 0] });
+    }
+    else {
+      this.setState({ weeklySleepData: [day7, day6, day5, day4, day3, day2, day1] });
+    }
   }
 
   getAverageFood = async () => {
@@ -85,14 +123,36 @@ export default class CalendarScreen extends Component {
     const empty = newdata => newdata.length = 0;
     empty(this.state.weeklyfoodData)
     let day7 = Number(((data[0] + data[1] + data[2]) / 3).toFixed());
-    let day6 = Number(((data[4] + data[4] + data[5]) / 3).toFixed());
+    let day6 = Number(((data[3] + data[4] + data[5]) / 3).toFixed());
     let day5 = Number(((data[6] + data[7] + data[8]) / 3).toFixed());
     let day4 = Number(((data[9] + data[10] + data[11]) / 3).toFixed());
     let day3 = Number(((data[12] + data[13] + data[14]) / 3).toFixed());
     let day2 = Number(((data[15] + data[16] + data[17]) / 3).toFixed());
     let day1 = Number(((data[18] + data[19] + data[20]) / 3).toFixed());
-    this.setState({weeklyfoodData: [day7, day6, day5, day4, day3, day2, day1]});
-    //console.log("averaged food data", this.state.weeklyfoodData)
+    if (data.length == 0) {
+      this.setState({ weeklywaterData: [0, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 3) {
+      this.setState({ weeklyfoodData: [day7, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 6) {
+      this.setState({ weeklyfoodData: [day7, day6, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 9) {
+      this.setState({ weeklyfoodData: [day7, day6, day5, 0, 0, 0, 0] });
+    }
+    else if (data.length == 12) {
+      this.setState({ weeklyfoodData: [day7, day6, day5, day4, 0, 0, 0] });
+    }
+    else if (data.length == 15) {
+      this.setState({ weeklyfoodData: [day7, day6, day5, day4, day3, 0, 0] });
+    }
+    else if (data.length == 18) {
+      this.setState({ weeklyfoodData: [day7, day6, day5, day4, day3, day2, 0] });
+    }
+    else {
+      this.setState({ weeklyfoodData: [day7, day6, day5, day4, day3, day2, day1] });
+    }
   };
 
   getAverageWater = async () => {
@@ -100,14 +160,36 @@ export default class CalendarScreen extends Component {
     const empty = newdata => newdata.length = 0;
     empty(this.state.weeklywaterData)
     let day7 = Number(((data[0] + data[1] + data[2]) / 3).toFixed());
-    let day6 = Number(((data[4] + data[4] + data[5]) / 3).toFixed());
+    let day6 = Number(((data[3] + data[4] + data[5]) / 3).toFixed());
     let day5 = Number(((data[6] + data[7] + data[8]) / 3).toFixed());
     let day4 = Number(((data[9] + data[10] + data[11]) / 3).toFixed());
     let day3 = Number(((data[12] + data[13] + data[14]) / 3).toFixed());
     let day2 = Number(((data[15] + data[16] + data[17]) / 3).toFixed());
     let day1 = Number(((data[18] + data[19] + data[20]) / 3).toFixed());
-    this.setState({weeklywaterData: [day7, day6, day5, day4, day3, day2, day1]});
-    //console.log("averaged water data", this.state.weeklywaterData)
+    if (data.length == 0) {
+      this.setState({ weeklywaterData: [0, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 3) {
+      this.setState({ weeklywaterData: [day7, 0, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 6) {
+      this.setState({ weeklywaterData: [day7, day6, 0, 0, 0, 0, 0] });
+    }
+    else if (data.length == 9) {
+      this.setState({ weeklywaterData: [day7, day6, day5, 0, 0, 0, 0] });
+    }
+    else if (data.length == 12) {
+      this.setState({ weeklywaterData: [day7, day6, day5, day4, 0, 0, 0] });
+    }
+    else if (data.length == 15) {
+      this.setState({ weeklywaterData: [day7, day6, day5, day4, day3, 0, 0] });
+    }
+    else if (data.length == 18) {
+      this.setState({ weeklywaterData: [day7, day6, day5, day4, day3, day2, 0] });
+    }
+    else {
+      this.setState({ weeklywaterData: [day7, day6, day5, day4, day3, day2, day1] });
+    }
   };
 
   // getAverageProgress = () => {
@@ -144,127 +226,131 @@ export default class CalendarScreen extends Component {
     setTimeout(() => {
       this.getAverageFood()
       this.getAverageWater()
+      this.getWeeklySleep()
     }, 1000);
   }
+
   render() {
     return (
       <ScrollView style={styles.graphContainer}>
         <View style={styles.graphs}>
-          <View style={styles.filters}>
+          
+          <View style={styles.navigation}>
           <Ionicons
-            style={styles.headerItem}
-            name="ios-menu"
-            size={50}
-            md="md-menu"
-            onPress={() => this.props.navigation.openDrawer()}
-          />
+              style={styles.headerItem}
+              name="ios-menu"
+              size={50}
+              md="md-menu"
+              onPress={() => this.props.navigation.openDrawer()}
+            />
+          <View style={styles.filters}>
+           
             <TouchableOpacity style={styles.outterLeftFilterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 7)}><Text>1 Week</Text></TouchableOpacity>
             <TouchableOpacity style={styles.filterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 14)}><Text>2 Weeks</Text></TouchableOpacity>
             <TouchableOpacity style={styles.filterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 28)}><Text>1 Month</Text></TouchableOpacity>
             <TouchableOpacity style={styles.outterRightFilterButton} onPress={() => this.setDateRange(Date.now(), Date.now() + 84)}><Text>3 Months</Text></TouchableOpacity>
           </View>
-          <View style={styles.graphWrapper}>
-            <Text style={styles.graphLabel}>Sleep</Text>
+          </View>
+          
+          <View style={styles.graphWrapper1}>
+            <Text style={styles.graphLabel1}>Sleep</Text>
             <LineChart
 
               data={{
-                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                labels: ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"],
                 datasets: [
                   {
-                    data: this.state.sleepData
+                    data: this.state.weeklySleepData
                   },
                 ],
               }}
-              width={Dimensions.get("window").width} // from react-native
+              width={Dimensions.get("window").width - 30} // from react-native
               height={180}
               // yAxisLabel="$"
               // yAxisSuffix="k"
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
-                backgroundColor: "#ffffff",
-                backgroundGradientFrom: "#ffffff",
-                backgroundGradientTo: "#ffffff",
+                backgroundColor: "#9582b8",
+                backgroundGradientFrom: "#9582b8",
+                backgroundGradientTo: "#8061ba",
                 decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(74, 73, 73, ${opacity})`,
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
 
                 propsForDots: {
                   r: "6",
                   strokeWidth: "2",
-                  stroke: "#4a4949",
+                  stroke: "#000",
                 },
               }}
-              bezier
-              style={styles.graph}
+              style={styles.graph1}
             />
           </View>
-          <View style={styles.graphWrapper}>
-            <Text style={styles.graphLabel}>Food</Text>
+          <View style={styles.graphWrapper2}>
+            <Text style={styles.graphLabel2}>Food</Text>
             <LineChart
 
               data={{
-                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                labels: ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"],
                 datasets: [
                   {
                     data: this.state.weeklyfoodData
                   },
                 ],
               }}
-              width={Dimensions.get("window").width} // from react-native
+              width={Dimensions.get("window").width - 30} // from react-native
               height={180}
               // yAxisLabel="$"
               // yAxisSuffix="k"
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
-                backgroundColor: "#ffffff",
-                backgroundGradientFrom: "#ffffff",
-                backgroundGradientTo: "#ffffff",
+                backgroundColor: "#86b58a",
+                backgroundGradientFrom: "#86b58a",
+                backgroundGradientTo: "#5eb565",
                 decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(74, 73, 73, ${opacity})`,
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
 
                 propsForDots: {
                   r: "6",
                   strokeWidth: "2",
-                  stroke: "#4a4949",
+                  stroke: "#000",
                 },
               }}
-              bezier
-              style={styles.graph}
+              style={styles.graph2}
             />
           </View>
-          <View style={styles.graphWrapper}>
-            <Text style={styles.graphLabel}>Water</Text>
+          <View style={styles.graphWrapper3}>
+            <Text style={styles.graphLabel3}>Water</Text>
             <LineChart
               data={{
-                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                labels: ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"],
                 datasets: [
                   {
                     data: this.state.weeklywaterData
                   },
                 ],
               }}
-              width={Dimensions.get("window").width} // from react-native
+              width={Dimensions.get("window").width - 30} // from react-native
               height={180}
               // yAxisLabel="$"
               // yAxisSuffix="k"
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
-                backgroundColor: "#ffffff",
-                backgroundGradientFrom: "#ffffff",
-                backgroundGradientTo: "#ffffff",
+                backgroundColor: "#80a7ad",
+                backgroundGradientFrom: "#80a7ad",
+                backgroundGradientTo: "#5fa3ad",
                 decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(74, 73, 73, ${opacity})`,
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
 
                 propsForDots: {
                   r: "6",
                   strokeWidth: "2",
-                  stroke: "#4a4949",
+                  stroke: "#000",
                 },
               }}
-              bezier
-              style={styles.graph}
+              style={styles.graph3}
             />
           </View>
         </View>
@@ -279,9 +365,16 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: StatusBar.currentHeight,
   },
+  navigation: {
+    width: 400,
+    height: 40,
+    borderRadius: 10,
+    flex: 1,
+    flexDirection: "row",
+  },
   headerItem: {
     flex: 1,
-    marginLeft: 30
+    marginLeft: 10
   },
   graphs: {
     flex: 1,
@@ -291,38 +384,80 @@ const styles = StyleSheet.create({
     height: 750,
     flexDirection: "column",
   },
-  graphWrapper: {
-    backgroundColor: "white"
+  graphWrapper1: {
+    marginTop: 5,
+    backgroundColor: "#4c32a8",
+    width: 400,
+    borderRadius: 10,
+    padding: 8,
   },
-  graphLabel: {
-    marginLeft: 30,
+  graphWrapper2: {
+    marginTop: 5,
+    backgroundColor: "#4ca655",
+    width: 400,
+    borderRadius: 10,
+    padding: 8,
+  },
+  graphWrapper3: {
+    marginTop: 5,
+    backgroundColor: "#37a9bd",
+    width: 400,
+    borderRadius: 10,
+    padding: 8,
+  },
+  graphLabel1: {
+    color: "white",
+    marginLeft: 8,
     marginBottom: 5,
-    marginTop: 10
+    marginTop: 5
   },
-  graph: {
-    marginLeft: 30,
-    marginRight: 30,
+  graphLabel2: {
+    color: "white",
+    marginLeft: 8,
+    marginBottom: 5,
+    marginTop: 5
+  },
+  graphLabel3: {
+    color: "white",
+    marginLeft: 8,
+    marginBottom: 5,
+    marginTop: 5
+  },
+  graph1: {
     borderRadius: 16,
-    borderColor: "#d6d6d6",
+    borderColor: "#4c32a8",
+    borderWidth: 2
+
+  },
+  graph2: {
+    borderRadius: 16,
+    borderColor: "#4ca655",
+    borderWidth: 2
+
+  },
+  graph3: {
+    borderRadius: 16,
+    borderColor: "#37a9bd",
     borderWidth: 2
 
   },
   filters: {
-    marginBottom: 1,
+    padding: 5,
+    marginTop: 4.5,
+    height: 41,
     justifyContent: "center",
     flexDirection: "row",
+    borderRadius: 10
   },
   filterButton: {
     padding: 5,
-    borderColor: "#d6d6d6",
+    borderColor: "#d9d9d9",
     borderWidth: 1,
     backgroundColor: "white"
-
-
   },
   outterLeftFilterButton: {
     padding: 5,
-    borderColor: "#d6d6d6",
+    borderColor: "#d9d9d9",
     backgroundColor: "white",
     borderWidth: 1,
     borderBottomLeftRadius: 10,
@@ -330,7 +465,7 @@ const styles = StyleSheet.create({
   },
   outterRightFilterButton: {
     padding: 5,
-    borderColor: "#d6d6d6",
+    borderColor: "#d9d9d9",
     backgroundColor: "white",
     borderWidth: 1,
     borderBottomRightRadius: 10,

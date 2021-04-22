@@ -91,8 +91,8 @@ const AppDrawerNavigator = createDrawerNavigator({
     SettingsScreen: {
         screen: SettingsScreen,
         navigationOptions: {
-            title: 'Settings',
-            drawerIcon:() => <Ionicons name="ios-settings" size={24} />
+            title: 'Log Out',
+            drawerIcon:() => <MaterialCommunityIcons name="logout" size={24} />
         }
     }
 })

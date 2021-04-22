@@ -44,10 +44,13 @@ class HomeScreen extends Component {
             source={require("../images/clouds.png")}
             style={styles.image}
           >
+            <View style={styles.titleContainer}>
             <Text style={styles.title}>Diary Statistics</Text>
             <Text style={styles.diaryDescription}>
-              You Statistics can be used to see an overview of your daily progress
+              The overview of all your progress 
             </Text>
+            </View>
+            
           </ImageBackground>
           </TouchableOpacity>
         </View>
@@ -59,7 +62,7 @@ class HomeScreen extends Component {
             <ImageBackground
                 source={require("../images/sleep.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Sleep</Text></ImageBackground>
+              ><Text style={styles.subActTitle}>Sleep</Text></ImageBackground>
             </TouchableOpacity>
             </View>
             <View style={styles.subActWindow}>
@@ -67,7 +70,7 @@ class HomeScreen extends Component {
             <ImageBackground
                 source={require("../images/water.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Water</Text>
+              ><Text style={styles.subActTitle}>Water</Text>
               </ImageBackground>
             </TouchableOpacity>
             </View>
@@ -76,7 +79,7 @@ class HomeScreen extends Component {
               <ImageBackground
                 source={require("../images/food.jpg")}
                 style={styles.image}
-              ><Text style={styles.title}>Food</Text>
+              ><Text style={styles.subActTitle}>Food</Text>
               </ImageBackground>
               </TouchableOpacity>
             </View>
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
   diaryAct: {
     alignSelf: "stretch",
     textAlign: "center",
-    height: 350,
+    height: 450,
     borderRadius: 20,
     marginLeft: 20,
     marginRight: 20,
@@ -134,7 +137,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   headerItem: {
     flex: 1,
@@ -143,10 +146,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     borderRadius: 20,
-    overflow: "hidden",
-    padding: 15,
-    paddingLeft: 20,
-    paddingRight: 20
+    overflow: "hidden"
   },
   touchable:{
     flex: 1,
@@ -156,6 +156,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    color: "white",
+  },
+  subActTitle: {
+    fontSize: 20,
+    padding: 15,
+    fontWeight: "bold",
     color: "white"
   },
   downArrow: {
@@ -164,7 +170,6 @@ const styles = StyleSheet.create({
     height: 50,
     marginTop: 20, 
     borderRadius: 40
-
   },
   subDownArrow: {
     backgroundColor: "white",
@@ -172,9 +177,15 @@ const styles = StyleSheet.create({
     height: 25,
     marginTop: 10, 
     borderRadius: 40
-
   },
   diaryDescription: {
     color: "white"
+  },
+  titleContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    padding: 20,
+    height: "100%",
+    width: "100%",
+    borderRadius: 10
   }
 });
