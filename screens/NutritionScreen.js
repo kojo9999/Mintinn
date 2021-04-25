@@ -25,9 +25,9 @@ export default class FoodScreen extends React.Component {
       sliderValue: 1,
       error: "",
       snackbarShow: false,
-      morning:  <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
-      afternoon: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
-      evening: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
+      morning:  <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={20} />,
+      afternoon: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={20} />,
+      evening: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={20} />,
       timeOfDay: this.TimeOfDay(),
     };
   }
@@ -145,15 +145,15 @@ export default class FoodScreen extends React.Component {
     for (var i = 0; i < check.length; i++) {
       if(check[i] == "morning" )
       {
-        this.setState({morning: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
+        this.setState({morning: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} color={"green"}/>})
       }
       else if(check[i] == "afternoon" )
       {
-        this.setState({afternoon: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
+        this.setState({afternoon: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} color={"green"}/>})
       }
       else if (check[i] == "evening" )
       {
-        this.setState({evening: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
+        this.setState({evening: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24}  color={"green"}/>})
       }
       else
       {
@@ -262,7 +262,7 @@ export default class FoodScreen extends React.Component {
             onPress={() => this.props.navigation.openDrawer()}
           />
         </View>
-        <View style={styles.infoContainer}>
+        {/* <View style={styles.infoContainer}>
           <TouchableOpacity onPress={this.toggleExpanded}>
             <View style={styles.header}>
               <Ionicons name="ios-information-circle" size={28} color="black" />
@@ -273,13 +273,42 @@ export default class FoodScreen extends React.Component {
               <Text>Food Info</Text>
             </View>
           </Collapsible>
+        </View> */}
+        <View style={styles.checklist}>
+       
+        <View style={styles.checkbox}><Text style={styles.checkLabel}>Morning</Text><Text>{this.state.morning}</Text></View>
+        <View style={styles.checkbox}><Text style={styles.checkLabel}>Afternoon</Text><Text>{this.state.afternoon}</Text></View>
+        <View style={styles.checkbox}><Text style={styles.checkLabel}>Evening</Text><Text>{this.state.evening}</Text></View>
         </View>
-        <Text>Morning {this.state.morning}</Text>
-        <Text>Afternoon {this.state.afternoon}</Text>
-        <Text>Evening {this.state.evening}</Text>
+        
+        <View style={styles.questionContainer}>
         <Text
           style={styles.Question}
-        >{`How have you eaten ${this.TimeOfDay()}?`}</Text>
+        >How have you eaten this</Text>
+        <View style={styles.dropbox}>
+          <DropDownPicker
+            items={[
+              { label: "Morning", value: "morning" },
+              { label: "Afternoon", value: "afternoon" },
+              { label: "Evening", value: "evening" },
+            ]}
+            defaultValue={this.TimeOfDay()}
+            containerStyle={{ height: 30 }}
+            style={{ backgroundColor: "#fafafa" }}
+            itemStyle={{
+              justifyContent: "flex-start",
+            }}
+            dropDownStyle={{ backgroundColor: "#fafafa" }}
+            onChangeItem={(item) =>
+              this.setState({
+                timeOfDay: item.value,
+              })
+            }
+          />
+        </View>
+        <Text>?</Text>
+        </View>
+
         <View style={styles.foodImages}>
           {this.state.sliderValue == 1 ? (
             <View>
@@ -318,27 +347,7 @@ export default class FoodScreen extends React.Component {
           step={1}
           onValueChange={this.handleSliderChange}
         />
-        <View style={styles.dropbox}>
-          <DropDownPicker
-            items={[
-              { label: "Morning", value: "morning" },
-              { label: "Afternoon", value: "afternoon" },
-              { label: "Evening", value: "evening" },
-            ]}
-            defaultValue={this.TimeOfDay()}
-            containerStyle={{ height: 30 }}
-            style={{ backgroundColor: "#fafafa" }}
-            itemStyle={{
-              justifyContent: "flex-start",
-            }}
-            dropDownStyle={{ backgroundColor: "#fafafa" }}
-            onChangeItem={(item) =>
-              this.setState({
-                timeOfDay: item.value,
-              })
-            }
-          />
-        </View>
+        
 
         <View style={styles.button}>
           <TouchableNativeFeedback
@@ -383,14 +392,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerItem: {
-    flex: 1,
-    marginLeft: 30,
+    width: "100%",
+    paddingLeft: 25,
+    marginTop: 40
   },
   button: {
     height: 50,
     width: 200,
     borderRadius: 30,
-    backgroundColor: "#32a852",
+    backgroundColor: "#4ca655",
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -400,6 +410,12 @@ const styles = StyleSheet.create({
   },
   Question: {
     color: "black",
+  },
+  questionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 50
+
   },
   slider: {
     marginBottom: 90,
@@ -417,6 +433,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     marginTop: 40,
     flexDirection: "row",
+ 
   },
   imageText: {
     marginLeft: 10,
@@ -434,7 +451,7 @@ const styles = StyleSheet.create({
     maxHeight: 200,
   },
   infoContainer: {
-    marginTop: -60,
+    marginTop: -123,
     marginBottom: 30,
     height: 200,
     alignItems: "center",
@@ -444,7 +461,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   dropbox: {
-    width: 200,
+    width: 110,
     height: 50,
+    marginLeft: 10,
+    marginRight: 10,
+    paddingTop: 10,
+
   },
+  checklist: {
+    flexDirection: 'row',
+    marginBottom: 60,
+    marginTop: 60
+  },
+  checkbox: {
+    flexDirection: 'row',
+    padding: 5
+  },
+  checkLabel:{
+    paddingRight: 5
+  }
 });
