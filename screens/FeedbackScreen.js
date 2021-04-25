@@ -27,12 +27,14 @@ export default class FeedbackScreen extends React.Component {
       sleepdates:[],
       fooddates:[],
       waterdates:[],
+      questionRatings:[],
       sleepstreak:0,
       foodstreak:0,
       waterstreak:0,
       feedbackCard: <Text>No Feedback Right Now</Text>,
       goodFeedbackCard: <Text>No Feedback Right Now</Text>,
-      streakCard: <Text>No Feedback Right Now</Text>
+      streakCard: <Text>No Feedback Right Now</Text>,
+      senseCard: <Text> </Text>,
     };
   }
 
@@ -94,6 +96,19 @@ export default class FeedbackScreen extends React.Component {
       this.setState({sleepdates: sleepdate})
   }
 
+  getQuestionProgress = async () => {
+    const today = new Date();
+    let userId = this.HandleGetUserId();
+    let answers = []
+    waterCollection.doc(userId).collection('questions')
+      .get().then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          answers.push(doc.data().answer);
+        })
+      })
+      this.setState({questionRatings: answers})
+  }
+
   getAverageFood = async () => {
     let data = this.state.foodData;
     const empty = newdata => newdata.length = 0;
@@ -137,6 +152,46 @@ export default class FeedbackScreen extends React.Component {
     this.setState({sleepAverage: average});
     
   };
+
+  evaluateAnswers = async() => {
+    let data = this.state.questionRatings
+    let total = 0
+    let sensitive = false
+    if(data.length>=26)
+    {
+        for(let i= 0;i<data.length;i++)
+        {
+          total = total + data[i]
+          console.log("total", total)
+        }
+        
+
+        if(total>42)
+        {
+          sensitive = true
+          console.log("Sense")
+        }
+    }
+
+    if(sensitive)
+    {
+      this.setState({senseCard: <Card>
+        <Card.Title>High Sensitivity</Card.Title>
+        <Text style={{marginBottom: 10}}>
+              From your question answers, we've noticed you may be identified as a sensitive person. Learn more at the link below.
+            </Text>
+          <Card.Image source={require('../images/sleep.jpg')}>
+            <Button
+                icon={<Icon name='code' color='#ffffff' />}
+                buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                title='Learn More'
+              onPress={ ()=> Linking.openURL('https://www.verywellmind.com/highly-sensitive-persons-traits-that-create-more-stress-4126393') }/>
+          </Card.Image>
+    </Card>}) 
+    }
+
+    }
+
 
   getLowestAverage = async() => {
 
@@ -341,12 +396,14 @@ else if(highest == "food")
       this.getFoodProgress()
       this.getWaterProgress()
       this.getSleepProgress()
+      this.getQuestionProgress()
     
       setTimeout(() => {
         this.getAverageFood()
         this.getAverageWater()
         this.getAverageSleep()
         this.getCurrentStreak()
+        this.evaluateAnswers()
         //console.log("Food Dates: ", this.state.fooddates)
         this.getLowestAverage()
       }, 1000);
@@ -480,6 +537,7 @@ else if(highest == "food")
        </View>
        <View>{this.state.feedbackCard}</View>
        <View>{this.state.goodFeedbackCard}</View> 
+       <View>{this.state.senseCard}</View> 
         
         </ScrollView>
         
