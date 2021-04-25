@@ -11,7 +11,7 @@ import firebase from "firebase/app";
 import { db } from "../config/config";
 import Slider from "@react-native-community/slider";
 import Collapsible from "react-native-collapsible";
-import { Ionicons } from "@expo/vector-icons";
+import {Ionicons, MaterialCommunityIcons, FontAwesome, Entypo } from '@expo/vector-icons'
 import DropDownPicker from "react-native-dropdown-picker";
 const foodCollection = db().collection("profile");
 
@@ -25,9 +25,9 @@ export default class FoodScreen extends React.Component {
       sliderValue: 1,
       error: "",
       snackbarShow: false,
-      morning: "None",
-      afternoon: "None",
-      evening: "None",
+      morning:  <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
+      afternoon: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
+      evening: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
       timeOfDay: this.TimeOfDay(),
     };
   }
@@ -143,12 +143,21 @@ export default class FoodScreen extends React.Component {
   Dailycheck = () => {
     let check = this.state.foodData;
     for (var i = 0; i < check.length; i++) {
-      if (check[i] == "morning") {
-        this.setState({ morning: "true" });
-      } else if (check[i] == "afternoon") {
-        this.setState({ afternoon: "true" });
-      } else {
-        this.setState({ evening: "true" });
+      if(check[i] == "morning" )
+      {
+        this.setState({morning: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
+      }
+      else if(check[i] == "afternoon" )
+      {
+        this.setState({afternoon: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
+      }
+      else if (check[i] == "evening" )
+      {
+        this.setState({evening: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
+      }
+      else
+      {
+      console.log("no data")
       }
     }
   };
