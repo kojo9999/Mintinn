@@ -120,8 +120,13 @@ export default class FoodScreen extends React.Component {
       else if (check[i] == "afternoon") {
         this.setState({ afternoon: "true" })
       }
-      else {
-        this.setState({ evening: "true" })
+      else if (check[i] == "evening" )
+      {
+        this.setState({evening: "true"})
+      }
+      else
+      {
+      console.log("no data")
       }
     }
   }
