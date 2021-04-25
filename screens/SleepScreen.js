@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 import { db } from "../config/config";
 import { TouchableOpacity, TouchableNativeFeedback } from "react-native-gesture-handler";
 import Collapsible from 'react-native-collapsible'
-import {Ionicons} from '@expo/vector-icons'
+import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons'
 const sleepCollection = db().collection("profile");
 
 export default class SleepScreen extends React.Component {
@@ -19,6 +19,8 @@ export default class SleepScreen extends React.Component {
       sleepInput: "",
       error: "",
       snackbarShow: false,
+      sleepData: 0,
+      today: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />
     };
   }
 
@@ -66,6 +68,27 @@ export default class SleepScreen extends React.Component {
       return true;
     }
   };
+
+  dailySleepProgress = () => {
+    const today = new Date();
+    let sleep = [];
+    let userId = this.HandleGetUserId();
+    sleepCollection.doc(userId).collection('sleep')
+      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+      .get().then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          sleep.push(doc.data().sleepamount);
+        //console.log(doc.data().waterstatus)
+      })
+      console.log(sleep)
+    })  
+    setTimeout(() => {
+    this.setState({ sleepData: sleep.length })
+    console.log("sleepData=>",this.state.sleepData)
+    // this.Dailycheck()
+    }, 1000);
+  }
 
   saveSleep = () => {
     this.handleSnackbar()
@@ -129,7 +152,28 @@ export default class SleepScreen extends React.Component {
           }
         });
     }
+    this.dailySleepProgress()
   };
+
+  Dailycheck = () =>{
+    let check = this.state.sleepData
+      if(check == 1 )
+      {
+        this.setState({today: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
+      }
+      else
+      {
+      console.log("no data")
+      }
+    }
+
+  async componentDidMount() {
+    await this.dailySleepProgress()
+    setTimeout(() => {
+    this.Dailycheck()
+    }, 1000);
+  }
+
   render() {
 
     return (
@@ -160,6 +204,7 @@ export default class SleepScreen extends React.Component {
             </View>
           </Collapsible>
           </View>
+          <Text>Today {this.state.today}</Text>
         <Image
           style={styles.sleepIcon}
           source={require("../images/sleeping.png")}
