@@ -14,7 +14,7 @@ import Slider from "@react-native-community/slider";
 import "firebase/auth";
 import "firebase/firestore";
 import Collapsible from 'react-native-collapsible'
-import { Ionicons } from '@expo/vector-icons'
+import {Ionicons, MaterialCommunityIcons, FontAwesome, Entypo } from '@expo/vector-icons'
 import firebase from "firebase/app";
 import { db } from '../config/config'
 const waterCollection = db().collection('profile');
@@ -31,9 +31,9 @@ export default class WaterScreen extends React.Component {
       sliderValue: 1,
       outputText: "",
       snackbarShow: false,
-      morning: "None",
-      afternoon: "None",
-      evening: "None"
+      morning:  <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
+      afternoon: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
+      evening: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />
     }
   }
 
@@ -141,15 +141,15 @@ export default class WaterScreen extends React.Component {
     {
       if(check[i] == "morning" )
       {
-        this.setState({morning: "true"})
+        this.setState({morning: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
       }
       else if(check[i] == "afternoon" )
       {
-        this.setState({afternoon: "true"})
+        this.setState({afternoon: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
       }
       else if (check[i] == "evening" )
       {
-        this.setState({evening: "true"})
+        this.setState({evening: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} />})
       }
       else
       {
