@@ -66,7 +66,7 @@ export default class QuestionScreen extends React.Component {
   nextQuestion = () => {
     currentQuestion++;
 
-    if (currentQuestion < 2) {
+    if (currentQuestion < 28) {
       this.setState({
         activeQuestion: this.state.questions[currentQuestion].Question,
       });
@@ -103,34 +103,34 @@ export default class QuestionScreen extends React.Component {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.addQuestionsAndAnswers(this.state.answers[0], this.state.activeQuestion)}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[0], this.state.activeQuestion)}
           >
             <Text style={styles.text}>Strongly Agree</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.addQuestionsAndAnswers(this.state.answers[1], this.state.activeQuestion)}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[1], this.state.activeQuestion)}
           >
             <Text style={styles.text}>Slightly Agree</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.addQuestionsAndAnswers(this.state.answers[2], this.state.activeQuestion)}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[2], this.state.activeQuestion)}
           >
             <Text style={styles.text}>No Opinion</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.addQuestionsAndAnswers(this.state.answers[3], this.state.activeQuestion)}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[3], this.state.activeQuestion)}
           >
             <Text style={styles.text}>Slightly Disagree</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.addQuestionsAndAnswers(this.state.answers[4], this.state.activeQuestion)}
+            onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[4], this.state.activeQuestion)}
           >
             <Text style={styles.text}>Strongly Disagree</Text>
           </TouchableOpacity>
