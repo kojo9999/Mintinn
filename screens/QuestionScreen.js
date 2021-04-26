@@ -96,40 +96,41 @@ export default class QuestionScreen extends React.Component {
             md="md-menu"
             onPress={() => this.props.navigation.openDrawer()}
           />
-        <Text style={styles.headerTitle}>Daily Questions</Text>
+        
         </View>
+        <Text style={styles.headerTitle}>Daily Questions</Text>
         <View style={styles.buttonContainer}>
           <Text style={styles.question}>{this.state.activeQuestion}</Text>
 
           <TouchableOpacity
-            style={styles.button}
+            style={styles.button1}
             onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[0], this.state.activeQuestion)}
           >
             <Text style={styles.text}>Strongly Agree</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.button}
+            style={styles.button2}
             onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[1], this.state.activeQuestion)}
           >
             <Text style={styles.text}>Slightly Agree</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}
+            style={styles.button3}
             onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[2], this.state.activeQuestion)}
           >
             <Text style={styles.text}>No Opinion</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.button}
+            style={styles.button4}
             onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[3], this.state.activeQuestion)}
           >
             <Text style={styles.text}>Slightly Disagree</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.button}
+            style={styles.button5}
             onPress={() => this.addQuestionsAndAnswers(this.state.answersNum[4], this.state.activeQuestion)}
           >
             <Text style={styles.text}>Strongly Disagree</Text>
@@ -153,32 +154,78 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  
   },
   headerItem: {
-    flex: 1,
-    marginLeft: 30
+    width: "100%",
+    paddingLeft: 25,
+    marginTop: 0
   },
   headerTitle: {
     fontSize: 24,
     marginLeft: 50,
     marginRight: 50,
+    marginTop: 40
   },
   buttonContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    marginLeft: 20,
+    marginRight: 20
   },
-  button: {
+  button1: {
     height: 50,
     width: 200,
     borderRadius: 30,
     marginBottom: 10,
-    backgroundColor: "black",
+    borderWidth: 2,
+    borderColor: "#61c75f",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button2: {
+    height: 50,
+    width: 200,
+    borderRadius: 30,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: "#5fabc7",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button3: {
+    height: 50,
+    width: 200,
+    borderRadius: 30,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: "#855fc7",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button4: {
+    height: 50,
+    width: 200,
+    borderRadius: 30,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: "#c75faf",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button5: {
+    height: 50,
+    width: 200,
+    borderRadius: 30,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: "#c75f64",
     justifyContent: "center",
     alignItems: "center",
   },
   text: {
-    color: "white",
+    color: "black",
   },
   title: {
     paddingTop: StatusBar.currentHeight + 30,
@@ -189,6 +236,8 @@ const styles = StyleSheet.create({
     marginBottom: 70,
     marginHorizontal: 10,
     fontSize: 15,
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: 'center',
+    textAlign: 'center'
   },
 });
