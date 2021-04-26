@@ -175,7 +175,7 @@ export default class FeedbackScreen extends React.Component {
 
     if(sensitive)
     {
-      this.setState({senseCard: <Card>
+      this.setState({senseCard: <Card style={styles.card}>
         <Card.Title>High Sensitivity</Card.Title>
         <Text style={{marginBottom: 10}}>
               From your question answers, we've noticed you may be identified as a sensitive person. Learn more at the link below.
@@ -231,7 +231,7 @@ export default class FeedbackScreen extends React.Component {
     if(lowest == "sleep")
     {
      
-      this.setState({feedbackCard: <Card>
+      this.setState({feedbackCard: <Card style={styles.card}>
         <Card.Title>Sleep Advice</Card.Title>
         <Text style={{marginBottom: 10}}>
               Your sleep time seems to be below average. Why not look for info below from HSE?
@@ -248,7 +248,7 @@ export default class FeedbackScreen extends React.Component {
   else if(lowest == "water")
   {
     
-    this.setState({feedbackCard: <Card>
+    this.setState({feedbackCard: <Card style={styles.card}>
       <Card.Title>Water Advice</Card.Title>
       <Text style={{marginBottom: 10}}>
             Your water intake seems to be below average. Why not look for info below from HSE?
@@ -265,7 +265,7 @@ export default class FeedbackScreen extends React.Component {
   else if(lowest == "food")
   {
 
-    this.setState({feedbackCard: <Card>
+    this.setState({feedbackCard: <Card style={styles.card}>
       <Card.Title>Food Advice</Card.Title>
       <Text style={{marginBottom: 10}}>
             Your nutritional intake seems to be below average. Why not look for info below from HSE?
@@ -285,7 +285,7 @@ export default class FeedbackScreen extends React.Component {
   if(highest == "sleep")
   {
    
-    this.setState({goodFeedbackCard: <Card>
+    this.setState({goodFeedbackCard: <Card style={styles.card}>
       <Card.Title>You've Been Sleeping Great!😴</Card.Title>
       <Text style={{marginBottom: 10}}>
             Looks like you've been keeping up on your sleep this week. Keep it up!🛌
@@ -302,7 +302,7 @@ export default class FeedbackScreen extends React.Component {
 else if(highest == "water")
 {
   
-  this.setState({goodFeedbackCard: <Card>
+  this.setState({goodFeedbackCard: <Card style={styles.card}>
     <Card.Title>You're a liquid legend!🌊</Card.Title>
     <Text style={{marginBottom: 10}}>
           Your water consumation is on the up this week! Keep it up 👍
@@ -319,7 +319,7 @@ else if(highest == "water")
 else if(highest == "food")
 {
 
-  this.setState({goodFeedbackCard: <Card>
+  this.setState({goodFeedbackCard: <Card style={styles.card}>
     <Card.Title>A healthy body is a happy body🥗</Card.Title>
     <Text style={{marginBottom: 10}}>
           Good nutriion can prove vital to a good mood. Keep it up!🔥
@@ -477,14 +477,15 @@ else if(highest == "food")
           /></View>
            <ScrollView>
         <View style={styles.infoContainer}>
-
+          <View>
           <Image source={require("../images/feedback.png")} style={styles.foodImage}></Image>
+          <Text style={styles.Question}>
+          {`Your Newest Feedback`}
+       </Text></View>
         </View>
 
         
-        <Text style={styles.Question}>
-          {`Your Newest Feedback`}
-       </Text>
+       
         
       <View>
        
@@ -535,9 +536,9 @@ else if(highest == "food")
         </View>
 
        </View>
-       <View>{this.state.feedbackCard}</View>
-       <View>{this.state.goodFeedbackCard}</View> 
-       <View>{this.state.senseCard}</View> 
+       <View style={styles.feedbackCard}>{this.state.feedbackCard}</View>
+       <View style={styles.feedbackCard}>{this.state.goodFeedbackCard}</View> 
+       <View style={styles.feedbackCard}>{this.state.senseCard}</View> 
         
         </ScrollView>
         
@@ -578,7 +579,6 @@ const styles = StyleSheet.create({
   },
   Question: {
     color: "black",
-    textAlign:"center",
     marginBottom:20
   },
   slider: {
@@ -590,9 +590,7 @@ const styles = StyleSheet.create({
   },
   foodImage: {
     width: 110,
-    height:110,
-    marginLeft: 10,
-    marginTop:80
+    height:110
   },
   imageText: {
     marginLeft: 10,
@@ -604,11 +602,9 @@ const styles = StyleSheet.create({
     maxHeight: 200
   },
   infoContainer: {
-    marginTop: -80,
-    marginBottom: 30,
-    height: 200,
-    alignItems: "center",
-    justifyContent: "center"
+    width: '100%',
+    marginLeft: 140,
+    marginBottom: 20,
   },
   imageLabel: {
     marginBottom: 20
@@ -629,5 +625,9 @@ const styles = StyleSheet.create({
     right : 2,
     alignItems: 'center',
     justifyContent:'center'
+  },
+  feedbackCard: {
+    maxWidth: 410
   }
+ 
 });
