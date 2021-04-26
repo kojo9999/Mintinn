@@ -16,7 +16,7 @@ export default class SleepScreen extends React.Component {
     this.state = {
       createdAt: "",
       sleep: 0,
-      sleepInput: "",
+      sleepInput: 0,
       error: "",
       snackbarShow: false,
       sleepData: 0,
@@ -83,7 +83,7 @@ export default class SleepScreen extends React.Component {
     setTimeout(() => {
       this.setState({ sleepData: sleep.length })
       console.log("sleepData=>", this.state.sleepData)
-      // this.Dailycheck()
+      this.Dailycheck()
     }, 1000);
   }
 
@@ -128,7 +128,7 @@ export default class SleepScreen extends React.Component {
           if (snapshot.size == 0) {
             sleepCollection.doc(userId).collection("sleep").add({
               createdat: new Date(),
-              sleepamount: this.state.sleep,
+              sleepamount: Number(this.state.sleep),
             });
             this.setState({ error: "Your Sleep entry has been uploaded" })
           } else if (snapshot.size == 1) {
@@ -149,7 +149,9 @@ export default class SleepScreen extends React.Component {
           }
         });
     }
+    setTimeout(() => {
     this.dailySleepProgress()
+  }, 1000);
   };
 
   Dailycheck = () => {
@@ -199,7 +201,7 @@ export default class SleepScreen extends React.Component {
             </View>
           </Collapsible> */}
           <View style={styles.checklist}>
-            <View style={styles.checkbox}><Text style={styles.checkLabel}>{new Date().getDate()}/{new Date().getMonth()}</Text><Text>{this.state.today}</Text></View>
+            <View style={styles.checkbox}><Text style={styles.checkLabel}>{new Date().getDate()}/{new Date().getMonth()+1}</Text><Text>{this.state.today}</Text></View>
           </View>
         </View>
         <Image
