@@ -114,6 +114,7 @@ export default class QuestionScreen extends React.Component {
         <Text style={styles.headerTitle}>Daily Questions</Text>
         <View style={styles.buttonContainer}>
           <Text style={styles.question}>{this.state.activeQuestion}</Text>
+          <Text style={styles.questionCount}>{this.state.questionNumber + "/5"}</Text>
 
           <TouchableOpacity
             style={styles.button1}
@@ -256,11 +257,19 @@ const styles = StyleSheet.create({
   },
   question: {
     color: "black",
-    marginBottom: 70,
+    marginBottom: 30,
     marginHorizontal: 10,
     fontSize: 15,
     justifyContent: "center",
     alignItems: 'center',
     textAlign: 'center'
   },
+  questionCount: {
+    color: "black",
+    fontSize: 15,
+    justifyContent: "center",
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: 40,
+  }
 });
