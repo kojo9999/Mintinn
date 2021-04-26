@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 import { db } from "../config/config";
 import { TouchableOpacity, TouchableNativeFeedback } from "react-native-gesture-handler";
 import Collapsible from 'react-native-collapsible'
-import {Ionicons} from '@expo/vector-icons'
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 const sleepCollection = db().collection("profile");
 
 export default class SleepScreen extends React.Component {
@@ -19,16 +19,18 @@ export default class SleepScreen extends React.Component {
       sleepInput: "",
       error: "",
       snackbarShow: false,
+      sleepData: 0,
+      today: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />
     };
   }
 
   handleSnackbar = () => {
-    this.setState({snackbarShow: true})
-    setTimeout(()=> {this.setState({snackbarShow: false})}, 3000)
+    this.setState({ snackbarShow: true })
+    setTimeout(() => { this.setState({ snackbarShow: false }) }, 3000)
   }
-  
+
   onDismissSnackBar = () => {
-    this.setState({snackbarShow: false})
+    this.setState({ snackbarShow: false })
   }
 
   toggleExpanded = () => {
@@ -50,22 +52,40 @@ export default class SleepScreen extends React.Component {
       this.setState({ error: "Sleep can only be a number" })
       return false;
     }
-    else if (this.state.sleep == 0)
-    {
+    else if (this.state.sleep == 0) {
       this.setState({ error: "Sleep must must be between 1 - 24 hours" })
       return false;
     }
-    else if (this.state.sleep >= 24)
-    {
+    else if (this.state.sleep >= 24) {
       this.setState({ error: "Sleep must must be between 1 - 24 hours" })
       return false;
     }
-    else
-    {
+    else {
       this.setState({ error: "" })
       return true;
     }
   };
+
+  dailySleepProgress = () => {
+    const today = new Date();
+    let sleep = [];
+    let userId = this.HandleGetUserId();
+    sleepCollection.doc(userId).collection('sleep')
+      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
+      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
+      .get().then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          sleep.push(doc.data().sleepamount);
+          //console.log(doc.data().waterstatus)
+        })
+        console.log(sleep)
+      })
+    setTimeout(() => {
+      this.setState({ sleepData: sleep.length })
+      console.log("sleepData=>", this.state.sleepData)
+      // this.Dailycheck()
+    }, 1000);
+  }
 
   saveSleep = () => {
     this.handleSnackbar()
@@ -123,18 +143,37 @@ export default class SleepScreen extends React.Component {
                 .doc(doc.id);
               batch.update(docRef, newSleepDoc);
               batch.commit().then(() => {
-              this.setState({ error: "Your Sleep entry has been updated" })
+                this.setState({ error: "Your Sleep entry has been updated" })
               });
             });
           }
         });
     }
+    this.dailySleepProgress()
   };
+
+  Dailycheck = () => {
+    let check = this.state.sleepData
+    if (check == 1) {
+      this.setState({ today: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} color={"green"}/> })
+    }
+    else {
+      console.log("no data")
+    }
+  }
+
+  async componentDidMount() {
+    await this.dailySleepProgress()
+    setTimeout(() => {
+      this.Dailycheck()
+    }, 1000);
+  }
+
   render() {
 
     return (
       <View style={styles.container}>
-      <View style={styles.headerView}>
+        <View style={styles.headerView}>
           <Ionicons
             style={styles.headerItem}
             name="ios-menu"
@@ -143,14 +182,14 @@ export default class SleepScreen extends React.Component {
             onPress={() => this.props.navigation.openDrawer()}
           />
         </View>
-         <View style={styles.infoContainer}>
-       <TouchableOpacity onPress={this.toggleExpanded}>
+        <View style={styles.infoContainer}>
+          {/* <TouchableOpacity onPress={this.toggleExpanded}>
             <View style={styles.header}>
-            <Ionicons name="ios-information-circle" size={28} color="black"/>
+              <Ionicons name="ios-information-circle" size={28} color="black" />
             </View>
-            
-          </TouchableOpacity>
-          <Collapsible collapsed={this.state.collapsed} align="center">
+
+          </TouchableOpacity> */}
+          {/* <Collapsible collapsed={this.state.collapsed} align="center">
             <View style={styles.content}>
               <Text>Regularly drinking water:</Text>
               <Text>Helps working Joints and Muscles</Text>
@@ -158,8 +197,11 @@ export default class SleepScreen extends React.Component {
               <Text>Keeps your body cool</Text>
               <Text>Keeps skin healthy</Text>
             </View>
-          </Collapsible>
+          </Collapsible> */}
+          <View style={styles.checklist}>
+            <View style={styles.checkbox}><Text style={styles.checkLabel}>{new Date().getDate()}/{new Date().getMonth()}</Text><Text>{this.state.today}</Text></View>
           </View>
+        </View>
         <Image
           style={styles.sleepIcon}
           source={require("../images/sleeping.png")}
@@ -172,19 +214,19 @@ export default class SleepScreen extends React.Component {
           onBlur={() => this.sleepValidator()}
           onChangeText={(sleepInput) => this.setState({ sleep: sleepInput })}
         />
-      
+
         <View style={styles.button}><TouchableNativeFeedback style={styles.button} background={TouchableNativeFeedback.Ripple('#000', true)} onPress={() => this.saveSleep()}><Text style={styles.submit}>Submit</Text></TouchableNativeFeedback></View>
         <Snackbar
-        visible={this.state.snackbarShow}
-        onDismiss={this.onDismissSnackBar}
+          visible={this.state.snackbarShow}
+          onDismiss={this.onDismissSnackBar}
           action={{
-          label: 'OK',
-          onPress: () => {
-            this.setState({snackbarShow: false})
-          },
-        }}>
-        {this.state.error}
-      </Snackbar>
+            label: 'OK',
+            onPress: () => {
+              this.setState({ snackbarShow: false })
+            },
+          }}>
+          {this.state.error}
+        </Snackbar>
       </View>
     );
   }
@@ -197,7 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerView: {
-    marginTop: StatusBar.currentHeight -120 ,
+    marginTop: StatusBar.currentHeight - 120,
     alignSelf: "stretch",
     flexDirection: "row",
     justifyContent: "center",
@@ -220,7 +262,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 200,
     borderRadius: 30,
-    backgroundColor: '#32a852',
+    backgroundColor: '#8061ba',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden'
@@ -242,6 +284,18 @@ const styles = StyleSheet.create({
     height: 200,
     alignItems: "center",
     justifyContent: "center",
-
+  },
+  checklist: {
+    flexDirection: 'row',
+    marginBottom: 60,
+    marginTop: 60
+  },
+  checkbox: {
+    flexDirection: 'row',
+    padding: 5
+  },
+  checkLabel: {
+    paddingRight: 5,
+    fontSize : 20
   }
 });

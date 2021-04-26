@@ -1,14 +1,18 @@
 import React from "react";
-import { Snackbar } from "react-native-paper"
+import { Snackbar } from "react-native-paper";
 import { Text, View, StyleSheet, Image, StatusBar } from "react-native";
-import { TouchableOpacity, TouchableNativeFeedback } from "react-native-gesture-handler";
+import {
+  TouchableOpacity,
+  TouchableNativeFeedback,
+} from "react-native-gesture-handler";
 import "firebase/auth";
 import "firebase/firestore";
 import firebase from "firebase/app";
 import { db } from "../config/config";
 import Slider from "@react-native-community/slider";
-import Collapsible from 'react-native-collapsible';
-import { Ionicons } from '@expo/vector-icons';
+import Collapsible from "react-native-collapsible";
+import {Ionicons, MaterialCommunityIcons, FontAwesome, Entypo } from '@expo/vector-icons'
+import DropDownPicker from "react-native-dropdown-picker";
 const foodCollection = db().collection("profile");
 
 export default class FoodScreen extends React.Component {
@@ -21,27 +25,27 @@ export default class FoodScreen extends React.Component {
       sliderValue: 1,
       error: "",
       snackbarShow: false,
-      morning: "None",
-      afternoon: "None",
-      evening: "None"
+      morning:  <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={20} />,
+      afternoon: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={20} />,
+      evening: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={20} />,
+      timeOfDay: this.TimeOfDay(),
     };
   }
 
   handleSnackbar = () => {
-    this.setState({ snackbarShow: true })
-    setTimeout(() => { this.setState({ snackbarShow: false }) }, 3000)
-  }
-
+    this.setState({ snackbarShow: true });
+    setTimeout(() => {
+      this.setState({ snackbarShow: false });
+    }, 3000);
+  };
 
   onDismissSnackBar = () => {
-    this.setState({ snackbarShow: false })
-  }
-
+    this.setState({ snackbarShow: false });
+  };
 
   toggleExpanded = () => {
     this.setState({ collapsed: !this.state.collapsed });
   };
-
 
   HandleGetUserId = () => {
     let userId = firebase.auth().currentUser.uid;
@@ -94,50 +98,78 @@ export default class FoodScreen extends React.Component {
     const today = new Date();
     let food = [];
     let userId = this.HandleGetUserId();
-    foodCollection.doc(userId).collection('food')
-      .where("createdat", ">", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0))
-      .where("createdat", "<", new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59))
-      .get().then((snapshot) => {
+    foodCollection
+      .doc(userId)
+      .collection("food")
+      .where(
+        "createdat",
+        ">",
+        new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate(),
+          0,
+          0,
+          0
+        )
+      )
+      .where(
+        "createdat",
+        "<",
+        new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate(),
+          23,
+          59,
+          59
+        )
+      )
+      .get()
+      .then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           food.push(doc.data().timeOfDay);
           //console.log(doc.data().waterstatus)
-        })
-        console.log(food)
-      })
+        });
+        console.log(food);
+      });
     setTimeout(() => {
-      this.setState({ foodData: food })
-      console.log("fooddata=>", this.state.foodData)
-      this.Dailycheck()
+      this.setState({ foodData: food });
+      console.log("fooddata=>", this.state.foodData);
+      this.Dailycheck();
     }, 1000);
-  }
+  };
 
   Dailycheck = () => {
-    let check = this.state.foodData
+    let check = this.state.foodData;
     for (var i = 0; i < check.length; i++) {
-      if (check[i] == "morning") {
-        this.setState({ morning: "true" })
+      if(check[i] == "morning" )
+      {
+        this.setState({morning: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} color={"green"}/>})
       }
-      else if (check[i] == "afternoon") {
-        this.setState({ afternoon: "true" })
+      else if(check[i] == "afternoon" )
+      {
+        this.setState({afternoon: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} color={"green"}/>})
       }
       else if (check[i] == "evening" )
       {
-        this.setState({evening: "true"})
+        this.setState({evening: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24}  color={"green"}/>})
       }
       else
       {
       console.log("no data")
       }
     }
-  }
+  };
 
   addFood = async (inputValue) => {
+    console.log("gavs time to shine", this.state.timeOfDay);
     //console.log("addFood2() is being called");
-    this.handleSnackbar()
+    this.handleSnackbar();
     let userId = this.HandleGetUserId();
     let batch = firebase.firestore().batch();
     const today = new Date();
-    const time = this.TimeOfDay();
+    const time = this.state.timeOfDay;
     console.log(time);
     const newFoodDoc = {
       updatedAt: new Date(),
@@ -171,11 +203,7 @@ export default class FoodScreen extends React.Component {
           59
         )
       )
-      .where(
-        "timeOfDay",
-        "==",
-        time
-      )
+      .where("timeOfDay", "==", time)
       .get()
       .then((snapshot) => {
         if (snapshot.size == 0) {
@@ -185,7 +213,9 @@ export default class FoodScreen extends React.Component {
             foodamount: inputValue,
             timeOfDay: time,
           });
-          this.setState({ error: "Your " + time + " food entry has been uploaded" })
+          this.setState({
+            error: "Your " + time + " food entry has been uploaded",
+          });
         } else {
           snapshot.docs.forEach((doc) => {
             console.log("docs found with todays date", time);
@@ -196,15 +226,17 @@ export default class FoodScreen extends React.Component {
             if (doc.data().timeOfDay == time) {
               batch.update(docRef, newFoodDoc);
               batch.commit().then(() => {
-                this.setState({ error: "Your " + time + " food entry has been updated" })
+                this.setState({
+                  error: "Your " + time + " food entry has been updated",
+                });
               });
             }
           });
         }
       });
-      setTimeout(() => {
-    this.dailyFoodProgress()
-  }, 1000);
+    setTimeout(() => {
+      this.dailyFoodProgress();
+    }, 1000);
   };
 
   handleSliderChange = (sliderValue) => {
@@ -212,9 +244,9 @@ export default class FoodScreen extends React.Component {
   };
 
   async componentDidMount() {
-    await this.dailyFoodProgress()
+    await this.dailyFoodProgress();
     setTimeout(() => {
-      this.Dailycheck()
+      this.Dailycheck();
     }, 1000);
   }
 
@@ -230,27 +262,53 @@ export default class FoodScreen extends React.Component {
             onPress={() => this.props.navigation.openDrawer()}
           />
         </View>
-        <View style={styles.infoContainer}>
+        {/* <View style={styles.infoContainer}>
           <TouchableOpacity onPress={this.toggleExpanded}>
             <View style={styles.header}>
               <Ionicons name="ios-information-circle" size={28} color="black" />
-
             </View>
-
           </TouchableOpacity>
           <Collapsible collapsed={this.state.collapsed} align="center">
             <View style={styles.content}>
               <Text>Food Info</Text>
-
             </View>
           </Collapsible>
+        </View> */}
+        <View style={styles.checklist}>
+       
+        <View style={styles.checkbox}><Text style={styles.checkLabel}>Morning</Text><Text>{this.state.morning}</Text></View>
+        <View style={styles.checkbox}><Text style={styles.checkLabel}>Afternoon</Text><Text>{this.state.afternoon}</Text></View>
+        <View style={styles.checkbox}><Text style={styles.checkLabel}>Evening</Text><Text>{this.state.evening}</Text></View>
         </View>
-        <Text>Morning {this.state.morning}</Text>
-        <Text>Afternoon {this.state.afternoon}</Text>
-        <Text>Evening {this.state.evening}</Text>
+        
+        <View style={styles.questionContainer}>
         <Text
           style={styles.Question}
-        >{`How have you eaten ${this.TimeOfDay()}?`}</Text>
+        >How have you eaten this</Text>
+        <View style={styles.dropbox}>
+          <DropDownPicker
+            items={[
+              { label: "Morning", value: "morning" },
+              { label: "Afternoon", value: "afternoon" },
+              { label: "Evening", value: "evening" },
+            ]}
+            defaultValue={this.TimeOfDay()}
+            containerStyle={{ height: 30 }}
+            style={{ backgroundColor: "#fafafa" }}
+            itemStyle={{
+              justifyContent: "flex-start",
+            }}
+            dropDownStyle={{ backgroundColor: "#fafafa" }}
+            onChangeItem={(item) =>
+              this.setState({
+                timeOfDay: item.value,
+              })
+            }
+          />
+        </View>
+        <Text>?</Text>
+        </View>
+
         <View style={styles.foodImages}>
           {this.state.sliderValue == 1 ? (
             <View>
@@ -258,7 +316,6 @@ export default class FoodScreen extends React.Component {
                 source={require("../images/diet.png")}
                 style={styles.foodImage}
               ></Image>
-
             </View>
           ) : null}
           {this.state.sliderValue == 2 ? (
@@ -267,13 +324,20 @@ export default class FoodScreen extends React.Component {
                 source={require("../images/burger.png")}
                 style={styles.foodImage}
               ></Image>
-
             </View>
           ) : null}
         </View>
         <View style={styles.imageLabel}>
-          {this.state.sliderValue == 1 ? <View><Text>Healthy</Text></View> : null}
-          {this.state.sliderValue == 2 ? <View><Text>Unhealthy</Text></View> : null}
+          {this.state.sliderValue == 1 ? (
+            <View>
+              <Text>Healthy</Text>
+            </View>
+          ) : null}
+          {this.state.sliderValue == 2 ? (
+            <View>
+              <Text>Unhealthy</Text>
+            </View>
+          ) : null}
         </View>
         <Slider
           style={styles.slider}
@@ -283,8 +347,17 @@ export default class FoodScreen extends React.Component {
           step={1}
           onValueChange={this.handleSliderChange}
         />
+        
 
-        <View style={styles.button}><TouchableNativeFeedback style={styles.button} background={TouchableNativeFeedback.Ripple('#000', true)} onPress={() => this.addFood(0)}><Text style={styles.submit}>Submit</Text></TouchableNativeFeedback></View>
+        <View style={styles.button}>
+          <TouchableNativeFeedback
+            style={styles.button}
+            background={TouchableNativeFeedback.Ripple("#000", true)}
+            onPress={() => this.addFood(1)}
+          >
+            <Text style={styles.submit}>Submit</Text>
+          </TouchableNativeFeedback>
+        </View>
         <TouchableOpacity style={styles.skip} onPress={() => this.addFood(0)}>
           <Text style={styles.notEatenLink}>I haven't eaten yet</Text>
         </TouchableOpacity>
@@ -292,11 +365,12 @@ export default class FoodScreen extends React.Component {
           visible={this.state.snackbarShow}
           onDismiss={this.onDismissSnackBar}
           action={{
-            label: 'OK',
+            label: "OK",
             onPress: () => {
-              this.setState({ snackbarShow: false })
+              this.setState({ snackbarShow: false });
             },
-          }}>
+          }}
+        >
           {this.state.error}
         </Snackbar>
       </View>
@@ -318,23 +392,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerItem: {
-    flex: 1,
-    marginLeft: 30
+    width: "100%",
+    paddingLeft: 25,
+    marginTop: 40
   },
   button: {
     height: 50,
     width: 200,
     borderRadius: 30,
-    backgroundColor: '#32a852',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden'
+    backgroundColor: "#4ca655",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
   },
   Text: {
     color: "white",
   },
   Question: {
     color: "black",
+  },
+  questionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 50
+
   },
   slider: {
     marginBottom: 90,
@@ -352,6 +433,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     marginTop: 40,
     flexDirection: "row",
+ 
   },
   imageText: {
     marginLeft: 10,
@@ -363,20 +445,39 @@ const styles = StyleSheet.create({
     color: "rgb(0, 41, 130)",
     padding: 1,
     borderBottomColor: "rgb(156, 156, 156)",
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   content: {
-    maxHeight: 200
+    maxHeight: 200,
   },
   infoContainer: {
-    marginTop: -60,
+    marginTop: -123,
     marginBottom: 30,
     height: 200,
     alignItems: "center",
     justifyContent: "center",
-
   },
   imageLabel: {
-    marginBottom: 20
+    marginBottom: 20,
+  },
+  dropbox: {
+    width: 110,
+    height: 50,
+    marginLeft: 10,
+    marginRight: 10,
+    paddingTop: 10,
+
+  },
+  checklist: {
+    flexDirection: 'row',
+    marginBottom: 60,
+    marginTop: 60
+  },
+  checkbox: {
+    flexDirection: 'row',
+    padding: 5
+  },
+  checkLabel:{
+    paddingRight: 5
   }
 });

@@ -14,9 +14,10 @@ import Slider from "@react-native-community/slider";
 import "firebase/auth";
 import "firebase/firestore";
 import Collapsible from 'react-native-collapsible'
-import { Ionicons } from '@expo/vector-icons'
+import {Ionicons, MaterialCommunityIcons, FontAwesome, Entypo } from '@expo/vector-icons'
 import firebase from "firebase/app";
 import { db } from '../config/config'
+import DropDownPicker from "react-native-dropdown-picker";
 const waterCollection = db().collection('profile');
 
 export default class WaterScreen extends React.Component {
@@ -31,9 +32,10 @@ export default class WaterScreen extends React.Component {
       sliderValue: 1,
       outputText: "",
       snackbarShow: false,
-      morning: "None",
-      afternoon: "None",
-      evening: "None"
+      timeOfDay: this.timeOfDay(),
+      morning:  <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
+      afternoon: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />,
+      evening: <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={24} />
     }
   }
 
@@ -98,7 +100,7 @@ export default class WaterScreen extends React.Component {
     let user = this.HandleGetUserId();
     let batch = firebase.firestore().batch();
     const today = new Date();
-    const time = this.timeOfDay();
+    const time = this.state.timeOfDay;
     console.log(time);
     const newWaterDoc = {
       updatedAt: new Date(),
@@ -141,15 +143,15 @@ export default class WaterScreen extends React.Component {
     {
       if(check[i] == "morning" )
       {
-        this.setState({morning: "true"})
+        this.setState({morning: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} color={"green"}/>})
       }
       else if(check[i] == "afternoon" )
       {
-        this.setState({afternoon: "true"})
+        this.setState({afternoon: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} color={"green"}/>})
       }
       else if (check[i] == "evening" )
       {
-        this.setState({evening: "true"})
+        this.setState({evening: <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={24} color={"green"}/>})
       }
       else
       {
@@ -181,7 +183,7 @@ export default class WaterScreen extends React.Component {
             onPress={() => this.props.navigation.openDrawer()}
           />
         </View>
-        <View style={styles.infoContainer}>
+        {/* <View style={styles.infoContainer}>
           <TouchableOpacity onPress={this.toggleExpanded}>
             <View style={styles.header}>
               <Ionicons name="ios-information-circle" size={28} color="black" />
@@ -196,11 +198,43 @@ export default class WaterScreen extends React.Component {
               <Text>Keeps skin healthy</Text>
             </View>
           </Collapsible>
-        </View>
-        <Text>Morning {this.state.morning}</Text>
+        </View> */}
+        {/* <Text>Morning {this.state.morning}</Text>
         <Text>Afternoon {this.state.afternoon}</Text>
-        <Text>Evening {this.state.evening}</Text>
-        <Text style={styles.Question}>{`What amount of water have you drank this ${this.timeOfDay()}?`}</Text>
+        <Text>Evening {this.state.evening}</Text> */}
+        <View style={styles.checklist}>
+       
+       <View style={styles.checkbox}><Text style={styles.checkLabel}>Morning</Text><Text>{this.state.morning}</Text></View>
+       <View style={styles.checkbox}><Text style={styles.checkLabel}>Afternoon</Text><Text>{this.state.afternoon}</Text></View>
+       <View style={styles.checkbox}><Text style={styles.checkLabel}>Evening</Text><Text>{this.state.evening}</Text></View>
+       </View>
+        <View style={styles.questionContainer}>
+        <Text
+          style={styles.Question}
+        >How have you eaten this</Text>
+        <View style={styles.dropbox}>
+          <DropDownPicker
+            items={[
+              { label: "Morning", value: "morning" },
+              { label: "Afternoon", value: "afternoon" },
+              { label: "Evening", value: "evening" },
+            ]}
+            defaultValue={this.timeOfDay()}
+            containerStyle={{ height: 30 }}
+            style={{ backgroundColor: "#fafafa" }}
+            itemStyle={{
+              justifyContent: "flex-start",
+            }}
+            dropDownStyle={{ backgroundColor: "#fafafa" }}
+            onChangeItem={(item) =>
+              this.setState({
+                timeOfDay: item.value,
+              })
+            }
+          />
+        </View>
+        <Text>?</Text>
+        </View>
         <View style={styles.waterImages}>
           <View style={styles.arrayImages}>{[...Array(this.state.sliderValue - 1)].map((e, i) => <Image source={require("../images/waterfull.png")} style={styles.waterImage} key={i}></Image>)}</View>
           {this.state.sliderValue == 1 ? <Image source={require("../images/waterempty.png")} style={styles.waterImage}></Image> : null}
@@ -248,13 +282,15 @@ const styles = StyleSheet.create({
   },
   headerItem: {
     flex: 1,
-    marginLeft: 30
+    marginLeft: 30,
+    marginTop:40
+
   },
   button: {
     height: 50,
     width: 200,
     borderRadius: 30,
-    backgroundColor: '#32a852',
+    backgroundColor: '#5fa3ad',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden'
@@ -301,8 +337,29 @@ const styles = StyleSheet.create({
     height: 200,
     alignItems: "center",
     justifyContent: "center",
-
+  },
+  questionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 50
+  },
+  dropbox: {
+    width: 110,
+    height: 50,
+    marginLeft: 10,
+    marginRight: 10,
+    paddingTop: 10,
+  },
+  checklist: {
+    flexDirection: 'row',
+    marginBottom: 60,
+    marginTop: 60
+  },
+  checkbox: {
+    flexDirection: 'row',
+    padding: 5
+  },
+  checkLabel:{
+    paddingRight: 5
   }
-
-
 });
