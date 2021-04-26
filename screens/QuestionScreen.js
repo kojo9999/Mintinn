@@ -16,7 +16,7 @@ export default class QuestionScreen extends React.Component {
     super();
     this.state = {
       questions: [],
-      answers: [5, 4, 3, 2, 1],     
+      answersNum: [5, 4, 3, 2, 1],     
       activeQuestion: "",
       outputText: "",
       questionNumber: 1
