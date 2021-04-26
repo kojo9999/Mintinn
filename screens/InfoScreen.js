@@ -61,12 +61,13 @@ class InfoScreen extends Component {
             onPress={() => this.props.navigation.openDrawer()}
           />
         </View>
-        <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
-        <OpenURLButton contentContainerStyle={{ paddingTop: 30 }} url={hseHome}>HSE</OpenURLButton>
-        <OpenURLButton contentContainerStyle={{ paddingTop: 30 }} url={hseNutrition}>Nutrition</OpenURLButton>
-        <OpenURLButton contentContainerStyle={{ paddingTop: 30 }} url={hseWater}>Water</OpenURLButton>
-        <OpenURLButton contentContainerStyle={{ paddingTop: 30 }} url={hseSleep}>Sleep</OpenURLButton>
-        </ScrollView>
+        <View style={styles.buttonContainer}>
+          <Text style={styles.question}>Here are links to some information that can help you</Text>
+          <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(hseHome)}><Text style={styles.text}>HSE</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(hseNutrition)}><Text style={styles.text}>Nutrition</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(hseWater)}><Text style={styles.text}>Water</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(hseSleep)}><Text style={styles.text}>Sleep</Text></TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -89,6 +90,29 @@ const styles = StyleSheet.create({
   },
   headerItem: {
     flex: 1,
-    marginLeft: 30
+    marginLeft: 30,
+  },
+  button: {
+    height: 50,
+    width: 200,
+    marginBottom: 10,
+    borderRadius: 30,
+    backgroundColor:"#4ca655",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    color: "white",
+    textAlign: "center"
+  },
+  question: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 50
   },
 });
