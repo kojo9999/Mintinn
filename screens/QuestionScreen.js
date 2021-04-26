@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { Snackbar } from "react-native-paper";
 import * as Progress from "react-native-progress";
 import "firebase/auth";
 import "firebase/firestore";
@@ -23,6 +24,17 @@ export default class QuestionScreen extends React.Component {
     };
   }
 
+  handleSnackbar = () => {
+    this.setState({ snackbarShow: true });
+    setTimeout(() => {
+      this.setState({ snackbarShow: false });
+    }, 1000);
+  };
+
+  onDismissSnackBar = () => {
+    this.setState({ snackbarShow: false });
+  };
+
   getQuestions = async () => {
     let Questiondata = [];
     let userId = this.HandleGetUserId();
@@ -42,6 +54,7 @@ export default class QuestionScreen extends React.Component {
   };
 
   addQuestionsAndAnswers = (answer, question) => {
+    this.handleSnackbar();
     let userId = this.HandleGetUserId();
     let batch = firebase.firestore().batch();
     const today = new Date();
@@ -58,7 +71,7 @@ export default class QuestionScreen extends React.Component {
           })
         }
       })
-      this.setState({ outputText: "Your answer to question" + this.state.questionNumber + " has been uploaded" })
+      this.setState({ outputText: "Your answer to question " + this.state.questionNumber + " has been uploaded" })
       this.setState({ questionNumber: this.state.questionNumber+1 })
     this.nextQuestion();
   };
@@ -101,6 +114,7 @@ export default class QuestionScreen extends React.Component {
         <Text style={styles.headerTitle}>Daily Questions</Text>
         <View style={styles.buttonContainer}>
           <Text style={styles.question}>{this.state.activeQuestion}</Text>
+          <Text style={styles.questionCount}>{this.state.questionNumber + "/5"}</Text>
 
           <TouchableOpacity
             style={styles.button1}
@@ -136,7 +150,18 @@ export default class QuestionScreen extends React.Component {
             <Text style={styles.text}>Strongly Disagree</Text>
           </TouchableOpacity>
         </View>
-        <Text>{this.state.outputText}</Text>
+        <Snackbar
+          visible={this.state.snackbarShow}
+          onDismiss={this.onDismissSnackBar}
+          action={{
+            label: "OK",
+            onPress: () => {
+              this.setState({ snackbarShow: false });
+            },
+          }}
+        >
+          {this.state.outputText}
+        </Snackbar>
       </View>
     );
   }
@@ -145,8 +170,7 @@ export default class QuestionScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    marginBottom: 80
+    alignItems: "center"
   },
   headerView: {
     paddingTop: StatusBar.currentHeight + 10,
@@ -233,11 +257,19 @@ const styles = StyleSheet.create({
   },
   question: {
     color: "black",
-    marginBottom: 70,
+    marginBottom: 30,
     marginHorizontal: 10,
     fontSize: 15,
     justifyContent: "center",
     alignItems: 'center',
     textAlign: 'center'
   },
+  questionCount: {
+    color: "black",
+    fontSize: 15,
+    justifyContent: "center",
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: 40,
+  }
 });
