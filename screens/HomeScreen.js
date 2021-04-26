@@ -83,6 +83,15 @@ class HomeScreen extends Component {
               </ImageBackground>
               </TouchableOpacity>
             </View>
+            <View style={styles.subActWindow}>
+            <TouchableOpacity style={styles.touchable} onPress={() => this.props.navigation.navigate("QuestionScreen")}>
+              <ImageBackground
+                source={require("../images/questions.png")}
+                style={styles.image}
+              ><Text style={styles.subActTitle}>Questions</Text>
+              </ImageBackground>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </View>
       </SafeAreaView>
