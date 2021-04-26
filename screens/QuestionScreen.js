@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { Snackbar } from "react-native-paper";
 import * as Progress from "react-native-progress";
 import "firebase/auth";
 import "firebase/firestore";
@@ -23,6 +24,17 @@ export default class QuestionScreen extends React.Component {
     };
   }
 
+  handleSnackbar = () => {
+    this.setState({ snackbarShow: true });
+    setTimeout(() => {
+      this.setState({ snackbarShow: false });
+    }, 1000);
+  };
+
+  onDismissSnackBar = () => {
+    this.setState({ snackbarShow: false });
+  };
+
   getQuestions = async () => {
     let Questiondata = [];
     let userId = this.HandleGetUserId();
@@ -42,6 +54,7 @@ export default class QuestionScreen extends React.Component {
   };
 
   addQuestionsAndAnswers = (answer, question) => {
+    this.handleSnackbar();
     let userId = this.HandleGetUserId();
     let batch = firebase.firestore().batch();
     const today = new Date();
@@ -58,7 +71,7 @@ export default class QuestionScreen extends React.Component {
           })
         }
       })
-      this.setState({ outputText: "Your answer to question" + this.state.questionNumber + " has been uploaded" })
+      this.setState({ outputText: "Your answer to question " + this.state.questionNumber + " has been uploaded" })
       this.setState({ questionNumber: this.state.questionNumber+1 })
     this.nextQuestion();
   };
@@ -136,7 +149,18 @@ export default class QuestionScreen extends React.Component {
             <Text style={styles.text}>Strongly Disagree</Text>
           </TouchableOpacity>
         </View>
-        <Text>{this.state.outputText}</Text>
+        <Snackbar
+          visible={this.state.snackbarShow}
+          onDismiss={this.onDismissSnackBar}
+          action={{
+            label: "OK",
+            onPress: () => {
+              this.setState({ snackbarShow: false });
+            },
+          }}
+        >
+          {this.state.outputText}
+        </Snackbar>
       </View>
     );
   }
@@ -145,8 +169,7 @@ export default class QuestionScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    marginBottom: 80
+    alignItems: "center"
   },
   headerView: {
     paddingTop: StatusBar.currentHeight + 10,
