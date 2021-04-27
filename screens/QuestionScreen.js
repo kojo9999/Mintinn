@@ -72,19 +72,26 @@ export default class QuestionScreen extends React.Component {
         }
       })
       this.setState({ outputText: "Your answer to question " + this.state.questionNumber + " has been uploaded" })
-      this.setState({ questionNumber: this.state.questionNumber+1 })
+      if(this.state.questionNumber!=5){
+        this.setState({ questionNumber: this.state.questionNumber+1 })
+        }
     this.nextQuestion();
   };
 
   nextQuestion = () => {
-    currentQuestion++;
-
-    if (currentQuestion < 28) {
+    if (currentQuestion < 4) {
+      currentQuestion++;
       this.setState({
         activeQuestion: this.state.questions[currentQuestion].Question,
       });
       console.log(currentQuestion);
       console.log(this.state.questions[currentQuestion].Question);
+    }
+    else
+    {
+      this.setState({
+        activeQuestion: "Check Back Tomorrow For More",
+      })
     }
   };
 
