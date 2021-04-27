@@ -134,7 +134,9 @@ export default class WaterScreen extends React.Component {
           });
         }
       });
+      setTimeout(() => {
       this.dailyWaterProgress()
+    }, 1000);
   }
 
   Dailycheck = () =>{
